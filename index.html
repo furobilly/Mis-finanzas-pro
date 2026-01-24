@@ -3,19 +3,15 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>📘 Finanzas Pro V2.0 - Toño</title>
-    
+    <title>🔐 Finanzas Pro V2.5 - Toño</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* SECCIÓN: VARIABLES DE COLOR (Tu paleta personalizada) */
         :root {
             --primary: #20A39E;      /* Verde Agua */
-            --primary-dark: #188883;
             --warning: #FFBA49;      /* Dorado */
             --danger: #EF5B5B;       /* Coral */
-            --text-dark: #23001E;    /* Violeta Profundo */
-            --text-muted: #A4A9AD;   /* Gris */
+            --text-dark: #23001E;    /* Violeta */
             --bg-light: #F6F7FB;
             --surface: #FFFFFF;
         }
@@ -23,404 +19,307 @@
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg-light); color: var(--text-dark); margin: 0; padding-bottom: 50px; }
 
-        /* HEADER STICKY */
-        header {
-            background: var(--primary);
-            color: white;
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        /* PANTALLA DE BLOQUEO (PIN) */
+        #pin-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--primary); z-index: 1000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; transition: 0.5s;
+        }
+        .pin-input {
+            font-size: 2rem; text-align: center; width: 150px; border: none;
+            border-radius: 10px; padding: 10px; margin-top: 20px; letter-spacing: 10px;
         }
 
-        .brand { font-weight: 800; font-size: 1.2rem; }
-        
-        .selectors { display: flex; gap: 10px; }
-        select { 
-            padding: 5px 10px; 
-            border-radius: 20px; 
-            border: none; 
-            font-weight: 600;
-            cursor: pointer;
-        }
+        /* HEADER & NAV */
+        header { background: var(--primary); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; }
+        nav { background: var(--surface); display: flex; overflow-x: auto; padding: 10px; gap: 10px; border-bottom: 1px solid #ddd; }
+        .tab-btn { padding: 8px 15px; border: none; background: none; border-radius: 15px; cursor: pointer; white-space: nowrap; color: #888; font-weight: 600; }
+        .tab-btn.active { background: var(--primary); color: white; }
 
-        /* NAVEGACIÓN (TABS) */
-        nav {
-            background: var(--surface);
-            display: flex;
-            overflow-x: auto;
-            padding: 10px;
-            gap: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .tab-btn {
-            padding: 8px 15px;
-            border: none;
-            background: none;
-            border-radius: 15px;
-            cursor: pointer;
-            white-space: nowrap;
-            color: var(--text-muted);
-            font-weight: 600;
-            transition: 0.3s;
-        }
-
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* GRID DEL DASHBOARD (Resumen rápido) */
+        /* DASHBOARD VISUALS */
         .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
-        
-        .grid-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .tile {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-bottom: 4px solid #ddd;
-        }
-        .tile.income { border-color: var(--primary); }
-        .tile.expense { border-color: var(--danger); }
-        .tile.savings { border-color: var(--warning); }
-        
-        .tile-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+        .grid-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .tile { background: var(--surface); padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .tile-value { font-size: 1.4rem; font-weight: 800; margin-top: 5px; }
 
-        /* TARJETAS DE MÓDULO */
-        .card {
-            background: var(--surface);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
+        /* BADGES (ESTADOS) */
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+        .badge-pending { background: #ffebeb; color: var(--danger); }
+        .badge-paid { background: #e0f7f6; color: var(--primary); }
 
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.3s; }
+        /* PROGRESS BAR */
+        .progress-container { background: #eee; border-radius: 10px; height: 10px; margin: 10px 0; overflow: hidden; }
+        .progress-bar { background: var(--primary); height: 100%; transition: 0.5s; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* FORMS */
+        .card { background: var(--surface); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        input, select, button { padding: 10px; border-radius: 8px; border: 1px solid #ddd; }
+        .btn-add { background: var(--primary); color: white; border: none; cursor: pointer; font-weight: bold; }
 
-        /* FORMULARIOS */
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        input, select { 
-            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; 
-        }
-        .btn-add {
-            background: var(--primary); color: white; border: none; padding: 10px;
-            border-radius: 8px; cursor: pointer; font-weight: 600;
-        }
-
-        /* TABLAS RESPONSIVAS */
-        .table-wrap { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: left; padding: 12px; background: #f8f9fa; color: var(--text-muted); font-size: 0.8rem; }
-        td { padding: 12px; border-bottom: 1px solid #eee; }
-
-        /* QUINCENAS */
-        .quincena-box { 
-            background: #fdfdfd; border: 1px solid #eee; 
-            border-radius: 12px; padding: 15px; margin-top: 10px;
-        }
-        .q-title { color: var(--primary); font-weight: 800; margin-bottom: 10px; display: block; }
-        
-        .payment-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 0; border-bottom: 1px dashed #eee;
-        }
-        .payment-item:last-child { border: none; }
-        .paid { text-decoration: line-through; opacity: 0.5; }
-
-        /* RESPONSIVE MÓVIL */
-        @media (max-width: 600px) {
-            header { flex-direction: column; gap: 10px; }
-            .grid-summary { grid-template-columns: 1fr 1fr; }
-        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="brand">📊 Finanzas Pro <span style="font-size: 0.7rem; opacity: 0.8;">V2.0</span></div>
-    <div class="selectors">
-        <select id="yearSel"></select>
-        <select id="monthSel"></select>
+<div id="pin-screen">
+    <h2 id="pin-msg">🔒 Introduce tu PIN</h2>
+    <input type="password" id="pin-entry" class="pin-input" maxlength="4" inputmode="numeric">
+    <p id="pin-hint" style="margin-top: 10px; font-size: 0.8rem;"></p>
+</div>
+
+<div id="app-content" class="hidden">
+    <header>
+        <div class="brand">📊 Finanzas Pro <span style="font-size: 0.7rem;">V2.5</span></div>
+        <select id="monthSel" style="width: auto;"></select>
+    </header>
+
+    <nav>
+        <button class="tab-btn active" data-target="dashboard">📊 Resumen</button>
+        <button class="tab-btn" data-target="servicios">🏠 Fijos/Digital</button>
+        <button class="tab-btn" data-target="gastos">🛒 Hormiga/Var</button>
+        <button class="tab-btn" data-target="tarjetas">💳 Mis Tarjetas</button>
+        <button class="tab-btn" data-target="ahorros">💜 Ahorro</button>
+    </nav>
+
+    <div class="container">
+        <section id="dashboard" class="page active">
+            <div class="grid-summary">
+                <div class="tile">
+                    <div style="font-size: 0.8rem; color: #888;">BALANCE DEL MES</div>
+                    <div id="dash-bal" class="tile-value">$0.00</div>
+                    <div class="progress-container"><div id="progress-bar" class="progress-bar" style="width: 0%"></div></div>
+                    <div id="progress-text" style="font-size: 0.7rem; color: #888;">0% de pagos completados</div>
+                </div>
+                <div class="tile"><div style="font-size: 0.8rem; color: #888;">AHORRO ACUMULADO</div><div id="dash-sav" class="tile-value">$0.00</div></div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h3>📅 Pagos de la Quincena</h3>
+                <div id="q-list"></div>
+            </div>
+        </section>
+
+        <section id="servicios" class="page hidden">
+            <div class="card">
+                <h3>🏠 Servicios y Suscripciones Digitales</h3>
+                <div class="form-row">
+                    <input type="text" id="serv-name" placeholder="Nombre (Netflix, Renta...)">
+                    <input type="number" id="serv-amt" placeholder="Monto">
+                    <input type="number" id="serv-day" placeholder="Día pago" min="1" max="31">
+                    <select id="serv-card"></select>
+                    <button class="btn-add" onclick="addItem('services')">Añadir</button>
+                </div>
+                <div id="services-list"></div>
+            </div>
+        </section>
+
+        <section id="gastos" class="page hidden">
+            <div class="card">
+                <h3>🛒 Gastos Hormiga y Variables</h3>
+                <div class="form-row">
+                    <input type="text" id="exp-desc" placeholder="¿Qué compraste?">
+                    <input type="number" id="exp-amt" placeholder="Monto">
+                    <select id="exp-card"></select>
+                    <button class="btn-add" onclick="addItem('expenses')">Registrar</button>
+                </div>
+                <div id="expenses-list"></div>
+            </div>
+        </section>
+
+        <section id="tarjetas" class="page hidden">
+            <div class="card">
+                <h3>💳 Mis Tarjetas</h3>
+                <div class="form-row">
+                    <input type="text" id="card-name" placeholder="Nombre (BBVA, AMEX)">
+                    <input type="text" id="card-digits" placeholder="Últimos 4 dígitos" maxlength="4">
+                    <button class="btn-add" onclick="addItem('cards')">Guardar Tarjeta</button>
+                </div>
+                <div id="cards-list"></div>
+            </div>
+        </section>
+
+        <section id="ahorros" class="page hidden">
+            <div class="card">
+                <h3>💜 Mi Cochinito (Ahorro Real)</h3>
+                <div class="form-row">
+                    <input type="number" id="sav-amt" placeholder="Monto">
+                    <select id="sav-type"><option value="in">➕ Depósito</option><option value="out">➖ Retiro</option></select>
+                    <button class="btn-add" onclick="addItem('savings')">Actualizar</button>
+                </div>
+                <div id="savings-history"></div>
+            </div>
+        </section>
     </div>
-</header>
-
-<nav id="mainNav">
-    <button class="tab-btn active" data-target="dashboard">📊 Dashboard</button>
-    <button class="tab-btn" data-target="ingresos">💵 Ingresos</button>
-    <button class="tab-btn" data-target="servicios">🏠 Servicios</button>
-    <button class="tab-btn" data-target="tarjetas">💳 Tarjetas</button>
-    <button class="tab-btn" data-target="gastos">🛒 Gastos</button>
-    <button class="tab-btn" data-target="ahorros">💜 Ahorros</button>
-</nav>
-
-<div class="container">
-    
-    <section id="dashboard" class="page active">
-        <div class="grid-summary">
-            <div class="tile income"><div class="tile-label">INGRESOS</div><div id="dash-inc" class="tile-value">$0.00</div></div>
-            <div class="tile expense"><div class="tile-label">GASTOS</div><div id="dash-exp" class="tile-value">$0.00</div></div>
-            <div class="tile income"><div class="tile-label">BALANCE</div><div id="dash-bal" class="tile-value">$0.00</div></div>
-            <div class="tile savings"><div class="tile-label">AHORROS</div><div id="dash-sav" class="tile-value">$0.00</div></div>
-        </div>
-
-        <div class="card">
-            <h3>📅 Próximos Pagos</h3>
-            <div class="quincena-box">
-                <span class="q-title">Quincena 1 (Día 1-14)</span>
-                <div id="q1-list"></div>
-            </div>
-            <div class="quincena-box">
-                <span class="q-title">Quincena 2 (Día 15-31)</span>
-                <div id="q2-list"></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="ingresos" class="page">
-        <div class="card">
-            <h3>Registrar Ingreso</h3>
-            <div class="form-row">
-                <input type="text" id="inc-desc" placeholder="Ej: Sueldo Quincena">
-                <input type="number" id="inc-amt" placeholder="Monto">
-                <button class="btn-add" onclick="addItem('income')">Agregar</button>
-            </div>
-            <div class="table-wrap">
-                <table id="table-income">
-                    <thead><tr><th>Descripción</th><th>Monto</th><th>Acción</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <section id="servicios" class="page">
-        <div class="card">
-            <h3>Gastos Fijos (Servicios)</h3>
-            <div class="form-row">
-                <input type="text" id="serv-name" placeholder="Luz, Netflix, Renta...">
-                <input type="number" id="serv-amt" placeholder="Monto">
-                <input type="number" id="serv-day" placeholder="Día (1-31)" min="1" max="31">
-                <button class="btn-add" onclick="addItem('services')">Agregar</button>
-            </div>
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>Servicio</th><th>Monto</th><th>Día</th><th>Quincena</th><th></th></tr></thead>
-                    <tbody id="table-services"></tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <section id="gastos" class="page">
-        <div class="card">
-            <h3>🛒 Gastos Variables</h3>
-            <div class="form-row">
-                <input type="text" id="exp-desc" placeholder="Ej: Supermercado">
-                <input type="number" id="exp-amt" placeholder="Monto">
-                <select id="exp-cat">
-                    <option value="alimentacion">🍔 Alimentación</option>
-                    <option value="transporte">🚗 Transporte</option>
-                    <option value="entretenimiento">🎬 Entretenimiento</option>
-                    <option value="otros">📌 Otros</option>
-                </select>
-                <button class="btn-add" onclick="addItem('expenses')">Agregar</button>
-            </div>
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>Descripción</th><th>Cat.</th><th>Monto</th><th></th></tr></thead>
-                    <tbody id="table-expenses"></tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <section id="tarjetas" class="page"><div class="card"><h3>💳 Tarjetas de Crédito</h3><p>Módulo en construcción Fase 2...</p></div></section>
-    <section id="ahorros" class="page"><div class="card"><h3>💜 Mis Ahorros</h3><p>Módulo en construcción Fase 2...</p></div></section>
-
 </div>
 
 <script>
-    /**
-     * LÓGICA DE PROGRAMACIÓN - NIVEL 1/10
-     * Aquí controlamos los datos.
-     */
-
-    // 1. VARIABLES GLOBALES
-    let db = JSON.parse(localStorage.getItem('finanzasToñoV2')) || {
-        years: {}
+    // --- MODELO DE DATOS ---
+    let db = JSON.parse(localStorage.getItem('finanzasProV25')) || {
+        pin: null,
+        cards: [],
+        months: {},
+        globalSavings: 0
     };
 
-    const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-    let currentY = new Date().getFullYear();
     let currentM = new Date().getMonth();
+    const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
-    // 2. INICIALIZACIÓN
-    window.onload = () => {
-        initSelectors();
-        render();
-        setupTabs();
-    };
-
-    function initSelectors() {
-        const ySel = document.getElementById('yearSel');
-        const mSel = document.getElementById('monthSel');
-        
-        for(let i = 2024; i <= 2030; i++) ySel.innerHTML += `<option value="${i}">${i}</option>`;
-        months.forEach((m, idx) => mSel.innerHTML += `<option value="${idx}">${m}</option>`);
-
-        ySel.value = currentY;
-        mSel.value = currentM;
-
-        ySel.onchange = (e) => { currentY = e.target.value; render(); };
-        mSel.onchange = (e) => { currentM = e.target.value; render(); };
+    // --- SEGURIDAD (PIN) ---
+    const pinEntry = document.getElementById('pin-entry');
+    if (!db.pin) {
+        document.getElementById('pin-msg').innerText = "🆕 Crea tu PIN de 4 dígitos";
+        document.getElementById('pin-hint').innerText = "Este PIN protegerá tus datos en este navegador.";
     }
 
-    // 3. OBTENER DATOS DEL MES ACTUAL
-    function getMonthData() {
-        const key = `${currentY}-${currentM}`;
-        if (!db.years[key]) {
-            // Regla de Rollover: Si el mes es nuevo, podrías copiar servicios aquí.
-            db.years[key] = { income: [], expenses: [], services: [], savings: 0, payments: {} };
+    pinEntry.addEventListener('input', (e) => {
+        if (e.target.value.length === 4) {
+            if (!db.pin) {
+                db.pin = e.target.value;
+                save();
+                unlock();
+            } else if (e.target.value === db.pin) {
+                unlock();
+            } else {
+                alert("PIN Incorrecto");
+                e.target.value = "";
+            }
         }
-        return db.years[key];
+    });
+
+    function unlock() {
+        document.getElementById('pin-screen').style.transform = "translateY(-100%)";
+        document.getElementById('app-content').classList.remove('hidden');
+        init();
     }
 
-    // 4. AGREGAR DATOS
+    // --- LÓGICA CORE ---
+    function init() {
+        const mSel = document.getElementById('monthSel');
+        ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"].forEach((m, i) => {
+            mSel.innerHTML += `<option value="${i}" ${i === currentM ? 'selected' : ''}>${m}</option>`;
+        });
+        mSel.onchange = (e) => { currentM = parseInt(e.target.value); render(); };
+        setupTabs();
+        render();
+    }
+
+    function setupTabs() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+                document.getElementById(btn.dataset.target).classList.remove('hidden');
+            };
+        });
+    }
+
+    function getMonthData() {
+        if (!db.months[currentM]) db.months[currentM] = { services: [], expenses: [], payments: {} };
+        return db.months[currentM];
+    }
+
     function addItem(type) {
         const data = getMonthData();
-        if (type === 'income') {
-            const desc = document.getElementById('inc-desc').value;
-            const amt = parseFloat(document.getElementById('inc-amt').value);
-            if (desc && amt) data.income.push({ desc, amt, id: Date.now() });
-        } 
-        else if (type === 'services') {
+        if (type === 'cards') {
+            const name = document.getElementById('card-name').value;
+            const digits = document.getElementById('card-digits').value;
+            if (name && digits) db.cards.push({ name, digits, id: Date.now() });
+        } else if (type === 'services') {
             const name = document.getElementById('serv-name').value;
             const amt = parseFloat(document.getElementById('serv-amt').value);
             const day = parseInt(document.getElementById('serv-day').value);
-            if (name && amt && day) data.services.push({ name, amt, day, id: Date.now() });
-        }
-        else if (type === 'expenses') {
+            const card = document.getElementById('serv-card').value;
+            if (name && amt) data.services.push({ name, amt, day, card, id: Date.now() });
+        } else if (type === 'expenses') {
             const desc = document.getElementById('exp-desc').value;
             const amt = parseFloat(document.getElementById('exp-amt').value);
-            const cat = document.getElementById('exp-cat').value;
-            if (desc && amt) data.expenses.push({ desc, amt, cat, id: Date.now() });
+            const card = document.getElementById('exp-card').value;
+            if (desc && amt) data.expenses.push({ desc, amt, card, id: Date.now() });
+        } else if (type === 'savings') {
+            const amt = parseFloat(document.getElementById('sav-amt').value);
+            const op = document.getElementById('sav-type').value;
+            db.globalSavings += (op === 'in' ? amt : -amt);
         }
-
-        save();
-        render();
-        // Limpiar inputs
-        document.querySelectorAll('input').forEach(i => i.value = '');
-    }
-
-    function deleteItem(type, id) {
-        const data = getMonthData();
-        data[type] = data[type].filter(item => item.id !== id);
-        save();
-        render();
+        save(); render();
     }
 
     function togglePayment(id) {
         const data = getMonthData();
         data.payments[id] = !data.payments[id];
-        save();
-        render();
+        save(); render();
     }
 
-    // 5. GUARDAR Y RENDERIZAR (DIBUJAR)
-    function save() {
-        localStorage.setItem('finanzasToñoV2', JSON.stringify(db));
-    }
+    function save() { localStorage.setItem('finanzasProV25', JSON.stringify(db)); }
 
     function render() {
         const data = getMonthData();
-        const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-
-        // Totales
-        const totalInc = data.income.reduce((s, i) => s + i.amt, 0);
-        const totalServ = data.services.reduce((s, i) => s + i.amt, 0);
-        const totalExp = data.expenses.reduce((s, i) => s + i.amt, 0);
-        
-        document.getElementById('dash-inc').innerText = fmt.format(totalInc);
-        document.getElementById('dash-exp').innerText = fmt.format(totalServ + totalExp);
-        document.getElementById('dash-bal').innerText = fmt.format(totalInc - (totalServ + totalExp));
-
-        // Dibujar Tablas
-        renderTable('table-income', data.income, fmt, 'income');
-        renderTable('table-services', data.services, fmt, 'services', true);
-        renderTable('table-expenses', data.expenses, fmt, 'expenses');
-
-        // Dibujar Quincenas en Dashboard
-        renderQuincenas(data, fmt);
-    }
-
-    function renderTable(id, list, fmt, type, isService = false) {
-        const tbody = document.querySelector(`#${id} tbody`);
-        tbody.innerHTML = '';
-        list.forEach(item => {
-            tbody.innerHTML += `
-                <tr>
-                    <td>${item.desc || item.name}</td>
-                    ${isService ? `<td>${fmt.format(item.amt)}</td><td>Día ${item.day}</td><td>Q${item.day <= 14 ? 1 : 2}</td>` : `<td>${fmt.format(item.amt)}</td>`}
-                    <td><button onclick="deleteItem('${type}', ${item.id})" style="border:none; color:var(--danger); background:none; cursor:pointer;">✖</button></td>
-                </tr>
-            `;
+        // Cargar dropdowns de tarjetas
+        const cardSelectors = ['serv-card', 'exp-card'];
+        cardSelectors.forEach(sId => {
+            const s = document.getElementById(sId);
+            s.innerHTML = '<option value="efectivo">💵 Efectivo</option>';
+            db.cards.forEach(c => s.innerHTML += `<option value="${c.digits}">💳 ${c.name} (*${c.digits})</option>`);
         });
+
+        // Dashboard
+        const totalServ = data.services.reduce((acc, s) => acc + s.amt, 0);
+        const totalExp = data.expenses.reduce((acc, e) => acc + e.amt, 0);
+        document.getElementById('dash-bal').innerText = fmt.format(totalServ + totalExp);
+        document.getElementById('dash-sav').innerText = fmt.format(db.globalSavings);
+
+        // Barra progreso quincena
+        const totalItems = data.services.length;
+        const paidItems = data.services.filter(s => data.payments[s.id]).length;
+        const percent = totalItems === 0 ? 0 : Math.round((paidItems / totalItems) * 100);
+        document.getElementById('progress-bar').style.width = percent + "%";
+        document.getElementById('progress-text').innerText = `${percent}% de tus pagos fijos completados`;
+
+        // Listas
+        renderPayments(data);
+        renderSimpleList('services-list', data.services, true);
+        renderSimpleList('expenses-list', data.expenses, false);
+        renderCards();
     }
 
-    function renderQuincenas(data, fmt) {
-        const q1 = document.getElementById('q1-list');
-        const q2 = document.getElementById('q2-list');
-        q1.innerHTML = ''; q2.innerHTML = '';
-
+    function renderPayments(data) {
+        const list = document.getElementById('q-list');
+        list.innerHTML = '';
         data.services.sort((a,b) => a.day - b.day).forEach(s => {
-            const isPaid = data.payments[s.id];
-            const html = `
-                <div class="payment-item ${isPaid ? 'paid' : ''}">
-                    <input type="checkbox" ${isPaid ? 'checked' : ''} onclick="togglePayment(${s.id})">
-                    <span>${s.name} (Día ${s.day})</span>
-                    <span style="margin-left:auto; font-weight:bold;">${fmt.format(s.amt)}</span>
+            const paid = data.payments[s.id];
+            list.innerHTML += `
+                <div style="display:flex; align-items:center; padding: 10px 0; border-bottom: 1px solid #eee;">
+                    <button onclick="togglePayment(${s.id})" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">${paid ? '✅' : '⬜'}</button>
+                    <div style="margin-left:10px">
+                        <div style="${paid ? 'text-decoration:line-through; color:#888' : 'font-weight:bold'}">${s.name}</div>
+                        <div style="font-size:0.7rem; color:#888">Día ${s.day} • Card: *${s.card}</div>
+                    </div>
+                    <div style="margin-left:auto; font-weight:bold;">${fmt.format(s.amt)}</div>
                 </div>
             `;
-            if (s.day <= 14) q1.innerHTML += html;
-            else q2.innerHTML += html;
         });
     }
 
-    // 6. MANEJO DE PESTAÑAS
-    function setupTabs() {
-        const btns = document.querySelectorAll('.tab-btn');
-        btns.forEach(btn => {
-            btn.onclick = () => {
-                btns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const target = btn.getAttribute('data-target');
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                document.getElementById(target).classList.add('active');
-            };
+    function renderSimpleList(id, arr, isServ) {
+        const el = document.getElementById(id);
+        el.innerHTML = '';
+        arr.forEach(item => {
+            el.innerHTML += `<div style="padding:8px; border-bottom:1px solid #eee; font-size:0.9rem;">
+                ${isServ ? `<b>Día ${item.day}</b> - ` : ''} ${item.name || item.desc} : <b>${fmt.format(item.amt)}</b> 
+                <span style="font-size:0.7rem; color:var(--primary)">(*${item.card})</span>
+            </div>`;
+        });
+    }
+
+    function renderCards() {
+        const el = document.getElementById('cards-list');
+        el.innerHTML = '';
+        db.cards.forEach(c => {
+            el.innerHTML += `<div style="padding:10px; background:#f9f9f9; border-radius:8px; margin-top:5px;">💳 ${c.name} - Finaliza en: <b>${c.digits}</b></div>`;
         });
     }
 </script>
-
 </body>
 </html>
