@@ -3,204 +3,248 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>🔐 Finanzas Pro V2.5 - Toño</title>
+    <title>💰 Finanzas Pro V2.6</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <style>
         :root {
-            --primary: #20A39E;      /* Verde Agua */
-            --warning: #FFBA49;      /* Dorado */
-            --danger: #EF5B5B;       /* Coral */
-            --text-dark: #23001E;    /* Violeta */
-            --bg-light: #F6F7FB;
-            --surface: #FFFFFF;
+            --purple: #6c2bd9; --purple2: #7c3aed; --purple3: #5b21b6;
+            --green: #20A39E; --orange: #FFBA49; --red: #EF5B5B;
+            --bg-gradient: linear-gradient(135deg, #667eea, #764ba2);
+            --surface: #ffffff; --border: #e5e7eb; --text: #111827;
         }
 
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-dark); margin: 0; padding-bottom: 50px; }
+        body { margin: 0; background: var(--bg-gradient) fixed; min-height: 100vh; color: var(--text); }
 
-        /* PANTALLA DE BLOQUEO (PIN) */
-        #pin-screen {
+        /* PANTALLA DE PIN (SEGURIDAD) */
+        #pin-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--primary); z-index: 1000;
+            background: var(--purple3); z-index: 2000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: white; transition: 0.5s;
         }
-        .pin-input {
-            font-size: 2rem; text-align: center; width: 150px; border: none;
-            border-radius: 10px; padding: 10px; margin-top: 20px; letter-spacing: 10px;
-        }
+        .pin-box { background: white; padding: 30px; border-radius: 18px; color: var(--text); text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .pin-input { font-size: 2rem; text-align: center; width: 140px; border: 2px solid var(--purple); border-radius: 10px; padding: 10px; letter-spacing: 8px; }
 
-        /* HEADER & NAV */
-        header { background: var(--primary); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; }
-        nav { background: var(--surface); display: flex; overflow-x: auto; padding: 10px; gap: 10px; border-bottom: 1px solid #ddd; }
-        .tab-btn { padding: 8px 15px; border: none; background: none; border-radius: 15px; cursor: pointer; white-space: nowrap; color: #888; font-weight: 600; }
-        .tab-btn.active { background: var(--primary); color: white; }
+        /* CONTENEDOR PRINCIPAL (ESTILO ORIGINAL) */
+        .wrap { max-width: 1100px; margin: 20px auto; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 18px 60px rgba(0,0,0,0.25); display: none; }
 
-        /* DASHBOARD VISUALS */
-        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
-        .grid-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
-        .tile { background: var(--surface); padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .tile-value { font-size: 1.4rem; font-weight: 800; margin-top: 5px; }
+        /* HEADER */
+        header { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: linear-gradient(135deg, var(--purple), var(--purple2)); color: #fff; }
+        .brand { font-weight: 800; font-size: 1.2rem; }
+        .ctrls { display: flex; gap: 10px; align-items: center; }
+        .pill { padding: 8px 12px; border-radius: 20px; border: none; font-weight: 600; background: #fff; cursor: pointer; }
 
-        /* BADGES (ESTADOS) */
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
-        .badge-pending { background: #ffebeb; color: var(--danger); }
-        .badge-paid { background: #e0f7f6; color: var(--primary); }
+        /* NAVEGACIÓN (TABS) */
+        nav { display: flex; background: var(--purple3); overflow-x: auto; }
+        nav button { border: 0; background: transparent; color: #fff; padding: 14px 20px; cursor: pointer; font-weight: 600; opacity: 0.7; border-bottom: 3px solid transparent; transition: 0.3s; }
+        nav button.active { opacity: 1; border-bottom-color: var(--orange); background: rgba(255,255,255,0.1); }
 
-        /* PROGRESS BAR */
-        .progress-container { background: #eee; border-radius: 10px; height: 10px; margin: 10px 0; overflow: hidden; }
-        .progress-bar { background: var(--primary); height: 100%; transition: 0.5s; }
+        /* MAIN CONTENT */
+        main { padding: 20px; }
+        .page { display: none; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* FORMS */
-        .card { background: var(--surface); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 15px; }
-        input, select, button { padding: 10px; border-radius: 8px; border: 1px solid #ddd; }
-        .btn-add { background: var(--primary); color: white; border: none; cursor: pointer; font-weight: bold; }
+        /* TILES (RESUMEN) */
+        .grid { display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 20px; }
+        .tile { background: #fff; border-radius: 12px; padding: 18px; border-left: 5px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .tile.income { border-color: var(--green); }
+        .tile.fixed { border-color: var(--red); }
+        .tile.var { border-color: var(--orange); }
+        .tile.balance { border-color: var(--purple); }
+        .tile-val { font-size: 1.5rem; font-weight: 800; margin-top: 5px; }
 
-        .hidden { display: none !important; }
+        /* CARDS & FORMS */
+        .card { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .form-row { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 15px; }
+        input, select { padding: 10px; border: 1.5px solid var(--border); border-radius: 10px; width: 100%; }
+        .btn { background: var(--purple); color: white; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: 700; }
+        .btn:hover { opacity: 0.9; }
+
+        /* TABLAS */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { text-align: left; padding: 12px; background: #f9fafb; border-bottom: 2px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); }
+
+        /* ESTADOS DE PAGO */
+        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; }
+        .pending { background: #fff1f1; color: var(--red); }
+        .paid { background: #e6fffa; color: var(--green); text-decoration: line-through; opacity: 0.7; }
+        
+        .progress-box { background: #eee; border-radius: 10px; height: 8px; margin: 10px 0; overflow: hidden; }
+        .progress-bar { background: var(--green); height: 100%; transition: 0.5s; }
+
+        @media (max-width: 768px) { .wrap { margin: 0; border-radius: 0; } .form-row { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-<div id="pin-screen">
-    <h2 id="pin-msg">🔒 Introduce tu PIN</h2>
-    <input type="password" id="pin-entry" class="pin-input" maxlength="4" inputmode="numeric">
-    <p id="pin-hint" style="margin-top: 10px; font-size: 0.8rem;"></p>
+<div id="pin-overlay">
+    <div class="pin-box">
+        <h2 id="pin-title">🔒 Finanzas Pro</h2>
+        <p id="pin-desc">Introduce tu PIN de acceso</p>
+        <input type="password" id="pin-input" class="pin-input" maxlength="4" inputmode="numeric" autofocus>
+    </div>
 </div>
 
-<div id="app-content" class="hidden">
+<div class="wrap" id="main-app">
     <header>
-        <div class="brand">📊 Finanzas Pro <span style="font-size: 0.7rem;">V2.5</span></div>
-        <select id="monthSel" style="width: auto;"></select>
+        <div class="brand">💰 Finanzas Pro <span style="font-size: 0.7rem; opacity: 0.7;">v2.6</span></div>
+        <div class="ctrls">
+            <select id="yearSel" class="pill"></select>
+            <select id="monthSel" class="pill"></select>
+            <button id="btnReset" class="pill" style="background: var(--red); color: white;">🗑️ Reiniciar</button>
+        </div>
     </header>
 
-    <nav>
-        <button class="tab-btn active" data-target="dashboard">📊 Resumen</button>
-        <button class="tab-btn" data-target="servicios">🏠 Fijos/Digital</button>
-        <button class="tab-btn" data-target="gastos">🛒 Hormiga/Var</button>
-        <button class="tab-btn" data-target="tarjetas">💳 Mis Tarjetas</button>
-        <button class="tab-btn" data-target="ahorros">💜 Ahorro</button>
+    <nav id="nav-tabs">
+        <button class="tab-btn active" data-page="dashboard">📊 Dashboard</button>
+        <button class="tab-btn" data-page="ingresos">💵 Ingresos</button>
+        <button class="tab-btn" data-page="servicios">🏠 Servicios</button>
+        <button class="tab-btn" data-page="tarjetas">💳 Tarjetas</button>
+        <button class="tab-btn" data-page="gastos">🛒 Gastos</button>
+        <button class="tab-btn" data-page="ahorros">💜 Ahorros</button>
     </nav>
 
-    <div class="container">
+    <main>
         <section id="dashboard" class="page active">
-            <div class="grid-summary">
-                <div class="tile">
-                    <div style="font-size: 0.8rem; color: #888;">BALANCE DEL MES</div>
-                    <div id="dash-bal" class="tile-value">$0.00</div>
-                    <div class="progress-container"><div id="progress-bar" class="progress-bar" style="width: 0%"></div></div>
-                    <div id="progress-text" style="font-size: 0.7rem; color: #888;">0% de pagos completados</div>
-                </div>
-                <div class="tile"><div style="font-size: 0.8rem; color: #888;">AHORRO ACUMULADO</div><div id="dash-sav" class="tile-value">$0.00</div></div>
+            <div class="grid">
+                <div class="tile income"><div>Ingresos</div><div id="t-inc" class="tile-val">$0.00</div></div>
+                <div class="tile fixed"><div>Gastos Fijos</div><div id="t-fix" class="tile-val">$0.00</div></div>
+                <div class="tile var"><div>Gastos Var.</div><div id="t-var" class="tile-val">$0.00</div></div>
+                <div class="tile balance"><div>Balance</div><div id="t-bal" class="tile-val">$0.00</div></div>
             </div>
 
-            <div class="card" style="margin-top: 20px;">
-                <h3>📅 Pagos de la Quincena</h3>
+            <div class="card">
+                <h3>📅 Control de Pagos Quincenales</h3>
+                <div class="progress-box"><div id="p-bar" class="progress-bar" style="width: 0%"></div></div>
+                <p id="p-text" style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">0% completado</p>
+                
                 <div id="q-list"></div>
             </div>
         </section>
 
-        <section id="servicios" class="page hidden">
+        <section id="ingresos" class="page">
             <div class="card">
-                <h3>🏠 Servicios y Suscripciones Digitales</h3>
+                <h3>Nuevo Ingreso</h3>
                 <div class="form-row">
-                    <input type="text" id="serv-name" placeholder="Nombre (Netflix, Renta...)">
-                    <input type="number" id="serv-amt" placeholder="Monto">
-                    <input type="number" id="serv-day" placeholder="Día pago" min="1" max="31">
-                    <select id="serv-card"></select>
-                    <button class="btn-add" onclick="addItem('services')">Añadir</button>
+                    <input type="text" id="in-desc" placeholder="Descripción (Sueldo)">
+                    <input type="number" id="in-amt" placeholder="Monto">
+                    <button class="btn" onclick="addItem('income')">Agregar</button>
                 </div>
-                <div id="services-list"></div>
+                <div class="table-container">
+                    <table id="tab-income"><thead><tr><th>Descripción</th><th>Monto</th><th></th></tr></thead><tbody></tbody></table>
+                </div>
             </div>
         </section>
 
-        <section id="gastos" class="page hidden">
+        <section id="servicios" class="page">
+            <div class="card">
+                <h3>Gastos Fijos y Digitales</h3>
+                <div class="form-row">
+                    <input type="text" id="sv-name" placeholder="Servicio (Renta, Luz)">
+                    <input type="number" id="sv-amt" placeholder="Monto">
+                    <input type="number" id="sv-day" placeholder="Día pago" min="1" max="31">
+                    <select id="sv-card"></select>
+                    <button class="btn" onclick="addItem('services')">Agregar</button>
+                </div>
+                <div class="table-container">
+                    <table id="tab-services"><thead><tr><th>Nombre</th><th>Monto</th><th>Día</th><th>Tarjeta</th><th></th></tr></thead><tbody></tbody></table>
+                </div>
+            </div>
+        </section>
+
+        <section id="tarjetas" class="page">
+            <div class="card">
+                <h3>Mis Tarjetas de Crédito</h3>
+                <div class="form-row">
+                    <input type="text" id="c-name" placeholder="Banco / Alias">
+                    <input type="text" id="c-dig" placeholder="Últimos 4 dígitos" maxlength="4">
+                    <button class="btn" onclick="addItem('cards')">Guardar</button>
+                </div>
+                <div class="table-container">
+                    <table id="tab-cards"><thead><tr><th>Nombre</th><th>Dígitos</th><th></th></tr></thead><tbody></tbody></table>
+                </div>
+            </div>
+        </section>
+
+        <section id="gastos" class="page">
             <div class="card">
                 <h3>🛒 Gastos Hormiga y Variables</h3>
                 <div class="form-row">
-                    <input type="text" id="exp-desc" placeholder="¿Qué compraste?">
-                    <input type="number" id="exp-amt" placeholder="Monto">
-                    <select id="exp-card"></select>
-                    <button class="btn-add" onclick="addItem('expenses')">Registrar</button>
+                    <input type="text" id="ex-desc" placeholder="Gasto (Café, Super)">
+                    <input type="number" id="ex-amt" placeholder="Monto">
+                    <select id="ex-card"></select>
+                    <button class="btn" onclick="addItem('expenses')">Registrar</button>
                 </div>
-                <div id="expenses-list"></div>
+                <div class="table-container">
+                    <table id="tab-expenses"><thead><tr><th>Descripción</th><th>Monto</th><th>Tarjeta</th><th></th></tr></thead><tbody></tbody></table>
+                </div>
             </div>
         </section>
 
-        <section id="tarjetas" class="page hidden">
+        <section id="ahorros" class="page">
             <div class="card">
-                <h3>💳 Mis Tarjetas</h3>
+                <h3>💜 Mi Ahorro (Cochinito)</h3>
                 <div class="form-row">
-                    <input type="text" id="card-name" placeholder="Nombre (BBVA, AMEX)">
-                    <input type="text" id="card-digits" placeholder="Últimos 4 dígitos" maxlength="4">
-                    <button class="btn-add" onclick="addItem('cards')">Guardar Tarjeta</button>
+                    <input type="number" id="s-amt" placeholder="Monto">
+                    <select id="s-type"><option value="in">➕ Depósito</option><option value="out">➖ Retiro</option></select>
+                    <button class="btn" onclick="addItem('savings')">Actualizar</button>
                 </div>
-                <div id="cards-list"></div>
+                <div id="sav-total" style="font-size: 2rem; font-weight: 800; text-align: center; margin-top: 20px;">$0.00</div>
             </div>
         </section>
-
-        <section id="ahorros" class="page hidden">
-            <div class="card">
-                <h3>💜 Mi Cochinito (Ahorro Real)</h3>
-                <div class="form-row">
-                    <input type="number" id="sav-amt" placeholder="Monto">
-                    <select id="sav-type"><option value="in">➕ Depósito</option><option value="out">➖ Retiro</option></select>
-                    <button class="btn-add" onclick="addItem('savings')">Actualizar</button>
-                </div>
-                <div id="savings-history"></div>
-            </div>
-        </section>
-    </div>
+    </main>
 </div>
 
 <script>
-    // --- MODELO DE DATOS ---
-    let db = JSON.parse(localStorage.getItem('finanzasProV25')) || {
-        pin: null,
-        cards: [],
-        months: {},
-        globalSavings: 0
+    /** LÓGICA DE DATOS Y PERSISTENCIA **/
+    let db = JSON.parse(localStorage.getItem('finanzasToñoV26')) || {
+        pin: null, cards: [], months: {}, globalSavings: 0
     };
 
-    let currentM = new Date().getMonth();
+    let curY = new Date().getFullYear();
+    let curM = new Date().getMonth();
     const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
-    // --- SEGURIDAD (PIN) ---
-    const pinEntry = document.getElementById('pin-entry');
+    // --- SEGURIDAD PIN ---
+    const pinOverlay = document.getElementById('pin-overlay');
+    const pinIn = document.getElementById('pin-input');
+
     if (!db.pin) {
-        document.getElementById('pin-msg').innerText = "🆕 Crea tu PIN de 4 dígitos";
-        document.getElementById('pin-hint').innerText = "Este PIN protegerá tus datos en este navegador.";
+        document.getElementById('pin-title').innerText = "🆕 Crea tu PIN";
+        document.getElementById('pin-desc').innerText = "Elige 4 dígitos para tu seguridad";
     }
 
-    pinEntry.addEventListener('input', (e) => {
+    pinIn.addEventListener('input', (e) => {
         if (e.target.value.length === 4) {
             if (!db.pin) {
-                db.pin = e.target.value;
-                save();
-                unlock();
+                db.pin = e.target.value; save(); unlock();
             } else if (e.target.value === db.pin) {
                 unlock();
             } else {
-                alert("PIN Incorrecto");
-                e.target.value = "";
+                alert("PIN Incorrecto"); e.target.value = "";
             }
         }
     });
 
     function unlock() {
-        document.getElementById('pin-screen').style.transform = "translateY(-100%)";
-        document.getElementById('app-content').classList.remove('hidden');
-        init();
+        pinOverlay.style.opacity = "0";
+        setTimeout(() => { pinOverlay.style.display = "none"; document.getElementById('main-app').style.display = "block"; init(); }, 500);
     }
 
-    // --- LÓGICA CORE ---
+    // --- INICIALIZACIÓN ---
     function init() {
-        const mSel = document.getElementById('monthSel');
-        ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"].forEach((m, i) => {
-            mSel.innerHTML += `<option value="${i}" ${i === currentM ? 'selected' : ''}>${m}</option>`;
-        });
-        mSel.onchange = (e) => { currentM = parseInt(e.target.value); render(); };
+        const yS = document.getElementById('yearSel'), mS = document.getElementById('monthSel');
+        for(let i=2024; i<=2030; i++) yS.innerHTML += `<option value="${i}" ${i==curY?'selected':''}>${i}</option>`;
+        ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"].forEach((m,i)=>mS.innerHTML += `<option value="${i}" ${i==curM?'selected':''}>${m}</option>`);
+        
+        yS.onchange = e => { curY = e.target.value; render(); };
+        mS.onchange = e => { curM = e.target.value; render(); };
+        
+        document.getElementById('btnReset').onclick = () => { if(confirm('¿Borrar todo?')) { localStorage.removeItem('finanzasToñoV26'); location.reload(); }};
         setupTabs();
         render();
     }
@@ -210,114 +254,114 @@
             btn.onclick = () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-                document.getElementById(btn.dataset.target).classList.remove('hidden');
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById(btn.dataset.page).classList.add('active');
             };
         });
     }
 
     function getMonthData() {
-        if (!db.months[currentM]) db.months[currentM] = { services: [], expenses: [], payments: {} };
-        return db.months[currentM];
+        const key = `${curY}-${curM}`;
+        if (!db.months[key]) db.months[key] = { income: [], services: [], expenses: [], payments: {} };
+        return db.months[key];
     }
 
+    // --- ACCIONES ---
     function addItem(type) {
         const data = getMonthData();
-        if (type === 'cards') {
-            const name = document.getElementById('card-name').value;
-            const digits = document.getElementById('card-digits').value;
-            if (name && digits) db.cards.push({ name, digits, id: Date.now() });
+        if (type === 'income') {
+            const d = document.getElementById('in-desc').value, a = parseFloat(document.getElementById('in-amt').value);
+            if(d && a) data.income.push({id: Date.now(), d, a});
         } else if (type === 'services') {
-            const name = document.getElementById('serv-name').value;
-            const amt = parseFloat(document.getElementById('serv-amt').value);
-            const day = parseInt(document.getElementById('serv-day').value);
-            const card = document.getElementById('serv-card').value;
-            if (name && amt) data.services.push({ name, amt, day, card, id: Date.now() });
+            const n = document.getElementById('sv-name').value, a = parseFloat(document.getElementById('sv-amt').value), dy = parseInt(document.getElementById('sv-day').value), c = document.getElementById('sv-card').value;
+            if(n && a && dy) data.services.push({id: Date.now(), n, a, dy, c});
+        } else if (type === 'cards') {
+            const n = document.getElementById('c-name').value, d = document.getElementById('c-dig').value;
+            if(n && d) db.cards.push({id: Date.now(), n, d});
         } else if (type === 'expenses') {
-            const desc = document.getElementById('exp-desc').value;
-            const amt = parseFloat(document.getElementById('exp-amt').value);
-            const card = document.getElementById('exp-card').value;
-            if (desc && amt) data.expenses.push({ desc, amt, card, id: Date.now() });
+            const d = document.getElementById('ex-desc').value, a = parseFloat(document.getElementById('ex-amt').value), c = document.getElementById('ex-card').value;
+            if(d && a) data.expenses.push({id: Date.now(), d, a, c});
         } else if (type === 'savings') {
-            const amt = parseFloat(document.getElementById('sav-amt').value);
-            const op = document.getElementById('sav-type').value;
-            db.globalSavings += (op === 'in' ? amt : -amt);
+            const a = parseFloat(document.getElementById('s-amt').value), t = document.getElementById('s-type').value;
+            if(a) db.globalSavings += (t == 'in' ? a : -a);
         }
         save(); render();
+        document.querySelectorAll('input').forEach(i => i.value = '');
     }
 
-    function togglePayment(id) {
-        const data = getMonthData();
-        data.payments[id] = !data.payments[id];
+    function delItem(type, id) {
+        if (type === 'cards') db.cards = db.cards.filter(x => x.id !== id);
+        else { const data = getMonthData(); data[type] = data[type].filter(x => x.id !== id); }
         save(); render();
     }
 
-    function save() { localStorage.setItem('finanzasProV25', JSON.stringify(db)); }
+    function togglePay(id) { const data = getMonthData(); data.payments[id] = !data.payments[id]; save(); render(); }
 
+    function save() { localStorage.setItem('finanzasToñoV26', JSON.stringify(db)); }
+
+    // --- RENDERIZADO ---
     function render() {
         const data = getMonthData();
-        // Cargar dropdowns de tarjetas
-        const cardSelectors = ['serv-card', 'exp-card'];
-        cardSelectors.forEach(sId => {
+        
+        // Actualizar Selectores de Tarjetas
+        const selectors = ['sv-card', 'ex-card'];
+        selectors.forEach(sId => {
             const s = document.getElementById(sId);
-            s.innerHTML = '<option value="efectivo">💵 Efectivo</option>';
-            db.cards.forEach(c => s.innerHTML += `<option value="${c.digits}">💳 ${c.name} (*${c.digits})</option>`);
+            s.innerHTML = '<option value="Efectivo">💵 Efectivo</option>';
+            db.cards.forEach(c => s.innerHTML += `<option value="${c.n} (*${c.d})">💳 ${c.n}</option>`);
         });
 
-        // Dashboard
-        const totalServ = data.services.reduce((acc, s) => acc + s.amt, 0);
-        const totalExp = data.expenses.reduce((acc, e) => acc + e.amt, 0);
-        document.getElementById('dash-bal').innerText = fmt.format(totalServ + totalExp);
-        document.getElementById('dash-sav').innerText = fmt.format(db.globalSavings);
+        // Totales Dashboard
+        const totalIn = data.income.reduce((s,x)=>s+x.a, 0);
+        const totalFix = data.services.reduce((s,x)=>s+x.a, 0);
+        const totalVar = data.expenses.reduce((s,x)=>s+x.a, 0);
+        
+        document.getElementById('t-inc').innerText = fmt.format(totalIn);
+        document.getElementById('t-fix').innerText = fmt.format(totalFix);
+        document.getElementById('t-var').innerText = fmt.format(totalVar);
+        document.getElementById('t-bal').innerText = fmt.format(totalIn - (totalFix + totalVar));
+        document.getElementById('sav-total').innerText = fmt.format(db.globalSavings);
 
-        // Barra progreso quincena
-        const totalItems = data.services.length;
-        const paidItems = data.services.filter(s => data.payments[s.id]).length;
-        const percent = totalItems === 0 ? 0 : Math.round((paidItems / totalItems) * 100);
-        document.getElementById('progress-bar').style.width = percent + "%";
-        document.getElementById('progress-text').innerText = `${percent}% de tus pagos fijos completados`;
+        // Barra Progreso
+        const totalP = data.services.length;
+        const paidP = data.services.filter(x => data.payments[x.id]).length;
+        const perc = totalP ? Math.round((paidP/totalP)*100) : 0;
+        document.getElementById('p-bar').style.width = perc + "%";
+        document.getElementById('p-text').innerText = `${perc}% de pagos fijos realizados`;
 
-        // Listas
-        renderPayments(data);
-        renderSimpleList('services-list', data.services, true);
-        renderSimpleList('expenses-list', data.expenses, false);
-        renderCards();
-    }
-
-    function renderPayments(data) {
-        const list = document.getElementById('q-list');
-        list.innerHTML = '';
-        data.services.sort((a,b) => a.day - b.day).forEach(s => {
-            const paid = data.payments[s.id];
-            list.innerHTML += `
-                <div style="display:flex; align-items:center; padding: 10px 0; border-bottom: 1px solid #eee;">
-                    <button onclick="togglePayment(${s.id})" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">${paid ? '✅' : '⬜'}</button>
-                    <div style="margin-left:10px">
-                        <div style="${paid ? 'text-decoration:line-through; color:#888' : 'font-weight:bold'}">${s.name}</div>
-                        <div style="font-size:0.7rem; color:#888">Día ${s.day} • Card: *${s.card}</div>
+        // Lista de Pagos Quincenales
+        const qList = document.getElementById('q-list'); qList.innerHTML = '';
+        data.services.sort((a,b)=>a.dy - b.dy).forEach(s => {
+            const isP = data.payments[s.id];
+            qList.innerHTML += `
+                <div style="display:flex; align-items:center; padding: 12px; border-bottom: 1px solid #eee; background: ${isP?'#f9f9f9':'#fff'}">
+                    <input type="checkbox" ${isP?'checked':''} onclick="togglePay(${s.id})" style="width:20px; height:20px;">
+                    <div style="margin-left:15px">
+                        <div class="${isP?'paid':''}" style="font-weight:700">${s.n}</div>
+                        <div style="font-size:0.7rem; color:#888">Día ${s.dy} • ${s.c}</div>
                     </div>
-                    <div style="margin-left:auto; font-weight:bold;">${fmt.format(s.amt)}</div>
+                    <div style="margin-left:auto; font-weight:800; color:var(--purple3)">${fmt.format(s.a)}</div>
                 </div>
             `;
         });
+
+        // Tablas
+        fillTable('tab-income', data.income, 'income');
+        fillTable('tab-services', data.services, 'services', true);
+        fillTable('tab-cards', db.cards, 'cards', false, true);
+        fillTable('tab-expenses', data.expenses, 'expenses', false, false, true);
     }
 
-    function renderSimpleList(id, arr, isServ) {
-        const el = document.getElementById(id);
-        el.innerHTML = '';
-        arr.forEach(item => {
-            el.innerHTML += `<div style="padding:8px; border-bottom:1px solid #eee; font-size:0.9rem;">
-                ${isServ ? `<b>Día ${item.day}</b> - ` : ''} ${item.name || item.desc} : <b>${fmt.format(item.amt)}</b> 
-                <span style="font-size:0.7rem; color:var(--primary)">(*${item.card})</span>
-            </div>`;
-        });
-    }
-
-    function renderCards() {
-        const el = document.getElementById('cards-list');
-        el.innerHTML = '';
-        db.cards.forEach(c => {
-            el.innerHTML += `<div style="padding:10px; background:#f9f9f9; border-radius:8px; margin-top:5px;">💳 ${c.name} - Finaliza en: <b>${c.digits}</b></div>`;
+    function fillTable(id, list, type, isS=false, isC=false, isE=false) {
+        const tb = document.querySelector(`#${id} tbody`); tb.innerHTML = '';
+        list.forEach(x => {
+            tb.innerHTML += `<tr>
+                <td>${x.d || x.n}</td>
+                <td>${fmt.format(x.a || 0)}${isC ? x.d : ''}</td>
+                ${isS ? `<td>${x.dy}</td><td>${x.c}</td>` : ''}
+                ${isE ? `<td>${x.c}</td>` : ''}
+                <td><button onclick="delItem('${type}', ${x.id})" style="border:none; background:none; color:var(--red); cursor:pointer;">✖</button></td>
+            </tr>`;
         });
     }
 </script>
