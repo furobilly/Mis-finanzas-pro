@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>💰 Finanzas Pro V2.6</title>
+    <title>💰 Finanzas Pro V2.7 - Toño</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,235 +16,228 @@
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { margin: 0; background: var(--bg-gradient) fixed; min-height: 100vh; color: var(--text); }
 
-        /* PANTALLA DE PIN (SEGURIDAD) */
-        #pin-overlay {
+        /* PANTALLA DE ACCESO PROFESIONAL */
+        #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--purple3); z-index: 2000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; transition: 0.5s;
+            color: white; text-align: center;
         }
-        .pin-box { background: white; padding: 30px; border-radius: 18px; color: var(--text); text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .pin-input { font-size: 2rem; text-align: center; width: 140px; border: 2px solid var(--purple); border-radius: 10px; padding: 10px; letter-spacing: 8px; }
+        .login-box { background: white; padding: 30px; border-radius: 18px; color: var(--text); box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 320px; }
+        .login-input { font-size: 1.2rem; text-align: center; width: 100%; border: 2px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 15px; }
 
-        /* CONTENEDOR PRINCIPAL (ESTILO ORIGINAL) */
+        /* ESTRUCTURA CENTRADA */
         .wrap { max-width: 1100px; margin: 20px auto; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 18px 60px rgba(0,0,0,0.25); display: none; }
 
-        /* HEADER */
         header { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: linear-gradient(135deg, var(--purple), var(--purple2)); color: #fff; }
-        .brand { font-weight: 800; font-size: 1.2rem; }
-        .ctrls { display: flex; gap: 10px; align-items: center; }
-        .pill { padding: 8px 12px; border-radius: 20px; border: none; font-weight: 600; background: #fff; cursor: pointer; }
+        .user-info { display: flex; align-items: center; gap: 10px; cursor: pointer; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; }
 
-        /* NAVEGACIÓN (TABS) */
-        nav { display: flex; background: var(--purple3); overflow-x: auto; }
-        nav button { border: 0; background: transparent; color: #fff; padding: 14px 20px; cursor: pointer; font-weight: 600; opacity: 0.7; border-bottom: 3px solid transparent; transition: 0.3s; }
+        nav { display: flex; background: var(--purple3); overflow-x: auto; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        nav button { border: 0; background: transparent; color: #fff; padding: 14px 18px; cursor: pointer; font-weight: 600; opacity: 0.7; border-bottom: 3px solid transparent; white-space: nowrap; }
         nav button.active { opacity: 1; border-bottom-color: var(--orange); background: rgba(255,255,255,0.1); }
 
-        /* MAIN CONTENT */
         main { padding: 20px; }
-        .page { display: none; animation: fadeIn 0.3s; }
+        .page { display: none; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* TILES (RESUMEN) */
+        /* DASHBOARD TILES */
         .grid { display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 20px; }
-        .tile { background: #fff; border-radius: 12px; padding: 18px; border-left: 5px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .tile { background: #fff; border-radius: 15px; padding: 20px; border-left: 6px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .tile.income { border-color: var(--green); }
         .tile.fixed { border-color: var(--red); }
-        .tile.var { border-color: var(--orange); }
         .tile.balance { border-color: var(--purple); }
-        .tile-val { font-size: 1.5rem; font-weight: 800; margin-top: 5px; }
+        .tile-val { font-size: 1.6rem; font-weight: 800; margin-top: 5px; }
 
-        /* CARDS & FORMS */
-        .card { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .form-row { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 15px; }
-        input, select { padding: 10px; border: 1.5px solid var(--border); border-radius: 10px; width: 100%; }
-        .btn { background: var(--purple); color: white; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: 700; }
-        .btn:hover { opacity: 0.9; }
-
-        /* TABLAS */
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th { text-align: left; padding: 12px; background: #f9fafb; border-bottom: 2px solid var(--border); }
-        td { padding: 12px; border-bottom: 1px solid var(--border); }
-
-        /* ESTADOS DE PAGO */
-        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; }
-        .pending { background: #fff1f1; color: var(--red); }
-        .paid { background: #e6fffa; color: var(--green); text-decoration: line-through; opacity: 0.7; }
+        /* QUINCENAS */
+        .q-container { background: #f9fafb; border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .q-header { color: var(--purple3); font-weight: 800; border-bottom: 2px solid #eee; padding-bottom: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; }
         
-        .progress-box { background: #eee; border-radius: 10px; height: 8px; margin: 10px 0; overflow: hidden; }
-        .progress-bar { background: var(--green); height: 100%; transition: 0.5s; }
+        .pay-item { display: flex; align-items: center; padding: 12px; background: #fff; border: 1px solid #eee; border-radius: 10px; margin-bottom: 8px; }
+        .pay-item.paid { opacity: 0.5; background: #f0f0f0; }
 
-        @media (max-width: 768px) { .wrap { margin: 0; border-radius: 0; } .form-row { grid-template-columns: 1fr; } }
+        /* FORMS */
+        .card { background: #fff; border-radius: 15px; padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .form-row { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin-bottom: 15px; }
+        input, select { padding: 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; }
+        .btn { background: var(--purple); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 12px; background: #f8f9fa; font-size: 0.8rem; text-transform: uppercase; color: #666; }
+        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+
+        .tag-digital { background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; }
     </style>
 </head>
 <body>
 
-<div id="pin-overlay">
-    <div class="pin-box">
-        <h2 id="pin-title">🔒 Finanzas Pro</h2>
-        <p id="pin-desc">Introduce tu PIN de acceso</p>
-        <input type="password" id="pin-input" class="pin-input" maxlength="4" inputmode="numeric" autofocus>
+<div id="login-screen">
+    <div class="login-box">
+        <h2 id="login-title">Finanzas Pro</h2>
+        <input type="text" id="user-name" class="login-input" placeholder="Tu Nombre">
+        <input type="password" id="user-pin" class="login-input" placeholder="PIN (4 dígitos)" maxlength="4" inputmode="numeric">
+        <button class="btn" style="width: 100%" onclick="handleLogin()">Entrar</button>
     </div>
 </div>
 
-<div class="wrap" id="main-app">
+<div class="wrap" id="app">
     <header>
-        <div class="brand">💰 Finanzas Pro <span style="font-size: 0.7rem; opacity: 0.7;">v2.6</span></div>
-        <div class="ctrls">
-            <select id="yearSel" class="pill"></select>
-            <select id="monthSel" class="pill"></select>
-            <button id="btnReset" class="pill" style="background: var(--red); color: white;">🗑️ Reiniciar</button>
+        <div class="brand">💰 Finanzas Pro <span id="ver">v2.7</span></div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <select id="ySel" class="pill" style="padding: 5px 10px; border-radius: 20px;"></select>
+            <select id="mSel" class="pill" style="padding: 5px 10px; border-radius: 20px;"></select>
+            <div class="user-info" onclick="switchUser()">👤 <span id="active-user">Usuario</span></div>
         </div>
     </header>
 
-    <nav id="nav-tabs">
-        <button class="tab-btn active" data-page="dashboard">📊 Dashboard</button>
-        <button class="tab-btn" data-page="ingresos">💵 Ingresos</button>
-        <button class="tab-btn" data-page="servicios">🏠 Servicios</button>
-        <button class="tab-btn" data-page="tarjetas">💳 Tarjetas</button>
+    <nav>
+        <button class="tab-btn active" data-page="dash">📊 Dashboard</button>
+        <button class="tab-btn" data-page="inc">💵 Ingresos</button>
+        <button class="tab-btn" data-page="fix">🏠 Servicios/Digital</button>
+        <button class="tab-btn" data-page="cards">💳 Tarjetas</button>
         <button class="tab-btn" data-page="gastos">🛒 Gastos</button>
-        <button class="tab-btn" data-page="ahorros">💜 Ahorros</button>
+        <button class="tab-btn" data-page="sav">💜 Ahorros</button>
     </nav>
 
     <main>
-        <section id="dashboard" class="page active">
+        <section id="dash" class="page active">
             <div class="grid">
-                <div class="tile income"><div>Ingresos</div><div id="t-inc" class="tile-val">$0.00</div></div>
-                <div class="tile fixed"><div>Gastos Fijos</div><div id="t-fix" class="tile-val">$0.00</div></div>
-                <div class="tile var"><div>Gastos Var.</div><div id="t-var" class="tile-val">$0.00</div></div>
-                <div class="tile balance"><div>Balance</div><div id="t-bal" class="tile-val">$0.00</div></div>
+                <div class="tile income"><div>Ingresos</div><div id="d-inc" class="tile-val">$0.00</div></div>
+                <div class="tile fixed"><div>Egresos Fijos</div><div id="d-fix" class="tile-val">$0.00</div></div>
+                <div class="tile balance"><div>Disponible</div><div id="d-bal" class="tile-val">$0.00</div></div>
             </div>
 
             <div class="card">
-                <h3>📅 Control de Pagos Quincenales</h3>
-                <div class="progress-box"><div id="p-bar" class="progress-bar" style="width: 0%"></div></div>
-                <p id="p-text" style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">0% completado</p>
-                
-                <div id="q-list"></div>
+                <h3>📅 Próximos Pagos (Separados por Día)</h3>
+                <div class="q-container">
+                    <div class="q-header"><span>Quincena 1 (Día 1-14)</span><span id="q1-total">$0.00</span></div>
+                    <div id="q1-list"></div>
+                </div>
+                <div class="q-container">
+                    <div class="q-header"><span>Quincena 2 (Día 15-31)</span><span id="q2-total">$0.00</span></div>
+                    <div id="q2-list"></div>
+                </div>
             </div>
         </section>
 
-        <section id="ingresos" class="page">
+        <section id="inc" class="page">
             <div class="card">
                 <h3>Nuevo Ingreso</h3>
                 <div class="form-row">
-                    <input type="text" id="in-desc" placeholder="Descripción (Sueldo)">
-                    <input type="number" id="in-amt" placeholder="Monto">
-                    <button class="btn" onclick="addItem('income')">Agregar</button>
+                    <input type="date" id="i-date">
+                    <input type="text" id="i-desc" placeholder="Descripción">
+                    <input type="number" id="i-amt" placeholder="Monto">
+                    <button class="btn" onclick="add('inc')">Agregar</button>
                 </div>
-                <div class="table-container">
-                    <table id="tab-income"><thead><tr><th>Descripción</th><th>Monto</th><th></th></tr></thead><tbody></tbody></table>
-                </div>
+                <table><thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th><th></th></tr></thead><tbody id="t-inc"></tbody></table>
             </div>
         </section>
 
-        <section id="servicios" class="page">
+        <section id="fix" class="page">
             <div class="card">
-                <h3>Gastos Fijos y Digitales</h3>
+                <h3>Servicios / Cargos Recurrentes</h3>
                 <div class="form-row">
-                    <input type="text" id="sv-name" placeholder="Servicio (Renta, Luz)">
-                    <input type="number" id="sv-amt" placeholder="Monto">
-                    <input type="number" id="sv-day" placeholder="Día pago" min="1" max="31">
-                    <select id="sv-card"></select>
-                    <button class="btn" onclick="addItem('services')">Agregar</button>
+                    <input type="text" id="s-name" placeholder="Netflix, Luz, Renta">
+                    <input type="number" id="s-amt" placeholder="Monto">
+                    <input type="number" id="s-day" placeholder="Día (1-31)" min="1" max="31">
+                    <select id="s-freq">
+                        <option value="Mensual">Mensual</option>
+                        <option value="Bimestral">Bimestral</option>
+                        <option value="Anual">Anual</option>
+                    </select>
                 </div>
-                <div class="table-container">
-                    <table id="tab-services"><thead><tr><th>Nombre</th><th>Monto</th><th>Día</th><th>Tarjeta</th><th></th></tr></thead><tbody></tbody></table>
+                <div class="form-row">
+                    <select id="s-card-link"><option value="">💸 Efectivo/Débito</option></select>
+                    <label style="font-size: 0.8rem; display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="s-digital"> 🐜 Suscripción Digital
+                    </label>
+                    <button class="btn" onclick="add('serv')">Añadir Servicio</button>
                 </div>
+                <table><thead><tr><th>Servicio</th><th>Día</th><th>Pago</th><th>Frecuencia</th><th></th></tr></thead><tbody id="t-serv"></tbody></table>
             </div>
         </section>
 
-        <section id="tarjetas" class="page">
+        <section id="cards" class="page">
             <div class="card">
                 <h3>Mis Tarjetas de Crédito</h3>
                 <div class="form-row">
-                    <input type="text" id="c-name" placeholder="Banco / Alias">
-                    <input type="text" id="c-dig" placeholder="Últimos 4 dígitos" maxlength="4">
-                    <button class="btn" onclick="addItem('cards')">Guardar</button>
+                    <input type="text" id="c-name" placeholder="Banco / Nombre">
+                    <input type="text" id="c-dig" placeholder="Últimos 4" maxlength="4">
+                    <input type="number" id="c-limit" placeholder="Límite">
+                    <input type="number" id="c-pay" placeholder="Día Pago (1-31)">
+                    <button class="btn" onclick="add('card')">Guardar</button>
                 </div>
-                <div class="table-container">
-                    <table id="tab-cards"><thead><tr><th>Nombre</th><th>Dígitos</th><th></th></tr></thead><tbody></tbody></table>
-                </div>
+                <table><thead><tr><th>Tarjeta</th><th>Límite</th><th>Pago</th><th>Quincena</th><th></th></tr></thead><tbody id="t-card"></tbody></table>
             </div>
         </section>
 
         <section id="gastos" class="page">
             <div class="card">
-                <h3>🛒 Gastos Hormiga y Variables</h3>
+                <h3>🛒 Gastos Variables / Hormiga</h3>
                 <div class="form-row">
-                    <input type="text" id="ex-desc" placeholder="Gasto (Café, Super)">
-                    <input type="number" id="ex-amt" placeholder="Monto">
-                    <select id="ex-card"></select>
-                    <button class="btn" onclick="addItem('expenses')">Registrar</button>
+                    <input type="text" id="e-desc" placeholder="¿Qué compraste?">
+                    <input type="number" id="e-amt" placeholder="Monto">
+                    <select id="e-card-link"><option value="">💸 Efectivo</option></select>
+                    <button class="btn" onclick="add('exp')">Registrar</button>
                 </div>
-                <div class="table-container">
-                    <table id="tab-expenses"><thead><tr><th>Descripción</th><th>Monto</th><th>Tarjeta</th><th></th></tr></thead><tbody></tbody></table>
-                </div>
+                <table><thead><tr><th>Descripción</th><th>Pago Con</th><th>Monto</th><th></th></tr></thead><tbody id="t-exp"></tbody></table>
             </div>
         </section>
 
-        <section id="ahorros" class="page">
+        <section id="sav" class="page">
+            <div class="card"><div id="sav-total" style="font-size: 2.5rem; font-weight: 800; text-align: center;">$0.00</div><p style="text-align: center; color: #666;">Ahorro Total Acumulado</p></div>
             <div class="card">
-                <h3>💜 Mi Ahorro (Cochinito)</h3>
                 <div class="form-row">
-                    <input type="number" id="s-amt" placeholder="Monto">
-                    <select id="s-type"><option value="in">➕ Depósito</option><option value="out">➖ Retiro</option></select>
-                    <button class="btn" onclick="addItem('savings')">Actualizar</button>
+                    <input type="number" id="sav-amt" placeholder="Monto">
+                    <select id="sav-op"><option value="in">➕ Depósito</option><option value="out">➖ Retiro</option></select>
+                    <button class="btn" onclick="add('sav')">Actualizar Cochinito</button>
                 </div>
-                <div id="sav-total" style="font-size: 2rem; font-weight: 800; text-align: center; margin-top: 20px;">$0.00</div>
             </div>
         </section>
     </main>
 </div>
 
 <script>
-    /** LÓGICA DE DATOS Y PERSISTENCIA **/
-    let db = JSON.parse(localStorage.getItem('finanzasToñoV26')) || {
-        pin: null, cards: [], months: {}, globalSavings: 0
+    let db = JSON.parse(localStorage.getItem('finanzasToñoMaster')) || {
+        users: {}, activeUser: null
     };
 
     let curY = new Date().getFullYear();
     let curM = new Date().getMonth();
     const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
-    // --- SEGURIDAD PIN ---
-    const pinOverlay = document.getElementById('pin-overlay');
-    const pinIn = document.getElementById('pin-input');
+    function handleLogin() {
+        const name = document.getElementById('user-name').value;
+        const pin = document.getElementById('user-pin').value;
+        if(!name || pin.length < 4) return alert("Nombre y PIN de 4 dígitos requeridos");
 
-    if (!db.pin) {
-        document.getElementById('pin-title').innerText = "🆕 Crea tu PIN";
-        document.getElementById('pin-desc').innerText = "Elige 4 dígitos para tu seguridad";
+        if(!db.users[name]) {
+            db.users[name] = { pin, cards: [], months: {}, savings: 0 };
+        } else if (db.users[name].pin !== pin) {
+            return alert("PIN Incorrecto para este usuario");
+        }
+        db.activeUser = name;
+        save(); unlock();
     }
 
-    pinIn.addEventListener('input', (e) => {
-        if (e.target.value.length === 4) {
-            if (!db.pin) {
-                db.pin = e.target.value; save(); unlock();
-            } else if (e.target.value === db.pin) {
-                unlock();
-            } else {
-                alert("PIN Incorrecto"); e.target.value = "";
-            }
-        }
-    });
+    function switchUser() {
+        db.activeUser = null; save(); location.reload();
+    }
 
     function unlock() {
-        pinOverlay.style.opacity = "0";
-        setTimeout(() => { pinOverlay.style.display = "none"; document.getElementById('main-app').style.display = "block"; init(); }, 500);
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('active-user').innerText = db.activeUser;
+        init();
     }
 
-    // --- INICIALIZACIÓN ---
     function init() {
-        const yS = document.getElementById('yearSel'), mS = document.getElementById('monthSel');
-        for(let i=2024; i<=2030; i++) yS.innerHTML += `<option value="${i}" ${i==curY?'selected':''}>${i}</option>`;
-        ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"].forEach((m,i)=>mS.innerHTML += `<option value="${i}" ${i==curM?'selected':''}>${m}</option>`);
+        const ys = document.getElementById('ySel'), ms = document.getElementById('mSel');
+        for(let i=2024; i<=2030; i++) ys.innerHTML += `<option value="${i}" ${i==curY?'selected':''}>${i}</option>`;
+        ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"].forEach((m,i)=>ms.innerHTML += `<option value="${i}" ${i==curM?'selected':''}>${m}</option>`);
         
-        yS.onchange = e => { curY = e.target.value; render(); };
-        mS.onchange = e => { curM = e.target.value; render(); };
+        ys.onchange = e => { curY = e.target.value; render(); };
+        ms.onchange = e => { curM = e.target.value; render(); };
         
-        document.getElementById('btnReset').onclick = () => { if(confirm('¿Borrar todo?')) { localStorage.removeItem('finanzasToñoV26'); location.reload(); }};
         setupTabs();
         render();
     }
@@ -260,110 +253,111 @@
         });
     }
 
-    function getMonthData() {
+    function getUData() {
+        const u = db.users[db.activeUser];
         const key = `${curY}-${curM}`;
-        if (!db.months[key]) db.months[key] = { income: [], services: [], expenses: [], payments: {} };
-        return db.months[key];
+        if(!u.months[key]) u.months[key] = { inc: [], serv: [], exp: [], pay: {} };
+        return u;
     }
 
-    // --- ACCIONES ---
-    function addItem(type) {
-        const data = getMonthData();
-        if (type === 'income') {
-            const d = document.getElementById('in-desc').value, a = parseFloat(document.getElementById('in-amt').value);
-            if(d && a) data.income.push({id: Date.now(), d, a});
-        } else if (type === 'services') {
-            const n = document.getElementById('sv-name').value, a = parseFloat(document.getElementById('sv-amt').value), dy = parseInt(document.getElementById('sv-day').value), c = document.getElementById('sv-card').value;
-            if(n && a && dy) data.services.push({id: Date.now(), n, a, dy, c});
-        } else if (type === 'cards') {
-            const n = document.getElementById('c-name').value, d = document.getElementById('c-dig').value;
-            if(n && d) db.cards.push({id: Date.now(), n, d});
-        } else if (type === 'expenses') {
-            const d = document.getElementById('ex-desc').value, a = parseFloat(document.getElementById('ex-amt').value), c = document.getElementById('ex-card').value;
-            if(d && a) data.expenses.push({id: Date.now(), d, a, c});
-        } else if (type === 'savings') {
-            const a = parseFloat(document.getElementById('s-amt').value), t = document.getElementById('s-type').value;
-            if(a) db.globalSavings += (t == 'in' ? a : -a);
+    function add(type) {
+        const u = getUData();
+        const m = u.months[`${curY}-${curM}`];
+        if(type==='inc'){
+            m.inc.push({id:Date.now(), d:document.getElementById('i-date').value, desc:document.getElementById('i-desc').value, a:parseFloat(document.getElementById('i-amt').value)});
+        } else if(type==='serv'){
+            m.serv.push({id:Date.now(), n:document.getElementById('s-name').value, a:parseFloat(document.getElementById('s-amt').value), dy:parseInt(document.getElementById('s-day').value), f:document.getElementById('s-freq').value, c:document.getElementById('s-card-link').value, dig:document.getElementById('s-digital').checked});
+        } else if(type==='card'){
+            u.cards.push({id:Date.now(), n:document.getElementById('c-name').value, d:document.getElementById('c-dig').value, l:parseFloat(document.getElementById('c-limit').value), p:parseInt(document.getElementById('c-pay').value)});
+        } else if(type==='exp'){
+            m.exp.push({id:Date.now(), desc:document.getElementById('e-desc').value, a:parseFloat(document.getElementById('e-amt').value), c:document.getElementById('e-card-link').value});
+        } else if(type==='sav'){
+            const amt = parseFloat(document.getElementById('sav-amt').value);
+            u.savings += (document.getElementById('sav-op').value === 'in' ? amt : -amt);
         }
         save(); render();
-        document.querySelectorAll('input').forEach(i => i.value = '');
+        document.querySelectorAll('input').forEach(i => { if(i.type !== 'date') i.value = '' });
     }
 
-    function delItem(type, id) {
-        if (type === 'cards') db.cards = db.cards.filter(x => x.id !== id);
-        else { const data = getMonthData(); data[type] = data[type].filter(x => x.id !== id); }
+    function togglePay(id) {
+        const m = getUData().months[`${curY}-${curM}`];
+        m.pay[id] = !m.pay[id]; save(); render();
+    }
+
+    function del(type, id) {
+        const u = getUData();
+        if(type==='card') u.cards = u.cards.filter(x=>x.id!==id);
+        else u.months[`${curY}-${curM}`][type] = u.months[`${curY}-${curM}`][type].filter(x=>x.id!==id);
         save(); render();
     }
 
-    function togglePay(id) { const data = getMonthData(); data.payments[id] = !data.payments[id]; save(); render(); }
+    function save() { localStorage.setItem('finanzasToñoMaster', JSON.stringify(db)); }
 
-    function save() { localStorage.setItem('finanzasToñoV26', JSON.stringify(db)); }
-
-    // --- RENDERIZADO ---
     function render() {
-        const data = getMonthData();
-        
-        // Actualizar Selectores de Tarjetas
-        const selectors = ['sv-card', 'ex-card'];
-        selectors.forEach(sId => {
+        const u = getUData();
+        const m = u.months[`${curY}-${curM}`];
+
+        // Tarjetas en Selects
+        const selects = ['s-card-link', 'e-card-link'];
+        selects.forEach(sId => {
             const s = document.getElementById(sId);
-            s.innerHTML = '<option value="Efectivo">💵 Efectivo</option>';
-            db.cards.forEach(c => s.innerHTML += `<option value="${c.n} (*${c.d})">💳 ${c.n}</option>`);
+            s.innerHTML = '<option value="">💸 Efectivo</option>';
+            u.cards.forEach(c => s.innerHTML += `<option value="${c.n} (*${c.d})">💳 ${c.n} (*${c.d})</option>`);
         });
 
         // Totales Dashboard
-        const totalIn = data.income.reduce((s,x)=>s+x.a, 0);
-        const totalFix = data.services.reduce((s,x)=>s+x.a, 0);
-        const totalVar = data.expenses.reduce((s,x)=>s+x.a, 0);
+        const totalInc = m.inc.reduce((s,x)=>s+x.a, 0);
+        const totalFix = m.serv.reduce((s,x)=>s+x.a, 0);
+        const totalExp = m.exp.reduce((s,x)=>s+x.a, 0);
         
-        document.getElementById('t-inc').innerText = fmt.format(totalIn);
-        document.getElementById('t-fix').innerText = fmt.format(totalFix);
-        document.getElementById('t-var').innerText = fmt.format(totalVar);
-        document.getElementById('t-bal').innerText = fmt.format(totalIn - (totalFix + totalVar));
-        document.getElementById('sav-total').innerText = fmt.format(db.globalSavings);
+        document.getElementById('d-inc').innerText = fmt.format(totalInc);
+        document.getElementById('d-fix').innerText = fmt.format(totalFix);
+        document.getElementById('d-bal').innerText = fmt.format(totalInc - (totalFix + totalExp));
+        document.getElementById('sav-total').innerText = fmt.format(u.savings);
 
-        // Barra Progreso
-        const totalP = data.services.length;
-        const paidP = data.services.filter(x => data.payments[x.id]).length;
-        const perc = totalP ? Math.round((paidP/totalP)*100) : 0;
-        document.getElementById('p-bar').style.width = perc + "%";
-        document.getElementById('p-text').innerText = `${perc}% de pagos fijos realizados`;
+        // Listas por Quincena
+        const q1List = document.getElementById('q1-list'), q2List = document.getElementById('q2-list');
+        q1List.innerHTML = ''; q2List.innerHTML = '';
+        let q1Tot = 0, q2Tot = 0;
 
-        // Lista de Pagos Quincenales
-        const qList = document.getElementById('q-list'); qList.innerHTML = '';
-        data.services.sort((a,b)=>a.dy - b.dy).forEach(s => {
-            const isP = data.payments[s.id];
-            qList.innerHTML += `
-                <div style="display:flex; align-items:center; padding: 12px; border-bottom: 1px solid #eee; background: ${isP?'#f9f9f9':'#fff'}">
-                    <input type="checkbox" ${isP?'checked':''} onclick="togglePay(${s.id})" style="width:20px; height:20px;">
-                    <div style="margin-left:15px">
-                        <div class="${isP?'paid':''}" style="font-weight:700">${s.n}</div>
-                        <div style="font-size:0.7rem; color:#888">Día ${s.dy} • ${s.c}</div>
+        const allPayments = [
+            ...m.serv.map(s => ({...s, type: 'serv'})),
+            ...u.cards.map(c => ({...c, n: `Pago ${c.n}`, a: 0, dy: c.p, type: 'card'})) // Deuda de tarjeta se calcula aquí
+        ];
+
+        allPayments.sort((a,b)=>a.dy - b.dy).forEach(p => {
+            const isP = m.pay[p.id];
+            const html = `
+                <div class="pay-item ${isP?'paid':''}">
+                    <input type="checkbox" ${isP?'checked':''} onclick="togglePay(${p.id})">
+                    <div style="margin-left:10px">
+                        <div style="font-weight:700">${p.n} ${p.dig?'<span class="tag-digital">ANT 🐜</span>':''}</div>
+                        <div style="font-size:0.7rem; color:#888">Día ${p.dy} • ${p.c || 'Efectivo'}</div>
                     </div>
-                    <div style="margin-left:auto; font-weight:800; color:var(--purple3)">${fmt.format(s.a)}</div>
-                </div>
-            `;
+                    <div style="margin-left:auto; font-weight:800;">${fmt.format(p.a)}</div>
+                </div>`;
+            if(p.dy <= 14) { q1List.innerHTML += html; if(!isP) q1Tot+=p.a; }
+            else { q2List.innerHTML += html; if(!isP) q2Tot+=p.a; }
         });
+        document.getElementById('q1-total').innerText = fmt.format(q1Tot);
+        document.getElementById('q2-total').innerText = fmt.format(q2Tot);
 
         // Tablas
-        fillTable('tab-income', data.income, 'income');
-        fillTable('tab-services', data.services, 'services', true);
-        fillTable('tab-cards', db.cards, 'cards', false, true);
-        fillTable('tab-expenses', data.expenses, 'expenses', false, false, true);
+        fillTable('t-inc', m.inc, 'inc', (x)=>`<td>${x.d}</td><td>${x.desc}</td><td>${fmt.format(x.a)}</td>`);
+        fillTable('t-serv', m.serv, 'serv', (x)=>`<td>${x.n} ${x.dig?'<span class="tag-digital">ANT 🐜</span>':''}</td><td>${x.dy}</td><td>${fmt.format(x.a)}</td><td>${x.f}</td>`);
+        fillTable('t-card', u.cards, 'card', (x)=>`<td>${x.n} (*${x.d})</td><td>${fmt.format(x.l)}</td><td>Día ${x.p}</td><td>Q${x.p<=14?1:2}</td>`);
+        fillTable('t-exp', m.exp, 'exp', (x)=>`<td>${x.desc}</td><td>${x.c || 'Efectivo'}</td><td>${fmt.format(x.a)}</td>`);
     }
 
-    function fillTable(id, list, type, isS=false, isC=false, isE=false) {
-        const tb = document.querySelector(`#${id} tbody`); tb.innerHTML = '';
+    function fillTable(id, list, type, rowFn) {
+        const b = document.getElementById(id); b.innerHTML = '';
         list.forEach(x => {
-            tb.innerHTML += `<tr>
-                <td>${x.d || x.n}</td>
-                <td>${fmt.format(x.a || 0)}${isC ? x.d : ''}</td>
-                ${isS ? `<td>${x.dy}</td><td>${x.c}</td>` : ''}
-                ${isE ? `<td>${x.c}</td>` : ''}
-                <td><button onclick="delItem('${type}', ${x.id})" style="border:none; background:none; color:var(--red); cursor:pointer;">✖</button></td>
-            </tr>`;
+            b.innerHTML += `<tr>${rowFn(x)}<td><button onclick="del('${type}', ${x.id})" style="color:var(--red); border:none; background:none; cursor:pointer;">✖</button></td></tr>`;
         });
     }
+
+    // Auto-Login si ya hay sesión
+    if(db.activeUser) unlock();
 </script>
 </body>
 </html>
