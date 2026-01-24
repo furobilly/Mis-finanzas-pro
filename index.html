@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>💰 Finanzas Pro V2.7 - Toño</title>
+    <title>💎 Finanzas Pro Premium - Toño</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,228 +16,253 @@
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { margin: 0; background: var(--bg-gradient) fixed; min-height: 100vh; color: var(--text); }
 
-        /* PANTALLA DE ACCESO PROFESIONAL */
-        #login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--purple3); z-index: 2000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; text-align: center;
-        }
-        .login-box { background: white; padding: 30px; border-radius: 18px; color: var(--text); box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 320px; }
-        .login-input { font-size: 1.2rem; text-align: center; width: 100%; border: 2px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 15px; }
+        /* LOGIN SCREEN */
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--purple3); z-index: 2000; display: flex; align-items: center; justify-content: center; color: white; text-align: center; }
+        .login-box { background: white; padding: 40px; border-radius: 24px; color: var(--text); box-shadow: 0 20px 50px rgba(0,0,0,0.3); width: 350px; }
+        .login-input { font-size: 1.1rem; text-align: center; width: 100%; border: 2px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 15px; outline: none; }
+        .login-input:focus { border-color: var(--purple); }
 
-        /* ESTRUCTURA CENTRADA */
-        .wrap { max-width: 1100px; margin: 20px auto; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 18px 60px rgba(0,0,0,0.25); display: none; }
+        /* LAYOUT */
+        .wrap { max-width: 1150px; margin: 30px auto; background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 70px rgba(0,0,0,0.3); display: none; }
 
-        header { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: linear-gradient(135deg, var(--purple), var(--purple2)); color: #fff; }
-        .user-info { display: flex; align-items: center; gap: 10px; cursor: pointer; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; }
+        header { display: flex; align-items: center; justify-content: space-between; padding: 20px 30px; background: linear-gradient(135deg, var(--purple), var(--purple2)); color: #fff; }
+        .app-title { font-weight: 800; font-size: 1.8rem; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
+        
+        .user-chip { display: flex; align-items: center; gap: 10px; cursor: pointer; background: rgba(255,255,255,0.15); padding: 8px 18px; border-radius: 30px; font-weight: 600; border: 1px solid rgba(255,255,255,0.2); }
 
-        nav { display: flex; background: var(--purple3); overflow-x: auto; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        nav button { border: 0; background: transparent; color: #fff; padding: 14px 18px; cursor: pointer; font-weight: 600; opacity: 0.7; border-bottom: 3px solid transparent; white-space: nowrap; }
+        nav { display: flex; background: var(--purple3); overflow-x: auto; padding: 5px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        nav button { border: 0; background: transparent; color: #fff; padding: 15px 22px; cursor: pointer; font-weight: 600; opacity: 0.6; border-bottom: 3px solid transparent; transition: 0.3s; white-space: nowrap; }
         nav button.active { opacity: 1; border-bottom-color: var(--orange); background: rgba(255,255,255,0.1); }
 
-        main { padding: 20px; }
+        main { padding: 30px; }
         .page { display: none; }
         .page.active { display: block; }
 
-        /* DASHBOARD TILES */
-        .grid { display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 20px; }
-        .tile { background: #fff; border-radius: 15px; padding: 20px; border-left: 6px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        /* TILES */
+        .grid-summary { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 30px; }
+        .tile { background: #fff; border-radius: 20px; padding: 25px; border-top: 5px solid var(--border); box-shadow: 0 10px 20px rgba(0,0,0,0.04); text-align: center; }
         .tile.income { border-color: var(--green); }
         .tile.fixed { border-color: var(--red); }
-        .tile.balance { border-color: var(--purple); }
-        .tile-val { font-size: 1.6rem; font-weight: 800; margin-top: 5px; }
+        .tile.balance { border-color: var(--purple); background: #fdfaff; }
+        .tile.savings { border-color: var(--orange); }
+        .tile-val { font-size: 1.8rem; font-weight: 800; margin-top: 10px; }
+        .tile-label { font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* QUINCENAS */
-        .q-container { background: #f9fafb; border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
-        .q-header { color: var(--purple3); font-weight: 800; border-bottom: 2px solid #eee; padding-bottom: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        /* TABLES & CARDS */
+        .card { background: #fff; border-radius: 20px; padding: 25px; border: 1px solid var(--border); margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
+        .card h3 { margin-top: 0; font-weight: 800; color: var(--purple3); border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+
+        .form-row { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin-bottom: 20px; }
+        input, select { padding: 14px; border: 2px solid var(--border); border-radius: 12px; outline: none; transition: 0.2s; font-size: 0.95rem; }
+        input:focus { border-color: var(--purple); }
+        .btn { background: var(--purple); color: white; border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(108, 43, 217, 0.3); }
+
+        /* LISTS */
+        .q-section { background: #fcfcfd; border-radius: 15px; border: 1px solid #eee; padding: 20px; margin-bottom: 20px; }
+        .q-title { font-weight: 800; color: #444; margin-bottom: 15px; display: flex; justify-content: space-between; }
+
+        .item-list { display: flex; flex-direction: column; gap: 10px; }
+        .item-row { display: flex; align-items: center; padding: 15px; background: #fff; border: 1px solid #eee; border-radius: 14px; transition: 0.2s; }
+        .item-row:hover { border-color: var(--purple); }
+        .item-row.paid { background: #f8f9fa; opacity: 0.6; }
         
-        .pay-item { display: flex; align-items: center; padding: 12px; background: #fff; border: 1px solid #eee; border-radius: 10px; margin-bottom: 8px; }
-        .pay-item.paid { opacity: 0.5; background: #f0f0f0; }
+        .icon-circle { width: 40px; height: 40px; border-radius: 50%; background: #f0edff; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-right: 15px; }
+        .actions { margin-left: auto; display: flex; gap: 10px; }
+        .btn-mini { border: none; background: #f5f5f5; padding: 8px; border-radius: 8px; cursor: pointer; color: #666; font-size: 0.8rem; }
+        .btn-mini.edit:hover { background: #e0f2fe; color: #0369a1; }
+        .btn-mini.del:hover { background: #fee2e2; color: #dc2626; }
 
-        /* FORMS */
-        .card { background: #fff; border-radius: 15px; padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-        .form-row { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin-bottom: 15px; }
-        input, select { padding: 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; }
-        .btn { background: var(--purple); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: left; padding: 12px; background: #f8f9fa; font-size: 0.8rem; text-transform: uppercase; color: #666; }
-        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-
-        .tag-digital { background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; }
+        /* ANTS SECTION */
+        .ants-box { background: #fff9f0; border: 2px dashed var(--orange); border-radius: 15px; padding: 15px; margin-top: 10px; }
+        .tag-ant { background: var(--orange); color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
     <div class="login-box">
-        <h2 id="login-title">Finanzas Pro</h2>
-        <input type="text" id="user-name" class="login-input" placeholder="Tu Nombre">
-        <input type="password" id="user-pin" class="login-input" placeholder="PIN (4 dígitos)" maxlength="4" inputmode="numeric">
-        <button class="btn" style="width: 100%" onclick="handleLogin()">Entrar</button>
+        <h2 style="margin-top:0">💎 Finanzas Pro</h2>
+        <p style="color:#666; margin-bottom:25px">Gestión de nivel avanzado</p>
+        <input type="text" id="u-name" class="login-input" placeholder="Nombre de Usuario">
+        <input type="password" id="u-pin" class="login-input" placeholder="PIN (4 dígitos)" maxlength="4" inputmode="numeric">
+        <button class="btn" style="width:100%" onclick="login()">Acceder al Sistema</button>
     </div>
 </div>
 
 <div class="wrap" id="app">
     <header>
-        <div class="brand">💰 Finanzas Pro <span id="ver">v2.7</span></div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <select id="ySel" class="pill" style="padding: 5px 10px; border-radius: 20px;"></select>
-            <select id="mSel" class="pill" style="padding: 5px 10px; border-radius: 20px;"></select>
-            <div class="user-info" onclick="switchUser()">👤 <span id="active-user">Usuario</span></div>
+        <div class="app-title">💎 Finanzas Pro</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <select id="ySel" class="pill" style="border:none; border-radius:30px; padding:8px 15px; font-weight:bold;"></select>
+            <select id="mSel" class="pill" style="border:none; border-radius:30px; padding:8px 15px; font-weight:bold;"></select>
+            <div class="user-chip" onclick="logout()">👤 <span id="display-user">Toño</span></div>
         </div>
     </header>
 
     <nav>
         <button class="tab-btn active" data-page="dash">📊 Dashboard</button>
         <button class="tab-btn" data-page="inc">💵 Ingresos</button>
-        <button class="tab-btn" data-page="fix">🏠 Servicios/Digital</button>
+        <button class="tab-btn" data-page="fix">🏠 Fijos/Digital</button>
         <button class="tab-btn" data-page="cards">💳 Tarjetas</button>
         <button class="tab-btn" data-page="gastos">🛒 Gastos</button>
-        <button class="tab-btn" data-page="sav">💜 Ahorros</button>
+        <button class="tab-btn" data-page="sav">💜 Cochinito</button>
     </nav>
 
     <main>
         <section id="dash" class="page active">
-            <div class="grid">
-                <div class="tile income"><div>Ingresos</div><div id="d-inc" class="tile-val">$0.00</div></div>
-                <div class="tile fixed"><div>Egresos Fijos</div><div id="d-fix" class="tile-val">$0.00</div></div>
-                <div class="tile balance"><div>Disponible</div><div id="d-bal" class="tile-val">$0.00</div></div>
+            <div class="grid-summary">
+                <div class="tile income"><div class="tile-label">Ingresos</div><div id="d-inc" class="tile-val">$0.00</div></div>
+                <div class="tile fixed"><div class="tile-label">Gastos Fijos/Var</div><div id="d-egr" class="tile-val">$0.00</div></div>
+                <div class="tile balance"><div class="tile-label">💵 Disponible p/ Pagos</div><div id="d-bal" class="tile-val" style="color:var(--purple)">$0.00</div></div>
+                <div class="tile savings"><div class="tile-label">💜 Ahorro Total</div><div id="d-sav" class="tile-val" style="color:var(--orange)">$0.00</div></div>
             </div>
 
             <div class="card">
-                <h3>📅 Próximos Pagos (Separados por Día)</h3>
-                <div class="q-container">
-                    <div class="q-header"><span>Quincena 1 (Día 1-14)</span><span id="q1-total">$0.00</span></div>
-                    <div id="q1-list"></div>
+                <h3>📅 Mi Calendario de Pagos</h3>
+                <div class="q-section">
+                    <div class="q-title"><span>Quincena 1 (Día 1-14)</span><span id="q1-t">$0.00</span></div>
+                    <div id="q1-l" class="item-list"></div>
                 </div>
-                <div class="q-container">
-                    <div class="q-header"><span>Quincena 2 (Día 15-31)</span><span id="q2-total">$0.00</span></div>
-                    <div id="q2-list"></div>
+                <div class="q-section">
+                    <div class="q-title"><span>Quincena 2 (Día 15-31)</span><span id="q2-t">$0.00</span></div>
+                    <div id="q2-l" class="item-list"></div>
                 </div>
+            </div>
+
+            <div class="card">
+                <h3>🐜 Gastos Hormiga / Suscripciones (Recurrentes)</h3>
+                <p style="font-size:0.85rem; color:#666;">Cargos automáticos que no dependen de una quincena específica.</p>
+                <div id="ant-list" class="item-list"></div>
             </div>
         </section>
 
         <section id="inc" class="page">
             <div class="card">
-                <h3>Nuevo Ingreso</h3>
+                <h3>Registrar Dinero</h3>
                 <div class="form-row">
                     <input type="date" id="i-date">
-                    <input type="text" id="i-desc" placeholder="Descripción">
-                    <input type="number" id="i-amt" placeholder="Monto">
-                    <button class="btn" onclick="add('inc')">Agregar</button>
+                    <input type="text" id="i-desc" placeholder="¿De dónde viene?">
+                    <input type="number" id="i-amt" placeholder="Monto $">
+                    <button class="btn" onclick="add('inc')">Añadir</button>
                 </div>
-                <table><thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th><th></th></tr></thead><tbody id="t-inc"></tbody></table>
+                <div id="inc-history" class="item-list"></div>
             </div>
         </section>
 
         <section id="fix" class="page">
             <div class="card">
-                <h3>Servicios / Cargos Recurrentes</h3>
+                <h3>Pagos Fijos y Suscripciones</h3>
                 <div class="form-row">
-                    <input type="text" id="s-name" placeholder="Netflix, Luz, Renta">
-                    <input type="number" id="s-amt" placeholder="Monto">
+                    <input type="text" id="s-name" placeholder="Ej: Renta, Netflix, Luz">
+                    <input type="number" id="s-amt" placeholder="Monto $">
                     <input type="number" id="s-day" placeholder="Día (1-31)" min="1" max="31">
-                    <select id="s-freq">
-                        <option value="Mensual">Mensual</option>
-                        <option value="Bimestral">Bimestral</option>
-                        <option value="Anual">Anual</option>
-                    </select>
+                    <select id="s-freq"><option value="Mensual">Mensual</option><option value="Bimestral">Bimestral</option></select>
                 </div>
                 <div class="form-row">
-                    <select id="s-card-link"><option value="">💸 Efectivo/Débito</option></select>
-                    <label style="font-size: 0.8rem; display: flex; align-items: center; gap: 5px;">
-                        <input type="checkbox" id="s-digital"> 🐜 Suscripción Digital
+                    <select id="s-card-link"><option value="">💸 Efectivo</option></select>
+                    <label style="display: flex; align-items:center; gap:8px; font-weight:600; font-size:0.9rem;">
+                        <input type="checkbox" id="s-is-ant" style="width:20px; height:20px;"> ¿Es Cargo Hormiga?
                     </label>
-                    <button class="btn" onclick="add('serv')">Añadir Servicio</button>
+                    <button class="btn" onclick="add('serv')">Guardar Pago</button>
                 </div>
-                <table><thead><tr><th>Servicio</th><th>Día</th><th>Pago</th><th>Frecuencia</th><th></th></tr></thead><tbody id="t-serv"></tbody></table>
+                <div id="serv-history" class="item-list"></div>
+            </div>
+        </section>
+
+        <section id="sav" class="page">
+            <div class="card" style="text-align: center;">
+                <div class="tile-label">Balance en el Cochinito</div>
+                <div id="sav-total-view" style="font-size:3rem; font-weight:800; color:var(--orange)">$0.00</div>
+            </div>
+            <div class="card">
+                <h3>Movimiento de Ahorro</h3>
+                <div class="form-row">
+                    <input type="date" id="sav-date">
+                    <input type="text" id="sav-desc" placeholder="Motivo (Ej: Ahorro Vacaciones)">
+                    <input type="number" id="sav-amt" placeholder="Monto $">
+                    <select id="sav-op"><option value="in">➕ Depósito</option><option value="out">➖ Retiro</option></select>
+                    <button class="btn" onclick="add('sav')">Registrar</button>
+                </div>
+                <div id="sav-history" class="item-list"></div>
             </div>
         </section>
 
         <section id="cards" class="page">
             <div class="card">
-                <h3>Mis Tarjetas de Crédito</h3>
+                <h3>Tarjetas de Crédito</h3>
                 <div class="form-row">
-                    <input type="text" id="c-name" placeholder="Banco / Nombre">
+                    <input type="text" id="c-name" placeholder="Banco">
                     <input type="text" id="c-dig" placeholder="Últimos 4" maxlength="4">
-                    <input type="number" id="c-limit" placeholder="Límite">
-                    <input type="number" id="c-pay" placeholder="Día Pago (1-31)">
-                    <button class="btn" onclick="add('card')">Guardar</button>
+                    <input type="number" id="c-pay" placeholder="Día Pago">
+                    <button class="btn" onclick="add('card')">Agregar Tarjeta</button>
                 </div>
-                <table><thead><tr><th>Tarjeta</th><th>Límite</th><th>Pago</th><th>Quincena</th><th></th></tr></thead><tbody id="t-card"></tbody></table>
+                <div id="card-history" class="item-list"></div>
             </div>
         </section>
 
         <section id="gastos" class="page">
             <div class="card">
-                <h3>🛒 Gastos Variables / Hormiga</h3>
+                <h3>Gastos Variables Diarios</h3>
                 <div class="form-row">
                     <input type="text" id="e-desc" placeholder="¿Qué compraste?">
-                    <input type="number" id="e-amt" placeholder="Monto">
+                    <input type="number" id="e-amt" placeholder="Monto $">
                     <select id="e-card-link"><option value="">💸 Efectivo</option></select>
-                    <button class="btn" onclick="add('exp')">Registrar</button>
+                    <button class="btn" onclick="add('exp')">Registrar Gasto</button>
                 </div>
-                <table><thead><tr><th>Descripción</th><th>Pago Con</th><th>Monto</th><th></th></tr></thead><tbody id="t-exp"></tbody></table>
-            </div>
-        </section>
-
-        <section id="sav" class="page">
-            <div class="card"><div id="sav-total" style="font-size: 2.5rem; font-weight: 800; text-align: center;">$0.00</div><p style="text-align: center; color: #666;">Ahorro Total Acumulado</p></div>
-            <div class="card">
-                <div class="form-row">
-                    <input type="number" id="sav-amt" placeholder="Monto">
-                    <select id="sav-op"><option value="in">➕ Depósito</option><option value="out">➖ Retiro</option></select>
-                    <button class="btn" onclick="add('sav')">Actualizar Cochinito</button>
-                </div>
+                <div id="exp-history" class="item-list"></div>
             </div>
         </section>
     </main>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('finanzasToñoMaster')) || {
-        users: {}, activeUser: null
-    };
-
+    // --- DATABASE MENTALITY ---
+    let db = JSON.parse(localStorage.getItem('finanzasPro_v2.8')) || { users: {}, active: null };
     let curY = new Date().getFullYear();
     let curM = new Date().getMonth();
     const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
-    function handleLogin() {
-        const name = document.getElementById('user-name').value;
-        const pin = document.getElementById('user-pin').value;
-        if(!name || pin.length < 4) return alert("Nombre y PIN de 4 dígitos requeridos");
+    // --- ICON ENGINE ---
+    const iconMap = {
+        renta: '🏠', casa: '🏠', luz: '💡', cfe: '💡', agua: '💧', gas: '🔥', internet: '🌐', wifi: '🌐',
+        netflix: '📺', amazon: '📦', spotify: '🎵', disney: '🎬', comida: '🍔', super: '🛒', wal: '🛒',
+        oxxo: '🏪', gym: '💪', tel: '📱', movistar: '📱', telcel: '📱', apple: '🍎', seguro: '🛡️', prestamo: '🏦'
+    };
 
-        if(!db.users[name]) {
-            db.users[name] = { pin, cards: [], months: {}, savings: 0 };
-        } else if (db.users[name].pin !== pin) {
-            return alert("PIN Incorrecto para este usuario");
-        }
-        db.activeUser = name;
-        save(); unlock();
+    function getIcon(name) {
+        const n = name.toLowerCase();
+        for (let key in iconMap) { if (n.includes(key)) return iconMap[key]; }
+        return '📌';
     }
 
-    function switchUser() {
-        db.activeUser = null; save(); location.reload();
+    // --- AUTH ---
+    function login() {
+        const u = document.getElementById('u-name').value, p = document.getElementById('u-pin').value;
+        if(!u || p.length<4) return alert("Completa tus datos de seguridad");
+        if(!db.users[u]) db.users[u] = { pin: p, cards: [], months: {}, savings: [] };
+        else if(db.users[u].pin !== p) return alert("PIN Incorrecto");
+        db.active = u; save(); unlock();
     }
+
+    function logout() { db.active = null; save(); location.reload(); }
 
     function unlock() {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('app').style.display = 'block';
-        document.getElementById('active-user').innerText = db.activeUser;
+        document.getElementById('display-user').innerText = db.active;
         init();
     }
 
+    // --- CORE LOGIC ---
     function init() {
         const ys = document.getElementById('ySel'), ms = document.getElementById('mSel');
         for(let i=2024; i<=2030; i++) ys.innerHTML += `<option value="${i}" ${i==curY?'selected':''}>${i}</option>`;
-        ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"].forEach((m,i)=>ms.innerHTML += `<option value="${i}" ${i==curM?'selected':''}>${m}</option>`);
-        
+        ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"].forEach((m,i)=>ms.innerHTML += `<option value="${i}" ${i==curM?'selected':''}>${m}</option>`);
         ys.onchange = e => { curY = e.target.value; render(); };
         ms.onchange = e => { curM = e.target.value; render(); };
-        
+        document.getElementById('i-date').value = new Date().toISOString().split('T')[0];
+        document.getElementById('sav-date').value = new Date().toISOString().split('T')[0];
         setupTabs();
         render();
     }
@@ -253,111 +278,135 @@
         });
     }
 
-    function getUData() {
-        const u = db.users[db.activeUser];
+    function getU() {
+        const u = db.users[db.active];
         const key = `${curY}-${curM}`;
         if(!u.months[key]) u.months[key] = { inc: [], serv: [], exp: [], pay: {} };
         return u;
     }
 
     function add(type) {
-        const u = getUData();
+        const u = getU();
         const m = u.months[`${curY}-${curM}`];
-        if(type==='inc'){
-            m.inc.push({id:Date.now(), d:document.getElementById('i-date').value, desc:document.getElementById('i-desc').value, a:parseFloat(document.getElementById('i-amt').value)});
-        } else if(type==='serv'){
-            m.serv.push({id:Date.now(), n:document.getElementById('s-name').value, a:parseFloat(document.getElementById('s-amt').value), dy:parseInt(document.getElementById('s-day').value), f:document.getElementById('s-freq').value, c:document.getElementById('s-card-link').value, dig:document.getElementById('s-digital').checked});
-        } else if(type==='card'){
-            u.cards.push({id:Date.now(), n:document.getElementById('c-name').value, d:document.getElementById('c-dig').value, l:parseFloat(document.getElementById('c-limit').value), p:parseInt(document.getElementById('c-pay').value)});
-        } else if(type==='exp'){
-            m.exp.push({id:Date.now(), desc:document.getElementById('e-desc').value, a:parseFloat(document.getElementById('e-amt').value), c:document.getElementById('e-card-link').value});
-        } else if(type==='sav'){
-            const amt = parseFloat(document.getElementById('sav-amt').value);
-            u.savings += (document.getElementById('sav-op').value === 'in' ? amt : -amt);
-        }
-        save(); render();
-        document.querySelectorAll('input').forEach(i => { if(i.type !== 'date') i.value = '' });
-    }
+        const id = Date.now();
 
-    function togglePay(id) {
-        const m = getUData().months[`${curY}-${curM}`];
-        m.pay[id] = !m.pay[id]; save(); render();
+        if(type==='inc') {
+            m.inc.push({id, d: document.getElementById('i-date').value, desc: document.getElementById('i-desc').value, a: parseFloat(document.getElementById('i-amt').value)});
+        } else if(type==='serv') {
+            m.serv.push({id, n: document.getElementById('s-name').value, a: parseFloat(document.getElementById('s-amt').value), dy: parseInt(document.getElementById('s-day').value), f: document.getElementById('s-freq').value, c: document.getElementById('s-card-link').value, ant: document.getElementById('s-is-ant').checked});
+        } else if(type==='card') {
+            u.cards.push({id, n: document.getElementById('c-name').value, d: document.getElementById('c-dig').value, p: parseInt(document.getElementById('c-pay').value)});
+        } else if(type==='exp') {
+            m.exp.push({id, desc: document.getElementById('e-desc').value, a: parseFloat(document.getElementById('e-amt').value), c: document.getElementById('e-card-link').value});
+        } else if(type==='sav') {
+            u.savings.push({id, d: document.getElementById('sav-date').value, desc: document.getElementById('sav-desc').value, a: parseFloat(document.getElementById('sav-amt').value), op: document.getElementById('sav-op').value});
+        }
+
+        save(); render();
+        document.querySelectorAll('input').forEach(i => { if(i.type !== 'date' && i.type !== 'checkbox') i.value = '' });
     }
 
     function del(type, id) {
-        const u = getUData();
-        if(type==='card') u.cards = u.cards.filter(x=>x.id!==id);
+        const u = getU();
+        if(type==='sav') u.savings = u.savings.filter(x=>x.id!==id);
+        else if(type==='card') u.cards = u.cards.filter(x=>x.id!==id);
         else u.months[`${curY}-${curM}`][type] = u.months[`${curY}-${curM}`][type].filter(x=>x.id!==id);
         save(); render();
     }
 
-    function save() { localStorage.setItem('finanzasToñoMaster', JSON.stringify(db)); }
+    function edit(type, id) {
+        const u = getU();
+        let item;
+        if(type==='sav') item = u.savings.find(x=>x.id===id);
+        const newAmt = prompt("Nuevo Monto:", item ? item.a : "");
+        if(newAmt) { item.a = parseFloat(newAmt); save(); render(); }
+    }
+
+    function togglePay(id) {
+        const m = getU().months[`${curY}-${curM}`];
+        m.pay[id] = !m.pay[id]; save(); render();
+    }
+
+    function save() { localStorage.setItem('finanzasPro_v2.8', JSON.stringify(db)); }
 
     function render() {
-        const u = getUData();
+        const u = getU();
         const m = u.months[`${curY}-${curM}`];
 
-        // Tarjetas en Selects
+        // Fill Card Selects
         const selects = ['s-card-link', 'e-card-link'];
         selects.forEach(sId => {
             const s = document.getElementById(sId);
             s.innerHTML = '<option value="">💸 Efectivo</option>';
-            u.cards.forEach(c => s.innerHTML += `<option value="${c.n} (*${c.d})">💳 ${c.n} (*${c.d})</option>`);
+            u.cards.forEach(c => s.innerHTML += `<option value="${c.n}">💳 ${c.n} (*${c.d})</option>`);
         });
 
-        // Totales Dashboard
+        // Totals
         const totalInc = m.inc.reduce((s,x)=>s+x.a, 0);
-        const totalFix = m.serv.reduce((s,x)=>s+x.a, 0);
+        const totalServ = m.serv.reduce((s,x)=>s+x.a, 0);
         const totalExp = m.exp.reduce((s,x)=>s+x.a, 0);
+        const savingsTotal = u.savings.reduce((s,x)=>s + (x.op==='in'?x.a:-x.a), 0);
         
         document.getElementById('d-inc').innerText = fmt.format(totalInc);
-        document.getElementById('d-fix').innerText = fmt.format(totalFix);
-        document.getElementById('d-bal').innerText = fmt.format(totalInc - (totalFix + totalExp));
-        document.getElementById('sav-total').innerText = fmt.format(u.savings);
+        document.getElementById('d-egr').innerText = fmt.format(totalServ + totalExp);
+        document.getElementById('d-bal').innerText = fmt.format(totalInc - (totalServ + totalExp));
+        document.getElementById('d-sav').innerText = fmt.format(savingsTotal);
+        document.getElementById('sav-total-view').innerText = fmt.format(savingsTotal);
 
-        // Listas por Quincena
-        const q1List = document.getElementById('q1-list'), q2List = document.getElementById('q2-list');
-        q1List.innerHTML = ''; q2List.innerHTML = '';
-        let q1Tot = 0, q2Tot = 0;
+        // Dashboard Lists (Quincenas)
+        const q1l = document.getElementById('q1-l'), q2l = document.getElementById('q2-l'), al = document.getElementById('ant-list');
+        q1l.innerHTML = ''; q2l.innerHTML = ''; al.innerHTML = '';
+        let q1t = 0, q2t = 0;
 
-        const allPayments = [
-            ...m.serv.map(s => ({...s, type: 'serv'})),
-            ...u.cards.map(c => ({...c, n: `Pago ${c.n}`, a: 0, dy: c.p, type: 'card'})) // Deuda de tarjeta se calcula aquí
-        ];
-
-        allPayments.sort((a,b)=>a.dy - b.dy).forEach(p => {
-            const isP = m.pay[p.id];
+        m.serv.forEach(s => {
+            const isP = m.pay[s.id];
             const html = `
-                <div class="pay-item ${isP?'paid':''}">
-                    <input type="checkbox" ${isP?'checked':''} onclick="togglePay(${p.id})">
-                    <div style="margin-left:10px">
-                        <div style="font-weight:700">${p.n} ${p.dig?'<span class="tag-digital">ANT 🐜</span>':''}</div>
-                        <div style="font-size:0.7rem; color:#888">Día ${p.dy} • ${p.c || 'Efectivo'}</div>
+                <div class="item-row ${isP?'paid':''}">
+                    <div class="icon-circle">${getIcon(s.n)}</div>
+                    <div>
+                        <div style="font-weight:800">${s.n} ${s.ant?'<span class="tag-ant">ANT</span>':''}</div>
+                        <div style="font-size:0.7rem; color:#888">Día ${s.dy} • ${s.c || 'Efectivo'}</div>
                     </div>
-                    <div style="margin-left:auto; font-weight:800;">${fmt.format(p.a)}</div>
+                    <div style="margin-left:auto; font-weight:800;">
+                        ${fmt.format(s.a)} 
+                        <input type="checkbox" ${isP?'checked':''} onclick="togglePay(${s.id})" style="margin-left:10px; width:18px; height:18px;">
+                    </div>
                 </div>`;
-            if(p.dy <= 14) { q1List.innerHTML += html; if(!isP) q1Tot+=p.a; }
-            else { q2List.innerHTML += html; if(!isP) q2Tot+=p.a; }
+            if(s.ant) { al.innerHTML += html; }
+            else if(s.dy <= 14) { q1l.innerHTML += html; if(!isP) q1t+=s.a; }
+            else { q2l.innerHTML += html; if(!isP) q2t+=s.a; }
         });
-        document.getElementById('q1-total').innerText = fmt.format(q1Tot);
-        document.getElementById('q2-total').innerText = fmt.format(q2Tot);
+        document.getElementById('q1-t').innerText = fmt.format(q1t);
+        document.getElementById('q2-t').innerText = fmt.format(q2t);
 
-        // Tablas
-        fillTable('t-inc', m.inc, 'inc', (x)=>`<td>${x.d}</td><td>${x.desc}</td><td>${fmt.format(x.a)}</td>`);
-        fillTable('t-serv', m.serv, 'serv', (x)=>`<td>${x.n} ${x.dig?'<span class="tag-digital">ANT 🐜</span>':''}</td><td>${x.dy}</td><td>${fmt.format(x.a)}</td><td>${x.f}</td>`);
-        fillTable('t-card', u.cards, 'card', (x)=>`<td>${x.n} (*${x.d})</td><td>${fmt.format(x.l)}</td><td>Día ${x.p}</td><td>Q${x.p<=14?1:2}</td>`);
-        fillTable('t-exp', m.exp, 'exp', (x)=>`<td>${x.desc}</td><td>${x.c || 'Efectivo'}</td><td>${fmt.format(x.a)}</td>`);
+        // History Views
+        renderHist('inc-history', m.inc, 'inc');
+        renderHist('serv-history', m.serv, 'serv');
+        renderHist('card-history', u.cards, 'card');
+        renderHist('exp-history', m.exp, 'exp');
+        renderHist('sav-history', u.savings, 'sav', true);
     }
 
-    function fillTable(id, list, type, rowFn) {
-        const b = document.getElementById(id); b.innerHTML = '';
+    function renderHist(id, list, type, canEdit=false) {
+        const el = document.getElementById(id); el.innerHTML = '';
         list.forEach(x => {
-            b.innerHTML += `<tr>${rowFn(x)}<td><button onclick="del('${type}', ${x.id})" style="color:var(--red); border:none; background:none; cursor:pointer;">✖</button></td></tr>`;
+            el.innerHTML += `
+                <div class="item-row">
+                    <div class="icon-circle">${getIcon(x.n || x.desc || '')}</div>
+                    <div>
+                        <div style="font-weight:700">${x.n || x.desc} ${x.op==='out'?'(Retiro)':''}</div>
+                        <div style="font-size:0.75rem; color:#888">${x.d || ''} ${x.c? '• '+x.c : ''}</div>
+                    </div>
+                    <div class="actions">
+                        <span style="font-weight:800; margin-right:10px;">${fmt.format(x.a)}</span>
+                        ${canEdit ? `<button class="btn-mini edit" onclick="edit('${type}', ${x.id})">✏️</button>` : ''}
+                        <button class="btn-mini del" onclick="del('${type}', ${x.id})">🗑️</button>
+                    </div>
+                </div>`;
         });
     }
 
-    // Auto-Login si ya hay sesión
-    if(db.activeUser) unlock();
+    if(db.active) unlock();
 </script>
 </body>
 </html>
