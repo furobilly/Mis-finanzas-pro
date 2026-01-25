@@ -3,37 +3,36 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Finanzas Pro V3.0</title>
+    <title>Finanzas Pro Premium V3.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* TUS COLORES OFICIALES */
             --verde-agua: #20A39E; 
             --dorado: #FFBA49;
             --coral: #EF5B5B;
             --violeta: #23001E;
-            --violeta-luz: #6c2bd9;
             --border: #e2e8f0;
-            --bg: #ffffff;
+            --bg-body: #ffffff;
         }
 
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { margin: 0; background-color: var(--bg); color: var(--violeta); min-height: 100vh; }
+        body { margin: 0; background-color: var(--bg-body); color: var(--violeta); min-height: 100vh; }
 
         /* PANTALLA DE ACCESO */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--violeta); z-index: 2000; display: flex; align-items: center; justify-content: center; color: white; }
         .login-box { background: white; padding: 40px; border-radius: 24px; color: var(--violeta); box-shadow: 0 20px 50px rgba(0,0,0,0.3); width: 350px; text-align: center; }
 
-        /* CONTENEDOR PRINCIPAL CENTRADO */
+        /* CONTENEDOR PRINCIPAL */
         .wrap { max-width: 1100px; margin: 0 auto; background: #fff; min-height: 100vh; display: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
 
-        /* HEADER PREMIUM CENTRADO */
+        /* HEADER */
         header { padding: 40px 20px; text-align: center; border-bottom: 1px solid var(--border); }
-        .app-title { font-weight: 800; font-size: 2.5rem; color: var(--violeta); letter-spacing: -2px; margin: 0 0 20px 0; }
+        .app-title { font-weight: 800; font-size: 2.8rem; color: var(--violeta); letter-spacing: -2px; margin: 0 0 20px 0; text-align: center; }
         
-        .header-controls { display: flex; justify-content: center; align-items: center; gap: 15px; }
+        .header-controls { display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; }
         .pill { padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border); background: #f8fafc; font-weight: 700; cursor: pointer; }
-        .btn-exit { background: var(--coral); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        .btn-exit { background: var(--coral); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-exit:hover { filter: brightness(0.9); }
 
         /* NAVEGACIÓN */
         nav { display: flex; background: #f8fafc; overflow-x: auto; padding: 0 20px; border-bottom: 1px solid var(--border); justify-content: center; }
@@ -45,35 +44,32 @@
         .page { display: none; }
         .page.active { display: block; }
 
-        /* DASHBOARD TILES */
+        /* DASHBOARD */
         .grid-summary { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 30px; }
-        .tile { background: #fff; border-radius: 20px; padding: 25px; border: 1px solid var(--border); text-align: center; }
+        .tile { background: #fff; border-radius: 20px; padding: 25px; border: 1px solid var(--border); text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .tile-val { font-size: 1.6rem; font-weight: 800; margin-top: 8px; }
         .tile-label { font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
 
-        /* QUINCENAS */
         .card { background: #fff; border-radius: 24px; padding: 25px; border: 1px solid var(--border); margin-bottom: 25px; }
         .q-box { background: #fcfcfd; border-radius: 18px; padding: 20px; margin-bottom: 20px; border: 1px solid #f1f5f9; }
         .q-title { display: flex; justify-content: space-between; font-weight: 800; margin-bottom: 15px; }
         
-        .item-row { display: flex; align-items: center; padding: 16px; background: #fff; border: 1px solid #f1f5f9; border-radius: 16px; margin-bottom: 10px; }
-        .item-row.paid { opacity: 0.5; background: #f8fafc; }
+        .item-row { display: flex; align-items: center; padding: 16px; background: #fff; border: 1px solid #f1f5f9; border-radius: 16px; margin-bottom: 10px; transition: 0.2s; }
+        .item-row.paid { opacity: 0.4; background: #f8fafc; }
 
         .days-badge { font-size: 0.7rem; font-weight: 800; padding: 4px 8px; border-radius: 6px; margin-top: 5px; display: inline-block; }
         .d-ok { background: #dcfce7; color: #166534; }
         .d-warn { background: #fef9c3; color: #854d0e; }
         .d-alert { background: #fee2e2; color: #991b1b; }
 
-        /* FORMULARIOS */
+        /* FORMS */
         .form-row { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin-bottom: 20px; }
-        input, select { padding: 14px; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 0.95rem; }
-        .btn-add { background: var(--verde-agua); color: white; border: none; padding: 14px; border-radius: 14px; cursor: pointer; font-weight: 700; }
+        input, select { padding: 14px; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 0.95rem; width: 100%; }
+        .btn-add { background: var(--verde-agua); color: white; border: none; padding: 14px; border-radius: 14px; cursor: pointer; font-weight: 700; width: 100%; }
 
-        /* ACCIONES */
-        .actions { margin-left: auto; display: flex; gap: 8px; }
-        .btn-mini { border: none; background: #f1f5f9; padding: 8px; border-radius: 8px; cursor: pointer; }
-
-        .tag-recurrente { background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; }
+        .actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+        .btn-mini { border: none; background: #f1f5f9; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+        .tag-rec { background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; }
     </style>
 </head>
 <body>
@@ -81,10 +77,9 @@
 <div id="login-screen">
     <div class="login-box">
         <h2 style="margin:0 0 10px 0">Finanzas Pro</h2>
-        <p style="color:#64748b; margin-bottom:30px">Ingreso de Usuario</p>
-        <input type="text" id="u-name" class="pill" style="width:100%; margin-bottom:10px" placeholder="Nombre">
+        <input type="text" id="u-name" class="pill" style="width:100%; margin-bottom:10px" placeholder="Tu Nombre">
         <input type="password" id="u-pin" style="width:100%; border:1px solid #ddd; padding:15px; border-radius:12px; text-align:center; font-size:1.5rem; letter-spacing:5px;" maxlength="4" placeholder="PIN">
-        <button class="btn-add" style="width:100%; margin-top:20px" onclick="login()">Entrar al Sistema</button>
+        <button class="btn-add" style="margin-top:20px" onclick="login()">Acceder</button>
     </div>
 </div>
 
@@ -114,11 +109,11 @@
                 <div class="tile"><div class="tile-label">Ingresos</div><div id="d-inc" class="tile-val">$0.00</div></div>
                 <div class="tile"><div class="tile-label">Egresos Mes</div><div id="d-egr" class="tile-val">$0.00</div></div>
                 <div class="tile" style="border-color:var(--verde-agua)"><div class="tile-label" style="color:var(--verde-agua)">Balance Disponible</div><div id="d-bal" class="tile-val" style="color:var(--verde-agua)">$0.00</div></div>
-                <div class="tile" style="border-color:var(--dorado)"><div class="tile-label" style="color:var(--dorado)">Ahorro Acumulado</div><div id="d-sav" class="tile-val" style="color:var(--dorado)">$0.00</div></div>
+                <div class="tile" style="border-color:var(--dorado)"><div class="tile-label" style="color:var(--dorado)">Ahorro Total</div><div id="d-sav" class="tile-val" style="color:var(--dorado)">$0.00</div></div>
             </div>
 
             <div class="card">
-                <h3>📅 Pagos de Quincena (Fijos + Tarjetas)</h3>
+                <h3>📅 Pagos de Quincena (Incluye Tarjetas)</h3>
                 <div class="q-box">
                     <div class="q-title"><span>Quincena 1 (1-14)</span><span id="q1-t" style="color:var(--verde-agua)">$0.00</span></div>
                     <div id="q1-l"></div>
@@ -150,19 +145,17 @@
 
         <section id="fix" class="page">
             <div class="card">
-                <h3>Servicios Fijos y Recurrentes</h3>
+                <h3>Servicios y Pagos Mensuales</h3>
                 <div class="form-row">
-                    <input type="text" id="s-name" placeholder="Servicio">
+                    <input type="text" id="s-name" placeholder="Nombre Servicio">
                     <input type="number" id="s-amt" placeholder="Monto">
                     <input type="number" id="s-day" placeholder="Día (1-31)">
-                    <select id="s-freq"><option value="Mensual">Mensual</option><option value="Bimestral">Bimestral</option></select>
+                    <select id="s-freq"><option value="Mensual">Mensual</option><option value="Bimestral">Bimestral</option><option value="Anual">Anual</option></select>
                 </div>
                 <div class="form-row">
                     <select id="s-card-link"><option value="">💸 Efectivo</option></select>
-                    <label style="display:flex; align-items:center; gap:8px; font-weight:700;">
-                        <input type="checkbox" id="s-is-rec"> Cargo Recurrente
-                    </label>
-                    <button class="btn-add" onclick="add('serv')">Guardar</button>
+                    <label style="display:flex; align-items:center; gap:8px; font-weight:700;"><input type="checkbox" id="s-is-rec"> Cargo Recurrente</label>
+                    <button class="btn-add" onclick="add('serv')">Guardar Servicio</button>
                 </div>
                 <div id="serv-list"></div>
             </div>
@@ -170,26 +163,29 @@
 
         <section id="gastos" class="page">
             <div class="card">
-                <h3>Gastos Variables</h3>
+                <h3>Gastos Variables con Fecha</h3>
                 <div class="form-row">
-                    <input type="text" id="e-desc" placeholder="Gasto">
+                    <input type="date" id="e-date">
+                    <input type="text" id="e-desc" placeholder="Descripción">
                     <input type="number" id="e-amt" placeholder="Monto">
+                </div>
+                <div class="form-row">
                     <select id="e-cat">
                         <option value="Comida">🍔 Comida</option><option value="Transporte">🚗 Transporte</option>
                         <option value="Hospital">🏥 Hospital</option><option value="Viajes">✈️ Viajes</option>
                         <option value="Otros">📌 Otros</option>
                     </select>
                     <select id="e-card-link"><option value="">💸 Efectivo</option></select>
-                    <button class="btn-add" onclick="add('exp')">Registrar</button>
+                    <button class="btn-add" onclick="add('exp')">Registrar Gasto</button>
                 </div>
                 <div id="exp-list"></div>
             </div>
         </section>
 
         <section id="sav" class="page">
-            <div class="card">
-                <h3 style="justify-content:center">🛡️ Reserva de Ahorro Real</h3>
-                <div id="sav-total-view" style="font-size:3rem; font-weight:800; text-align:center; color:var(--dorado)">$0.00</div>
+            <div class="card" style="text-align:center">
+                <div class="tile-label">Reserva de Ahorro</div>
+                <div id="sav-total-view" style="font-size:3rem; font-weight:800; color:var(--dorado)">$0.00</div>
             </div>
             <div class="card">
                 <div class="form-row">
@@ -205,12 +201,12 @@
 
         <section id="cards" class="page">
             <div class="card">
-                <h3>Mis Tarjetas de Crédito</h3>
+                <h3>Tarjetas de Crédito</h3>
                 <div class="form-row">
-                    <input type="text" id="c-name" placeholder="Nombre Banco">
+                    <input type="text" id="c-name" placeholder="Banco">
                     <input type="text" id="c-dig" placeholder="Últimos 4" maxlength="4">
                     <input type="number" id="c-pay" placeholder="Día Pago">
-                    <input type="number" id="c-amt" placeholder="Monto a Pagar">
+                    <input type="number" id="c-amt" placeholder="Monto a Pagar Mes">
                     <button class="btn-add" onclick="add('card')">Guardar Tarjeta</button>
                 </div>
                 <div id="card-list"></div>
@@ -220,23 +216,22 @@
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('finanzasPro_v3.0')) || { users: {}, active: null };
-    let curY = new Date().getFullYear();
-    let curM = new Date().getMonth();
+    let db = JSON.parse(localStorage.getItem('finanzasPro_v3.1')) || { users: {}, active: null };
+    let curY = 2026; 
+    let curM = 0; // Enero
     const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
-    // MOTOR DE ICONOS
-    const iconMap = { renta:'🏠', casa:'🏠', luz:'💡', agua:'💧', gas:'🔥', internet:'🌐', netflix:'📺', amazon:'📦', comida:'🍔', hospital:'🏥', transporte:'🚗', viaje:'✈️' };
+    const iconMap = { renta:'🏠', casa:'🏠', luz:'💡', agua:'💧', gas:'🔥', internet:'🌐', netflix:'📺', comida:'🍔', hospital:'🏥', transporte:'🚗', viaje:'✈️' };
     const getIcon = (name) => {
-        const n = name.toLowerCase();
+        const n = (name||"").toLowerCase();
         for(let k in iconMap) if(n.includes(k)) return iconMap[k];
         return '📌';
     }
 
-    // SEGURIDAD
+    // AUTH
     function login() {
         const u = document.getElementById('u-name').value, p = document.getElementById('u-pin').value;
-        if(!u || p.length < 4) return alert("Completa Nombre y PIN");
+        if(!u || p.length < 4) return alert("Completa Nombre y PIN de 4 dígitos");
         if(!db.users[u]) db.users[u] = { pin: p, cards: [], months: {}, savings: [] };
         else if(db.users[u].pin !== p) return alert("PIN Incorrecto");
         db.active = u; save(); unlock();
@@ -253,10 +248,11 @@
         const ys = document.getElementById('ySel'), ms = document.getElementById('mSel');
         for(let i=2024; i<=2030; i++) ys.innerHTML += `<option value="${i}" ${i==curY?'selected':''}>${i}</option>`;
         ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"].forEach((m,i)=>ms.innerHTML += `<option value="${i}" ${i==curM?'selected':''}>${m}</option>`);
-        ys.onchange = e => { curY = e.target.value; render(); };
-        ms.onchange = e => { curM = e.target.value; render(); };
-        document.getElementById('i-date').value = new Date().toISOString().split('T')[0];
-        document.getElementById('sav-date').value = new Date().toISOString().split('T')[0];
+        ys.onchange = e => { curY = parseInt(e.target.value); render(); };
+        ms.onchange = e => { curM = parseInt(e.target.value); render(); };
+        document.getElementById('i-date').value = "2026-01-24";
+        document.getElementById('e-date').value = "2026-01-24";
+        document.getElementById('sav-date').value = "2026-01-24";
         setupTabs();
         render();
     }
@@ -272,70 +268,96 @@
         });
     }
 
-    function getU() {
+    // EL CEREBRO: ROLLEOVER LOGIC
+    function getMonthData() {
         const u = db.users[db.active];
         const key = `${curY}-${curM}`;
-        if(!u.months[key]) u.months[key] = { inc: [], serv: [], exp: [], pay: {} };
-        return u;
+        
+        if(!u.months[key]) {
+            // Buscamos el mes anterior para copiar
+            const prevM = curM === 0 ? 11 : curM - 1;
+            const prevY = curM === 0 ? curY - 1 : curY;
+            const prevKey = `${prevY}-${prevM}`;
+            const prevData = u.months[prevKey];
+
+            u.months[key] = { inc: [], serv: [], exp: [], pay: {} };
+            
+            if(prevData) {
+                // Copiamos Servicios y Recurrentes
+                prevData.serv.forEach(s => {
+                    // Aquí podríamos validar la frecuencia si quisiéramos ser más estrictos
+                    u.months[key].serv.push({...s, id: Date.now() + Math.random()});
+                });
+            }
+        }
+        return u.months[key];
     }
 
-    // CRUD GENERAL
     function add(type) {
-        const u = getU();
-        const m = u.months[`${curY}-${curM}`];
+        const u = db.users[db.active];
+        const m = getMonthData();
         const id = Date.now();
-        if(type==='inc') m.inc.push({id, d: document.getElementById('i-date').value, desc: document.getElementById('i-desc').value, a: parseFloat(document.getElementById('i-amt').value)});
-        else if(type==='serv') m.serv.push({id, n: document.getElementById('s-name').value, a: parseFloat(document.getElementById('s-amt').value), dy: parseInt(document.getElementById('s-day').value), f: document.getElementById('s-freq').value, c: document.getElementById('s-card-link').value, rec: document.getElementById('s-is-rec').checked});
-        else if(type==='card') u.cards.push({id, n: document.getElementById('c-name').value, d: document.getElementById('c-dig').value, p: parseInt(document.getElementById('c-pay').value), a: parseFloat(document.getElementById('c-amt').value || 0)});
-        else if(type==='exp') m.exp.push({id, desc: document.getElementById('e-desc').value, a: parseFloat(document.getElementById('e-amt').value), cat: document.getElementById('e-cat').value, c: document.getElementById('e-card-link').value});
-        else if(type==='sav') u.savings.push({id, d: document.getElementById('sav-date').value, desc: document.getElementById('sav-desc').value, a: parseFloat(document.getElementById('sav-amt').value), op: document.getElementById('sav-op').value});
+        if(type==='inc') m.inc.push({id, d: document.getElementById('i-date').value, desc: document.getElementById('i-desc').value, a: parseFloat(document.getElementById('i-amt').value || 0)});
+        else if(type==='serv') m.serv.push({id, n: document.getElementById('s-name').value, a: parseFloat(document.getElementById('s-amt').value || 0), dy: parseInt(document.getElementById('s-day').value || 1), f: document.getElementById('s-freq').value, c: document.getElementById('s-card-link').value, rec: document.getElementById('s-is-rec').checked});
+        else if(type==='card') u.cards.push({id, n: document.getElementById('c-name').value, d: document.getElementById('c-dig').value, p: parseInt(document.getElementById('c-pay').value || 1), a: parseFloat(document.getElementById('c-amt').value || 0)});
+        else if(type==='exp') m.exp.push({id, d: document.getElementById('e-date').value, desc: document.getElementById('e-desc').value, a: parseFloat(document.getElementById('e-amt').value || 0), cat: document.getElementById('e-cat').value, c: document.getElementById('e-card-link').value});
+        else if(type==='sav') u.savings.push({id, d: document.getElementById('sav-date').value, desc: document.getElementById('sav-desc').value, a: parseFloat(document.getElementById('sav-amt').value || 0), op: document.getElementById('sav-op').value});
         save(); render();
         document.querySelectorAll('input:not([type="date"]):not([type="checkbox"])').forEach(i => i.value = '');
     }
 
     function del(type, id) {
-        const u = getU();
+        const u = db.users[db.active];
         if(type==='sav') u.savings = u.savings.filter(x=>x.id!==id);
         else if(type==='card') u.cards = u.cards.filter(x=>x.id!==id);
-        else u.months[`${curY}-${curM}`][type] = u.months[`${curY}-${curM}`][type].filter(x=>x.id!==id);
+        else getMonthData()[type] = getMonthData()[type].filter(x=>x.id!==id);
         save(); render();
     }
 
+    // EDITOR UNIVERSAL MEJORADO
     function edit(type, id) {
-        const u = getU();
-        let list = (type==='sav') ? u.savings : (type==='card') ? u.cards : u.months[`${curY}-${curM}`][type];
+        const u = db.users[db.active];
+        let list = (type==='sav') ? u.savings : (type==='card') ? u.cards : getMonthData()[type];
         let item = list.find(x=>x.id===id);
+        
+        const newName = prompt("Editar Nombre/Descripción:", item.n || item.desc || "");
         const newAmt = prompt("Editar Monto:", item.a || 0);
-        if(newAmt !== null) { item.a = parseFloat(newAmt); save(); render(); }
+        
+        if(newName !== null) {
+            if(item.n) item.n = newName; else item.desc = newName;
+        }
+        if(newAmt !== null) item.a = parseFloat(newAmt);
+        
+        save(); render();
     }
 
     function togglePay(id) {
-        const m = getU().months[`${curY}-${curM}`];
+        const m = getMonthData();
         m.pay[id] = !m.pay[id]; save(); render();
     }
 
-    function save() { localStorage.setItem('finanzasPro_v3.0', JSON.stringify(db)); }
+    function save() { localStorage.setItem('finanzasPro_v3.1', JSON.stringify(db)); }
 
     function getDaysLeft(day) {
-        const today = new Date(); today.setHours(0,0,0,0);
+        const today = new Date(2026, 0, 24); // Hoy es 24 Enero 2026
         const target = new Date(curY, curM, day);
         const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
         if(diff === 0) return { t: "Vence hoy", c: "d-warn" };
-        if(diff < 0) return { t: `Venció hace ${Math.abs(diff)} días`, c: "d-alert" };
+        if(diff < 0) return { t: `Venció hace ${Math.abs(diff)} d`, c: "d-alert" };
         return { t: `Faltan ${diff} días`, c: diff <= 3 ? "d-warn" : "d-ok" };
     }
 
-    // RENDER PRINCIPAL
     function render() {
-        const u = getU(), m = u.months[`${curY}-${curM}`];
-        
-        // Cargar Tarjetas en Menús
+        const u = db.users[db.active];
+        const m = getMonthData();
+
+        // Dropdowns de tarjetas
         ['s-card-link', 'e-card-link'].forEach(id => {
             const s = document.getElementById(id); s.innerHTML = '<option value="">💸 Efectivo</option>';
             u.cards.forEach(c => s.innerHTML += `<option value="${c.n}">💳 ${c.n}</option>`);
         });
 
-        // Totales Dashboard
+        // Dashboard Totales
         const tInc = m.inc.reduce((s,x)=>s+x.a, 0);
         const tServ = m.serv.reduce((s,x)=>s+x.a, 0);
         const tExp = m.exp.reduce((s,x)=>s+x.a, 0);
@@ -348,12 +370,10 @@
         document.getElementById('d-sav').innerText = fmt.format(tSav);
         document.getElementById('sav-total-view').innerText = fmt.format(tSav);
 
-        // Dashboard Lists (Quincenas + Tarjetas)
         const q1l = document.getElementById('q1-l'), q2l = document.getElementById('q2-l'), rl = document.getElementById('rec-list');
         q1l.innerHTML = ''; q2l.innerHTML = ''; rl.innerHTML = '';
         let q1t = 0, q2t = 0;
 
-        // Unificar todo lo que se paga por fecha
         const allPayments = [
             ...m.serv.map(s => ({...s, type:'serv'})),
             ...u.cards.map(c => ({id:c.id, n: `Pago ${c.n}`, a:c.a, dy:c.p, c:c.n, type:'card'}))
@@ -362,19 +382,18 @@
         allPayments.forEach(p => {
             const isP = m.pay[p.id];
             const dInfo = getDaysLeft(p.dy);
-            const html = `
-                <div class="item-row ${isP?'paid':''}">
-                    <div style="font-size:1.5rem; margin-right:15px;">${getIcon(p.n)}</div>
-                    <div>
-                        <div style="font-weight:800">${p.n} ${p.rec?'<span class="tag-recurrente">RECURRENTE</span>':''}</div>
-                        <div style="font-size:0.7rem; color:#888">Día ${p.dy} • ${p.c || 'Efectivo'}</div>
-                        ${!isP ? `<span class="days-badge ${dInfo.c}">${dInfo.t}</span>` : ''}
-                    </div>
-                    <div class="actions">
-                        <span style="font-weight:800; margin-right:10px;">${fmt.format(p.a)}</span>
-                        <input type="checkbox" ${isP?'checked':''} onclick="togglePay(${p.id})" style="width:20px; height:20px;">
-                    </div>
-                </div>`;
+            const html = `<div class="item-row ${isP?'paid':''}">
+                <div style="font-size:1.5rem; margin-right:15px;">${getIcon(p.n)}</div>
+                <div style="flex-grow:1">
+                    <div style="font-weight:800">${p.n} ${p.rec?'<span class="tag-rec">REC</span>':''}</div>
+                    <div style="font-size:0.7rem; color:#888">Día ${p.dy} • ${p.c||'Efectivo'}</div>
+                    ${!isP ? `<span class="days-badge ${dInfo.c}">${dInfo.t}</span>` : ''}
+                </div>
+                <div class="actions">
+                    <span style="font-weight:800; margin-right:10px;">${fmt.format(p.a)}</span>
+                    <input type="checkbox" ${isP?'checked':''} onclick="togglePay(${p.id})" style="width:20px; height:20px;">
+                </div>
+            </div>`;
             if(p.rec) rl.innerHTML += html;
             else if(p.dy <= 14) { q1l.innerHTML += html; if(!isP) q1t += p.a; }
             else { q2l.innerHTML += html; if(!isP) q2t += p.a; }
@@ -382,14 +401,14 @@
         document.getElementById('q1-t').innerText = fmt.format(q1t);
         document.getElementById('q2-t').innerText = fmt.format(q2t);
 
-        // Historiales en Vistas
-        const configs = { 'inc-list': m.inc, 'serv-list': m.serv, 'exp-list': m.exp, 'sav-list': u.savings, 'card-list': u.cards };
-        for(let id in configs) {
+        // Historiales con EDITOR COMPLETO
+        const confs = { 'inc-list': m.inc, 'serv-list': m.serv, 'exp-list': m.exp, 'sav-list': u.savings, 'card-list': u.cards };
+        for(let id in confs) {
             const el = document.getElementById(id); el.innerHTML = '';
-            configs[id].forEach(x => {
+            confs[id].forEach(x => {
                 el.innerHTML += `<div class="item-row">
                     <div style="font-size:1.2rem; margin-right:15px;">${getIcon(x.n || x.desc || '')}</div>
-                    <div>
+                    <div style="flex-grow:1">
                         <div style="font-weight:700">${x.n || x.desc} ${x.cat ? '• '+x.cat : ''}</div>
                         <div style="font-size:0.7rem; color:#888">${x.d || ''} ${x.c ? '• '+x.c : ''} ${x.dy ? '• Día '+x.dy : ''}</div>
                     </div>
