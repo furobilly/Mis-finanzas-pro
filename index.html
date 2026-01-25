@@ -3,133 +3,150 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Finanzas Pro Master V3.4</title>
+    <title>Finanzas Pro Master V3.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --verde: #20A39E; --dorado: #FFBA49; --coral: #EF5B5B; --violeta: #23001E;
-            --border: #e2e8f0; --bg: #ffffff; --fbg: #f8fafc;
+            --gris-claro: #f8fafc; --borde: #e2e8f0;
         }
 
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { margin: 0; background-color: var(--bg); color: var(--violeta); min-height: 100vh; overflow-x: hidden; }
+        body { margin: 0; background-color: #ffffff; color: var(--violeta); min-height: 100vh; overflow-x: hidden; }
 
-        /* PANTALLA DE ACCESO PROFESIONAL */
+        /* --- LOGIN SCREEN --- */
         #login-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--violeta); z-index: 2000; 
+            background: var(--violeta); z-index: 5000; 
             display: flex; align-items: center; justify-content: center; color: white; 
         }
         .login-box { 
-            background: white; padding: 40px; border-radius: 28px; color: var(--violeta); 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3); width: 420px; text-align: center; 
+            background: white; padding: 45px; border-radius: 30px; color: var(--violeta); 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4); width: 420px; text-align: center; 
         }
-        .user-list { margin: 25px 0; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+        .user-list { margin: 25px 0; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
         .user-btn { 
-            background: #f1f5f9; border: 2px solid transparent; padding: 12px 18px; 
-            border-radius: 15px; cursor: pointer; font-weight: 700; color: var(--violeta); transition: 0.2s;
+            background: var(--gris-claro); border: 2px solid transparent; padding: 12px 20px; 
+            border-radius: 14px; cursor: pointer; font-weight: 700; color: var(--violeta); transition: 0.2s;
         }
-        .user-btn:hover { border-color: var(--verde); background: #fff; }
+        .user-btn:hover { border-color: var(--verde); background: #fff; transform: translateY(-2px); }
 
-        /* CONTENEDOR PRINCIPAL ESTILO "MORADO" */
+        /* --- LAYOUT GENERAL --- */
         .wrap { 
             max-width: 1150px; margin: 0 auto; background: #fff; min-height: 100vh; 
-            display: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
-            box-shadow: 0 0 100px rgba(0,0,0,0.05);
+            display: none; border-left: 1px solid var(--borde); border-right: 1px solid var(--borde);
         }
 
-        /* HEADER PREMIUM */
-        header { padding: 60px 20px 40px 20px; text-align: center; border-bottom: 1px solid var(--border); }
-        .app-title { font-weight: 800; font-size: 3.2rem; color: var(--violeta); letter-spacing: -2.5px; margin: 0; }
+        header { padding: 50px 20px 30px 20px; text-align: center; border-bottom: 1px solid var(--borde); background: #fff; }
+        .app-title { font-weight: 800; font-size: 3rem; color: var(--violeta); letter-spacing: -2px; margin: 0; }
         
         .header-controls { 
             display: flex; justify-content: center; align-items: center; gap: 15px; 
-            margin-top: 30px; flex-wrap: wrap; 
+            margin-top: 25px; flex-wrap: wrap; 
         }
         .pill { 
-            padding: 12px 22px; border-radius: 14px; border: 1px solid var(--border); 
-            background: var(--fbg); font-weight: 700; cursor: pointer; color: var(--violeta);
+            padding: 10px 20px; border-radius: 50px; border: 1px solid var(--borde); 
+            background: var(--gris-claro); font-weight: 700; cursor: pointer; color: var(--violeta); font-size: 0.9rem;
         }
         .btn-exit { 
-            background: var(--coral); color: white; border: none; padding: 12px 22px; 
-            border-radius: 14px; font-weight: 700; cursor: pointer; transition: 0.2s;
+            background: var(--coral); color: white; border: none; padding: 10px 25px; 
+            border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.2s;
         }
-        .btn-exit:hover { filter: brightness(0.9); transform: translateY(-2px); }
+        .btn-exit:hover { filter: brightness(0.9); box-shadow: 0 4px 12px rgba(239, 91, 91, 0.3); }
 
         /* NAVEGACIÓN */
-        nav { display: flex; background: var(--fbg); overflow-x: auto; padding: 0 20px; border-bottom: 1px solid var(--border); justify-content: center; }
+        nav { display: flex; background: var(--gris-claro); overflow-x: auto; padding: 0 20px; border-bottom: 1px solid var(--borde); justify-content: center; }
         nav button { 
-            border: 0; background: transparent; color: #64748b; padding: 25px; 
+            border: 0; background: transparent; color: #64748b; padding: 22px 25px; 
             cursor: pointer; font-weight: 700; font-size: 0.95rem; position: relative; white-space: nowrap; 
         }
         nav button.active { color: var(--verde); }
-        nav button.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 5px; background: var(--verde); }
+        nav button.active::after { content: ''; position: absolute; bottom: 0; left: 20%; width: 60%; height: 4px; background: var(--verde); border-radius: 10px 10px 0 0; }
 
         main { padding: 40px; }
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .page { display: none; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* DASHBOARD TILES */
+        /* --- DASHBOARD TILES --- */
         .grid-summary { 
-            display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); 
+            display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
             margin-bottom: 40px; 
         }
         .tile { 
-            background: #fff; border-radius: 24px; padding: 30px; border: 1px solid var(--border); 
-            text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.02); 
+            background: #fff; border-radius: 24px; padding: 25px; border: 1px solid var(--borde); 
+            text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); position: relative; overflow: hidden;
         }
-        .tile-val { font-size: 1.8rem; font-weight: 800; margin-top: 10px; }
-        .tile-label { font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; }
+        .tile-val { font-size: 1.8rem; font-weight: 800; margin-top: 8px; }
+        .tile-label { font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* CARDS Y LISTAS */
-        .card { background: #fff; border-radius: 26px; padding: 30px; border: 1px solid var(--border); margin-bottom: 30px; }
-        .card h3 { margin-top: 0; font-weight: 800; color: var(--violeta); border-bottom: 2px solid #f8fafc; padding-bottom: 20px; margin-bottom: 25px; }
-        
-        .q-box { background: var(--fbg); border-radius: 22px; padding: 25px; margin-bottom: 25px; border: 1px solid #f1f5f9; }
-        .q-title { display: flex; justify-content: space-between; font-weight: 800; margin-bottom: 20px; color: var(--violeta); font-size: 1.1rem; }
-        
+        /* --- ACORDEONES (NUEVO) --- */
+        .accordion-block {
+            background: #fff; border: 1px solid var(--borde); border-radius: 20px; 
+            margin-bottom: 20px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: 0.3s;
+        }
+        .acc-header {
+            padding: 20px 25px; background: #fff; cursor: pointer; display: flex; 
+            justify-content: space-between; align-items: center; user-select: none;
+            transition: background 0.2s;
+        }
+        .acc-header:hover { background: #fcfcfc; }
+        .acc-title { font-weight: 800; font-size: 1.1rem; color: var(--violeta); display: flex; align-items: center; gap: 10px; }
+        .acc-total { background: var(--gris-claro); padding: 5px 12px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; color: var(--verde); }
+        .arrow { font-size: 0.8rem; transition: transform 0.3s; color: #94a3b8; }
+        .accordion-block.open .arrow { transform: rotate(180deg); color: var(--violeta); }
+        .accordion-block.open { border-color: var(--verde); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+        .acc-content {
+            display: none; padding: 0 20px 20px 20px; border-top: 1px solid var(--borde); background: #fcfcfd;
+        }
+
+        /* --- LISTAS Y FILAS --- */
         .item-row { 
-            display: flex; align-items: center; padding: 20px; background: #fff; 
-            border: 1px solid #f1f5f9; border-radius: 20px; margin-bottom: 12px; transition: 0.2s; 
+            display: flex; align-items: center; padding: 18px; background: #fff; 
+            border: 1px solid var(--borde); border-radius: 16px; margin-top: 12px; transition: 0.2s; 
         }
-        .item-row:hover { transform: scale(1.01); box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
-        .item-row.paid { opacity: 0.4; background: #f8fafc; filter: grayscale(1); }
+        .item-row:hover { transform: translateX(5px); border-color: var(--verde); }
+        .item-row.paid { opacity: 0.5; background: var(--gris-claro); filter: grayscale(1); }
 
-        .days-badge { font-size: 0.7rem; font-weight: 800; padding: 5px 10px; border-radius: 8px; margin-top: 8px; display: inline-block; }
+        .days-badge { font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; margin-top: 5px; display: inline-block; }
         .d-ok { background: #dcfce7; color: #166534; }
         .d-warn { background: #fef9c3; color: #854d0e; }
         .d-alert { background: #fee2e2; color: #991b1b; }
 
-        /* FORMULARIOS */
-        .form-row { display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin-bottom: 25px; }
-        input, select { padding: 16px; border: 2px solid #e2e8f0; border-radius: 16px; font-size: 1rem; outline: none; width: 100%; transition: 0.2s; }
-        input:focus { border-color: var(--verde); box-shadow: 0 0 0 4px rgba(32, 163, 158, 0.1); }
+        .tag-rec { background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; margin-left: 5px; }
+
+        /* --- FORMULARIOS --- */
+        .card { background: #fff; border-radius: 24px; padding: 30px; border: 1px solid var(--borde); margin-bottom: 30px; }
+        .card h3 { margin-top: 0; font-weight: 800; border-bottom: 2px solid var(--gris-claro); padding-bottom: 15px; margin-bottom: 20px; }
+
+        .form-row { display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 20px; }
+        input, select { padding: 15px; border: 2px solid var(--borde); border-radius: 14px; font-size: 1rem; outline: none; width: 100%; transition: 0.2s; }
+        input:focus { border-color: var(--verde); }
         .btn-add { 
-            background: var(--verde); color: white; border: none; padding: 16px; 
-            border-radius: 16px; cursor: pointer; font-weight: 700; width: 100%; transition: 0.2s; 
+            background: var(--verde); color: white; border: none; padding: 15px; 
+            border-radius: 14px; cursor: pointer; font-weight: 700; width: 100%; transition: 0.2s; 
         }
-        .btn-add:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .btn-add:hover { filter: brightness(1.1); }
 
-        .actions { margin-left: auto; display: flex; gap: 12px; align-items: center; }
-        .btn-mini { border: none; background: #f1f5f9; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-        .btn-mini:hover { background: #e2e8f0; transform: scale(1.1); }
+        .actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+        .btn-mini { border: none; background: var(--gris-claro); padding: 10px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .btn-mini:hover { background: #e2e8f0; }
 
-        .tag-rec { background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
     <div class="login-box">
-        <h1 style="margin:0 0 10px 0; font-size: 2.2rem; letter-spacing: -1.5px;">Finanzas Pro</h1>
-        <p style="color:#64748b; margin-bottom:20px;">Acceso Seguro a tu Capital</p>
+        <h1 style="margin:0 0 10px 0; font-size: 2.2rem; letter-spacing: -1px;">Finanzas Pro</h1>
+        <p style="color:#64748b; margin-bottom:25px;">Sistema de Gestión Personal</p>
         
         <div id="existing-users" class="user-list"></div>
 
-        <input type="text" id="u-name" class="pill" style="width:100%; margin-bottom:12px; text-align:center;" placeholder="Escribe tu Nombre">
-        <input type="password" id="u-pin" style="width:100%; border:2px solid #ddd; padding:18px; border-radius:18px; text-align:center; font-size:1.8rem; letter-spacing:8px;" maxlength="4" placeholder="••••" inputmode="numeric">
-        <button class="btn-add" style="margin-top:25px" onclick="login()">Desbloquear Sistema</button>
+        <input type="text" id="u-name" class="pill" style="width:100%; margin-bottom:12px; text-align:center; background:#fff;" placeholder="Usuario">
+        <input type="password" id="u-pin" style="width:100%; border:2px solid #ddd; padding:15px; border-radius:14px; text-align:center; font-size:1.5rem; letter-spacing:5px;" maxlength="4" placeholder="••••" inputmode="numeric">
+        <button class="btn-add" style="margin-top:25px" onclick="login()">Desbloquear</button>
     </div>
 </div>
 
@@ -140,14 +157,14 @@
             <select id="ySel" class="pill"></select>
             <select id="mSel" class="pill"></select>
             <div class="pill">👤 <span id="display-user"></span></div>
-            <button class="btn-exit" onclick="logout()">🔒 Salir y Bloquear</button>
+            <button class="btn-exit" onclick="logout()">🔒 Cerrar Sesión</button>
         </div>
     </header>
 
     <nav>
         <button class="tab-btn active" data-page="dash">📊 Dashboard</button>
         <button class="tab-btn" data-page="inc">💵 Ingresos</button>
-        <button class="tab-btn" data-page="fix">🏠 Servicios/Recurrentes</button>
+        <button class="tab-btn" data-page="fix">🏠 Servicios/Fijos</button>
         <button class="tab-btn" data-page="cards">💳 Tarjetas</button>
         <button class="tab-btn" data-page="gastos">🛒 Gastos Var.</button>
         <button class="tab-btn" data-page="sav">🛡️ Ahorro</button>
@@ -157,35 +174,50 @@
         <section id="dash" class="page active">
             <div class="grid-summary">
                 <div class="tile"><div class="tile-label">Ingresos</div><div id="d-inc" class="tile-val">$0.00</div></div>
-                <div class="tile"><div class="tile-label">Egresos Totales</div><div id="d-egr" class="tile-val">$0.00</div></div>
-                <div class="tile" style="border-color:var(--verde)"><div class="tile-label" style="color:var(--verde)">Balance Disponible</div><div id="d-bal" class="tile-val" style="color:var(--verde)">$0.00</div></div>
-                <div class="tile" style="border-color:var(--dorado)"><div class="tile-label" style="color:var(--dorado)">Ahorro Total</div><div id="d-sav" class="tile-val" style="color:var(--dorado)">$0.00</div></div>
+                <div class="tile"><div class="tile-label">Total Gastos (Todo)</div><div id="d-egr" class="tile-val">$0.00</div></div>
+                <div class="tile" style="border-color:var(--verde)"><div class="tile-label" style="color:var(--verde)">Balance Real Disponible</div><div id="d-bal" class="tile-val" style="color:var(--verde)">$0.00</div></div>
+                <div class="tile" style="border-color:var(--dorado)"><div class="tile-label" style="color:var(--dorado)">Reserva Ahorro</div><div id="d-sav" class="tile-val" style="color:var(--dorado)">$0.00</div></div>
             </div>
 
-            <div class="card">
-                <h3>📅 Pagos de Quincena (Fijos + Tarjetas)</h3>
-                <div class="q-box">
-                    <div class="q-title"><span>Quincena 1 (1-14)</span><span id="q1-t" style="color:var(--verde)">$0.00</span></div>
-                    <div id="q1-l"></div>
+            <div class="accordion-block" id="acc-q1">
+                <div class="acc-header" onclick="toggleAcc('acc-q1')">
+                    <div class="acc-title"><span class="arrow">▼</span> 📅 Quincena 1 (Día 1-14)</div>
+                    <div class="acc-total" id="q1-t">$0.00</div>
                 </div>
-                <div class="q-box">
-                    <div class="q-title"><span>Quincena 2 (15-31)</span><span id="q2-t" style="color:var(--verde)">$0.00</span></div>
-                    <div id="q2-l"></div>
-                </div>
+                <div class="acc-content" id="q1-l"></div>
             </div>
 
-            <div class="card">
-                <h3>🔄 Cargos Recurrentes (Fuera de Quincena)</h3>
-                <div id="rec-list"></div>
+            <div class="accordion-block" id="acc-q2">
+                <div class="acc-header" onclick="toggleAcc('acc-q2')">
+                    <div class="acc-title"><span class="arrow">▼</span> 📅 Quincena 2 (Día 15-31)</div>
+                    <div class="acc-total" id="q2-t">$0.00</div>
+                </div>
+                <div class="acc-content" id="q2-l"></div>
+            </div>
+
+            <div class="accordion-block" id="acc-rec">
+                <div class="acc-header" onclick="toggleAcc('acc-rec')">
+                    <div class="acc-title"><span class="arrow">▼</span> 🔄 Cargos Recurrentes</div>
+                    <div class="acc-total" id="rec-t">$0.00</div>
+                </div>
+                <div class="acc-content" id="rec-l"></div>
+            </div>
+
+            <div class="accordion-block" id="acc-exp">
+                <div class="acc-header" onclick="toggleAcc('acc-exp')">
+                    <div class="acc-title"><span class="arrow">▼</span> 🛒 Gastos Variables del Mes</div>
+                    <div class="acc-total" id="exp-t">$0.00</div>
+                </div>
+                <div class="acc-content" id="exp-l"></div>
             </div>
         </section>
 
         <section id="inc" class="page">
             <div class="card">
-                <h3>Registrar Dinero Entrante</h3>
+                <h3>Registrar Ingreso</h3>
                 <div class="form-row">
                     <input type="date" id="i-date">
-                    <input type="text" id="i-desc" placeholder="Descripción">
+                    <input type="text" id="i-desc" placeholder="Descripción (Sueldo, Bono)">
                     <input type="number" id="i-amt" placeholder="Monto $">
                     <button class="btn-add" onclick="add('inc')">Añadir Ingreso</button>
                 </div>
@@ -195,11 +227,11 @@
 
         <section id="fix" class="page">
             <div class="card">
-                <h3>Servicios y Pagos Recurrentes</h3>
+                <h3>Servicios Fijos y Recurrentes</h3>
                 <div class="form-row">
-                    <input type="text" id="s-name" placeholder="Nombre (Ej: Luz, Netflix)">
+                    <input type="text" id="s-name" placeholder="Nombre Servicio">
                     <input type="number" id="s-amt" placeholder="Monto $">
-                    <input type="number" id="s-day" placeholder="Día (1-31)">
+                    <input type="number" id="s-day" placeholder="Día Pago (1-31)">
                     <select id="s-freq">
                         <option value="Mensual">Mensual</option>
                         <option value="Bimestral">Bimestral</option>
@@ -207,11 +239,11 @@
                     </select>
                 </div>
                 <div class="form-row">
-                    <select id="s-card-link"><option value="">💸 Efectivo / Débito</option></select>
-                    <label style="display:flex; align-items:center; gap:8px; font-weight:700; font-size:0.9rem;">
-                        <input type="checkbox" id="s-is-rec"> Es Cargo Recurrente
+                    <select id="s-card-link"></select>
+                    <label style="display:flex; align-items:center; gap:8px; font-weight:700; color:#64748b;">
+                        <input type="checkbox" id="s-is-rec" style="width:20px; height:20px;"> Es Cargo Recurrente
                     </label>
-                    <button class="btn-add" onclick="add('serv')">Guardar en Sistema</button>
+                    <button class="btn-add" onclick="add('serv')">Guardar Servicio</button>
                 </div>
                 <div id="serv-list"></div>
             </div>
@@ -223,7 +255,7 @@
                 <div class="form-row">
                     <input type="text" id="c-name" placeholder="Banco / Alias">
                     <input type="text" id="c-dig" placeholder="Últimos 4 Dígitos" maxlength="4">
-                    <input type="number" id="c-pay" placeholder="Día de Pago">
+                    <input type="number" id="c-pay" placeholder="Día de Corte/Pago">
                     <button class="btn-add" onclick="add('card')">Registrar Tarjeta</button>
                 </div>
                 <div id="card-list"></div>
@@ -232,7 +264,7 @@
 
         <section id="gastos" class="page">
             <div class="card">
-                <h3>Gastos Diarios / Variables</h3>
+                <h3>Registrar Gasto Variable</h3>
                 <div class="form-row">
                     <input type="date" id="e-date">
                     <input type="text" id="e-desc" placeholder="Descripción">
@@ -244,7 +276,7 @@
                         <option value="Hospital">🏥 Hospital</option><option value="Viajes">✈️ Viajes</option>
                         <option value="Otros">📌 Otros</option>
                     </select>
-                    <select id="e-card-link"><option value="">💸 Efectivo / Débito</option></select>
+                    <select id="e-card-link"></select>
                     <button class="btn-add" onclick="add('exp')">Registrar Gasto</button>
                 </div>
                 <div id="exp-list"></div>
@@ -252,8 +284,8 @@
         </section>
 
         <section id="sav" class="page">
-            <div class="card" style="text-align:center">
-                <div class="tile-label">Reserva Acumulada Real</div>
+            <div class="card" style="text-align:center; padding: 40px;">
+                <div class="tile-label">Fondo de Ahorro Total</div>
                 <div id="sav-total-view" style="font-size:3.5rem; font-weight:800; color:var(--dorado)">$0.00</div>
             </div>
             <div class="card">
@@ -272,17 +304,23 @@
 </div>
 
 <script>
-    /** LÓGICA DE PROGRAMACIÓN - VERSIÓN MASTER 3.4 **/
-    let db = JSON.parse(localStorage.getItem('finanzasToñoMaster_V3.4')) || { users: {}, active: null };
-    let curY = 2026; 
-    let curM = 0; // Enero
+    /** FINANZAS PRO V3.5 - CÓDIGO MAESTRO **/
+    
+    // --- DATABASE ---
+    let db = JSON.parse(localStorage.getItem('finanzasMaster_V3.5')) || { users: {}, active: null };
+    let curY = new Date().getFullYear();
+    let curM = new Date().getMonth();
     const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
-    // MOTOR DE ICONOS POR PALABRA CLAVE
+    // --- ICON MAP EXTENDIDO ---
     const iconMap = { 
-        renta:'🏠', casa:'🏠', luz:'💡', agua:'💧', gas:'🔥', internet:'🌐', 
-        netflix:'📺', comida:'🍔', hospital:'🏥', transporte:'🚗', viaje:'✈️',
-        amazon:'📦', spotify:'🎵', disney:'🎬', apple:'🍎'
+        renta:'🏠', casa:'🏠', luz:'💡', agua:'💧', gas:'🔥', internet:'🌐', wifi:'🌐', 
+        netflix:'📺', amazon:'📦', spotify:'🎵', disney:'🎬', hbo:'📺', apple:'🍎',
+        comida:'🍔', tacos:'🌮', pizza:'🍕', sushi:'🍣', restaurante:'🍽️', super:'🛒', oxxo:'🏪',
+        hospital:'🏥', doctor:'👨‍⚕️', medicina:'💊', farmacia:'💊', seguro:'🛡️',
+        transporte:'🚗', gasolina:'⛽', uber:'🚖', didi:'🚖', bus:'🚌', metro:'🚇',
+        viaje:'✈️', hotel:'🏨', avion:'✈️', vacaciones:'🏖️',
+        tarjeta:'💳', banco:'🏦', cine:'🍿'
     };
     const getIcon = (n) => {
         const name = (n||"").toLowerCase();
@@ -306,12 +344,12 @@
     function login() {
         const name = document.getElementById('u-name').value;
         const pin = document.getElementById('u-pin').value;
-        if(!name || pin.length < 4) return alert("Ingresa Nombre y PIN de 4 dígitos");
+        if(!name || pin.length < 4) return alert("Por favor ingresa Nombre y PIN de 4 dígitos.");
         
         if(!db.users[name]) {
             db.users[name] = { pin, cards: [], months: {}, savings: [] };
         } else if (db.users[name].pin !== pin) {
-            return alert("PIN Incorrecto");
+            return alert("PIN Incorrecto. Intenta de nuevo.");
         }
         db.active = name; save(); unlock();
     }
@@ -335,11 +373,8 @@
         ys.onchange = e => { curY = parseInt(e.target.value); render(); };
         ms.onchange = e => { curM = parseInt(e.target.value); render(); };
         
-        // Fechas por defecto hoy (Enero 2026)
-        const hoyStr = "2026-01-24";
-        document.getElementById('i-date').value = hoyStr;
-        document.getElementById('e-date').value = hoyStr;
-        document.getElementById('sav-date').value = hoyStr;
+        const hoy = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('input[type="date"]').forEach(i => i.value = hoy);
 
         setupTabs();
         render();
@@ -356,15 +391,28 @@
         });
     }
 
-    // --- EL CEREBRO: INTELIGENCIA DE TIEMPO Y ROLLEOVER ---
+    function toggleAcc(id) {
+        const el = document.getElementById(id);
+        const content = el.querySelector('.acc-content');
+        if(content.style.display === 'block') {
+            content.style.display = 'none';
+            el.classList.remove('open');
+        } else {
+            content.style.display = 'block';
+            el.classList.add('open');
+        }
+    }
+
+    // --- LÓGICA DE HERENCIA (ROLLOVER) ---
     function getMonthData() {
         const u = db.users[db.active];
         const key = `${curY}-${curM}`;
         
         if(!u.months[key]) {
+            // Crear mes nuevo VACÍO de gastos, pero copiando servicios
             u.months[key] = { inc: [], serv: [], exp: [], pay: {}, cardAmts: {} };
             
-            // HERENCIA: Buscamos el mes anterior
+            // Buscar mes anterior para heredar servicios
             const prevM = curM === 0 ? 11 : curM - 1;
             const prevY = curM === 0 ? curY - 1 : curY;
             const prevKey = `${prevY}-${prevM}`;
@@ -372,7 +420,7 @@
 
             if(prevData) {
                 prevData.serv.forEach(s => {
-                    // Lógica de Frecuencia
+                    // Cálculo de frecuencia matemática
                     const diff = (curY - s.sy) * 12 + (curM - s.sm);
                     let show = false;
                     if(s.f === 'Mensual') show = true;
@@ -381,12 +429,13 @@
                     
                     if(show) u.months[key].serv.push({...s, id: Date.now() + Math.random()});
                 });
+                // NOTA: NO copiamos 'exp' (Gastos variables) porque esos no se repiten
             }
         }
         return u.months[key];
     }
 
-    // --- ACCIONES CRUD ---
+    // --- CRUD ---
     function add(type) {
         const u = db.users[db.active];
         const m = getMonthData();
@@ -410,6 +459,7 @@
         }
 
         save(); render();
+        // Limpiar inputs excepto fecha
         document.querySelectorAll('input:not([type="date"]):not([type="checkbox"])').forEach(i => i.value = '');
     }
 
@@ -424,15 +474,13 @@
         let list = (type==='sav') ? u.savings : (type==='card') ? u.cards : getMonthData()[type];
         let item = list.find(x=>x.id===id);
         
-        const newName = prompt("Editar Nombre / Descripción:", item.n || item.desc || "");
+        const newName = prompt("Editar Nombre/Descripción:", item.n || item.desc || "");
         if(newName === null) return;
-        
         const newAmt = prompt("Editar Monto:", item.a || 0);
         if(newAmt === null) return;
 
         if(item.n) item.n = newName; else item.desc = newName;
         item.a = parseFloat(newAmt);
-        
         save(); render();
     }
 
@@ -450,10 +498,10 @@
         save(); render();
     }
 
-    function save() { localStorage.setItem('finanzasToñoMaster_V3.4', JSON.stringify(db)); }
+    function save() { localStorage.setItem('finanzasMaster_V3.5', JSON.stringify(db)); }
 
     function getDaysLeft(day) {
-        const today = new Date(2026, 0, 24); today.setHours(0,0,0,0);
+        const today = new Date(); today.setHours(0,0,0,0);
         const target = new Date(curY, curM, day);
         const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
         if(diff === 0) return { t: "Vence hoy", c: "d-warn" };
@@ -461,35 +509,39 @@
         return { t: `Faltan ${diff} días`, c: diff <= 3 ? "d-warn" : "d-ok" };
     }
 
-    // --- RENDERIZADO MAESTRO ---
+    // --- RENDERIZADO PRINCIPAL ---
     function render() {
         const u = db.users[db.active];
         const m = getMonthData();
 
-        // Actualizar Selectors de Tarjetas
+        // 1. Actualizar Dropdowns de tarjetas
         ['s-card-link', 'e-card-link'].forEach(id => {
             const s = document.getElementById(id); s.innerHTML = '<option value="">💸 Efectivo / Débito</option>';
             u.cards.forEach(c => s.innerHTML += `<option value="${c.n}">💳 ${c.n}</option>`);
         });
 
-        // Totales Dashboard
+        // 2. Cálculos Totales
         const tInc = m.inc.reduce((s,x)=>s+x.a, 0);
         const tServ = m.serv.reduce((s,x)=>s+x.a, 0);
-        const tExp = m.exp.reduce((s,x)=>s+x.a, 0);
-        const tCard = Object.values(m.cardAmts).reduce((s,x)=>s+x, 0);
+        const tExp = m.exp.reduce((s,x)=>s+x.a, 0); // Gastos variables sumados
+        const tCard = Object.values(m.cardAmts || {}).reduce((s,x)=>s+x, 0);
         const tSav = u.savings.reduce((s,x)=>s + (x.op==='in' ? x.a : -x.a), 0);
 
+        // 3. Actualizar Tiles Dashboard
         document.getElementById('d-inc').innerText = fmt.format(tInc);
-        document.getElementById('d-egr').innerText = fmt.format(tServ + tExp + tCard);
-        document.getElementById('d-bal').innerText = fmt.format(tInc - (tServ + tExp + tCard));
+        document.getElementById('d-egr').innerText = fmt.format(tServ + tExp + tCard); // Suma todo
+        document.getElementById('d-bal').innerText = fmt.format(tInc - (tServ + tExp + tCard)); // Resta todo
         document.getElementById('d-sav').innerText = fmt.format(tSav);
         document.getElementById('sav-total-view').innerText = fmt.format(tSav);
 
-        // Listas Dashboard (Quincenas + Tarjetas)
-        const q1l = document.getElementById('q1-l'), q2l = document.getElementById('q2-l'), rl = document.getElementById('rec-list');
-        q1l.innerHTML = ''; q2l.innerHTML = ''; rl.innerHTML = '';
-        let q1t = 0, q2t = 0;
+        // 4. Llenar Listas Dashboard (Acordeones)
+        const q1l = document.getElementById('q1-l'), q2l = document.getElementById('q2-l');
+        const rl = document.getElementById('rec-l'), el = document.getElementById('exp-l');
+        q1l.innerHTML = ''; q2l.innerHTML = ''; rl.innerHTML = ''; el.innerHTML = '';
+        
+        let q1t = 0, q2t = 0, rt = 0;
 
+        // A) Pagos (Servicios + Tarjetas)
         const allPayments = [
             ...m.serv.map(s => ({...s, type:'serv'})),
             ...u.cards.map(c => ({id:c.id, n: `Pago ${c.n}`, a: m.cardAmts[c.id] || 0, dy: c.p, c: c.n, type: 'card'}))
@@ -502,8 +554,8 @@
                 <div class="item-row ${isP?'paid':''}">
                     <div style="font-size:1.8rem; margin-right:15px;">${getIcon(p.n)}</div>
                     <div style="flex-grow:1">
-                        <div style="font-weight:800">${p.n} ${p.rec?'<span class="tag-rec">RECURRENTE</span>':''}</div>
-                        <div style="font-size:0.75rem; color:#888">Día ${p.dy} • ${p.c || 'Efectivo'}</div>
+                        <div style="font-weight:800">${p.n} ${p.rec?'<span class="tag-rec">REC</span>':''}</div>
+                        <div style="font-size:0.8rem; color:#888">Día ${p.dy} • ${p.c || 'Efectivo'}</div>
                         ${(!isP && !p.rec) ? `<span class="days-badge ${dInfo.c}">${dInfo.t}</span>` : ''}
                     </div>
                     <div class="actions">
@@ -511,22 +563,43 @@
                         <input type="checkbox" ${isP?'checked':''} onclick="togglePay(${p.id})" style="width:22px; height:22px;">
                     </div>
                 </div>`;
-            if(p.rec) rl.innerHTML += html;
+            
+            if(p.rec) { rl.innerHTML += html; if(!isP) rt += p.a; }
             else if(p.dy <= 14) { q1l.innerHTML += html; if(!isP) q1t += p.a; }
             else { q2l.innerHTML += html; if(!isP) q2t += p.a; }
         });
+
+        // B) Gastos Variables en Dashboard (Lista Detallada por Fecha)
+        const sortedExp = m.exp.sort((a,b) => new Date(a.d) - new Date(b.d)); // Ordenar por fecha
+        if(sortedExp.length === 0) el.innerHTML = '<div style="padding:15px; color:#888; text-align:center">Aún no hay gastos registrados este mes.</div>';
+        
+        sortedExp.forEach(x => {
+            el.innerHTML += `
+                <div class="item-row">
+                    <div style="font-size:1.5rem; margin-right:15px;">${getIcon(x.desc)}</div>
+                    <div style="flex-grow:1">
+                        <div style="font-weight:800">${x.desc}</div>
+                        <div style="font-size:0.75rem; color:#888">${x.d} • ${x.cat}</div>
+                    </div>
+                    <div style="font-weight:800; color:var(--coral)">- ${fmt.format(x.a)}</div>
+                </div>`;
+        });
+
+        // 5. Actualizar Totales de Cabeceras Acordeón
         document.getElementById('q1-t').innerText = fmt.format(q1t);
         document.getElementById('q2-t').innerText = fmt.format(q2t);
+        document.getElementById('rec-t').innerText = fmt.format(rt);
+        document.getElementById('exp-t').innerText = fmt.format(tExp);
 
-        // Renderizar Historiales en Vistas
-        renderHist('inc-list', m.inc, 'inc');
-        renderHist('serv-list', m.serv, 'serv');
-        renderHist('card-list', u.cards, 'card');
-        renderHist('exp-list', m.exp, 'exp');
-        renderHist('sav-list', u.savings, 'sav');
+        // 6. Renderizar Listas Completas (Edición)
+        renderEditableList('inc-list', m.inc, 'inc');
+        renderEditableList('serv-list', m.serv, 'serv');
+        renderEditableList('card-list', u.cards, 'card');
+        renderEditableList('exp-list', m.exp, 'exp');
+        renderEditableList('sav-list', u.savings, 'sav');
     }
 
-    function renderHist(id, list, type) {
+    function renderEditableList(id, list, type) {
         const el = document.getElementById(id); el.innerHTML = '';
         list.forEach(x => {
             el.innerHTML += `
