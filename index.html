@@ -3,623 +3,874 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Finanzas Pro Master V3.5</title>
+    <title>Finanzas Pro V4.0 - Restauración</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --verde: #20A39E; --dorado: #FFBA49; --coral: #EF5B5B; --violeta: #23001E;
-            --gris-claro: #f8fafc; --borde: #e2e8f0;
+            /* PALETA DE COLORES OFICIAL */
+            --verde: #20A39E; 
+            --dorado: #FFBA49; 
+            --coral: #EF5B5B; 
+            --violeta: #23001E;
+            --gris-fondo: #F4F6F8;
+            --blanco: #FFFFFF;
+            --borde: #E2E8F0;
         }
 
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { margin: 0; background-color: #ffffff; color: var(--violeta); min-height: 100vh; overflow-x: hidden; }
+        
+        body { 
+            margin: 0; 
+            background-color: var(--gris-fondo); 
+            color: var(--violeta); 
+            min-height: 100vh;
+        }
 
-        /* --- LOGIN SCREEN --- */
+        /* --- PANTALLA DE LOGIN --- */
         #login-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--violeta); z-index: 5000; 
-            display: flex; align-items: center; justify-content: center; color: white; 
+            background: var(--violeta); z-index: 9999; 
+            display: flex; align-items: center; justify-content: center; 
         }
-        .login-box { 
-            background: white; padding: 45px; border-radius: 30px; color: var(--violeta); 
-            box-shadow: 0 25px 60px rgba(0,0,0,0.4); width: 420px; text-align: center; 
+        .login-card { 
+            background: var(--blanco); padding: 40px; border-radius: 20px; 
+            width: 90%; max-width: 400px; text-align: center; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
         }
-        .user-list { margin: 25px 0; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .user-btn { 
-            background: var(--gris-claro); border: 2px solid transparent; padding: 12px 20px; 
-            border-radius: 14px; cursor: pointer; font-weight: 700; color: var(--violeta); transition: 0.2s;
+        .user-grid { 
+            display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 20px 0; 
         }
-        .user-btn:hover { border-color: var(--verde); background: #fff; transform: translateY(-2px); }
+        .user-chip { 
+            background: #f0f0f0; padding: 10px 15px; border-radius: 20px; 
+            cursor: pointer; font-weight: 600; border: 1px solid transparent; 
+            transition: 0.2s;
+        }
+        .user-chip:hover { border-color: var(--verde); background: #fff; }
 
-        /* --- LAYOUT GENERAL --- */
-        .wrap { 
-            max-width: 1150px; margin: 0 auto; background: #fff; min-height: 100vh; 
-            display: none; border-left: 1px solid var(--borde); border-right: 1px solid var(--borde);
+        /* --- LAYOUT PRINCIPAL --- */
+        .app-container { 
+            max-width: 1200px; margin: 0 auto; background: var(--blanco); 
+            min-height: 100vh; display: none; /* Se activa al loguear */
+            box-shadow: 0 0 50px rgba(0,0,0,0.05);
         }
 
-        header { padding: 50px 20px 30px 20px; text-align: center; border-bottom: 1px solid var(--borde); background: #fff; }
-        .app-title { font-weight: 800; font-size: 3rem; color: var(--violeta); letter-spacing: -2px; margin: 0; }
+        /* --- HEADER CORREGIDO --- */
+        header { 
+            padding: 20px 30px; border-bottom: 1px solid var(--borde); 
+            background: var(--blanco);
+        }
+        .header-top { 
+            display: flex; justify-content: space-between; align-items: center; 
+            flex-wrap: wrap; gap: 20px; 
+        }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--violeta); letter-spacing: -1px; }
         
-        .header-controls { 
-            display: flex; justify-content: center; align-items: center; gap: 15px; 
-            margin-top: 25px; flex-wrap: wrap; 
+        .controls { 
+            display: flex; gap: 10px; align-items: center; flex-wrap: wrap; 
         }
-        .pill { 
-            padding: 10px 20px; border-radius: 50px; border: 1px solid var(--borde); 
-            background: var(--gris-claro); font-weight: 700; cursor: pointer; color: var(--violeta); font-size: 0.9rem;
+        
+        /* Estilos fijos para selects y botones del header para que no se estiren */
+        .ctrl-item { 
+            padding: 8px 15px; border-radius: 10px; border: 1px solid var(--borde); 
+            background: #fff; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+            height: 40px; /* Altura fija para evitar deformaciones */
+            display: flex; align-items: center;
         }
-        .btn-exit { 
-            background: var(--coral); color: white; border: none; padding: 10px 25px; 
-            border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.2s;
+        .btn-logout { 
+            background: var(--coral); color: white; border: none; 
         }
-        .btn-exit:hover { filter: brightness(0.9); box-shadow: 0 4px 12px rgba(239, 91, 91, 0.3); }
 
-        /* NAVEGACIÓN */
-        nav { display: flex; background: var(--gris-claro); overflow-x: auto; padding: 0 20px; border-bottom: 1px solid var(--borde); justify-content: center; }
-        nav button { 
-            border: 0; background: transparent; color: #64748b; padding: 22px 25px; 
-            cursor: pointer; font-weight: 700; font-size: 0.95rem; position: relative; white-space: nowrap; 
+        /* --- NAVEGACIÓN --- */
+        nav { 
+            display: flex; gap: 5px; padding: 10px 30px; overflow-x: auto; 
+            background: #fff; border-bottom: 1px solid var(--borde); 
         }
-        nav button.active { color: var(--verde); }
-        nav button.active::after { content: ''; position: absolute; bottom: 0; left: 20%; width: 60%; height: 4px; background: var(--verde); border-radius: 10px 10px 0 0; }
+        .nav-btn { 
+            padding: 12px 20px; border: none; background: transparent; 
+            color: #888; font-weight: 700; cursor: pointer; white-space: nowrap;
+            border-radius: 10px; transition: 0.2s;
+        }
+        .nav-btn.active { 
+            background: #E6FFFA; color: var(--verde); 
+        }
+        .nav-btn:hover:not(.active) { background: #f9f9f9; }
 
-        main { padding: 40px; }
-        .page { display: none; animation: slideUp 0.4s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- CONTENIDO --- */
+        main { padding: 30px; }
+        .view-section { display: none; animation: fadeEffect 0.3s; }
+        .view-section.active { display: block; }
+        @keyframes fadeEffect { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- DASHBOARD TILES --- */
-        .grid-summary { 
-            display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-            margin-bottom: 40px; 
+        /* --- DASHBOARD TILES (CUADROS) --- */
+        .stats-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 20px; margin-bottom: 30px; 
         }
-        .tile { 
-            background: #fff; border-radius: 24px; padding: 25px; border: 1px solid var(--borde); 
-            text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); position: relative; overflow: hidden;
+        .stat-card { 
+            background: #fff; padding: 25px; border-radius: 15px; 
+            border: 1px solid var(--borde); box-shadow: 0 4px 6px rgba(0,0,0,0.02); 
         }
-        .tile-val { font-size: 1.8rem; font-weight: 800; margin-top: 8px; }
-        .tile-label { font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-label { font-size: 0.8rem; color: #888; font-weight: 700; text-transform: uppercase; }
+        .stat-value { font-size: 1.8rem; font-weight: 800; margin-top: 5px; color: var(--violeta); }
+        .c-verde { color: var(--verde); }
+        .c-dorado { color: var(--dorado); }
 
-        /* --- ACORDEONES (NUEVO) --- */
-        .accordion-block {
-            background: #fff; border: 1px solid var(--borde); border-radius: 20px; 
-            margin-bottom: 20px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            transition: 0.3s;
+        /* --- ACORDEONES DEL DASHBOARD (SOLUCIÓN MODULAR) --- */
+        .accordion { 
+            border: 1px solid var(--borde); border-radius: 15px; margin-bottom: 15px; 
+            background: #fff; overflow: hidden;
         }
-        .acc-header {
-            padding: 20px 25px; background: #fff; cursor: pointer; display: flex; 
-            justify-content: space-between; align-items: center; user-select: none;
+        .acc-head { 
+            padding: 15px 20px; background: #fff; cursor: pointer; 
+            display: flex; justify-content: space-between; align-items: center;
             transition: background 0.2s;
         }
-        .acc-header:hover { background: #fcfcfc; }
-        .acc-title { font-weight: 800; font-size: 1.1rem; color: var(--violeta); display: flex; align-items: center; gap: 10px; }
-        .acc-total { background: var(--gris-claro); padding: 5px 12px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; color: var(--verde); }
-        .arrow { font-size: 0.8rem; transition: transform 0.3s; color: #94a3b8; }
-        .accordion-block.open .arrow { transform: rotate(180deg); color: var(--violeta); }
-        .accordion-block.open { border-color: var(--verde); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-
-        .acc-content {
-            display: none; padding: 0 20px 20px 20px; border-top: 1px solid var(--borde); background: #fcfcfd;
+        .acc-head:hover { background: #f8f9fa; }
+        .acc-title { font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 10px; }
+        .acc-amount { 
+            background: #f0f0f0; padding: 5px 10px; border-radius: 8px; 
+            font-weight: 700; font-size: 0.9rem; color: var(--verde); 
         }
-
-        /* --- LISTAS Y FILAS --- */
-        .item-row { 
-            display: flex; align-items: center; padding: 18px; background: #fff; 
-            border: 1px solid var(--borde); border-radius: 16px; margin-top: 12px; transition: 0.2s; 
+        .acc-body { 
+            display: none; /* CERRADO POR DEFECTO */
+            padding: 0; border-top: 1px solid var(--borde); background: #fcfcfc;
         }
-        .item-row:hover { transform: translateX(5px); border-color: var(--verde); }
-        .item-row.paid { opacity: 0.5; background: var(--gris-claro); filter: grayscale(1); }
+        .acc-body.open { display: block; padding: 20px; } /* CLASE PARA ABRIR */
+        
+        /* Flecha indicadora */
+        .arrow { transition: transform 0.3s; }
+        .arrow.rotate { transform: rotate(180deg); }
 
-        .days-badge { font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; margin-top: 5px; display: inline-block; }
-        .d-ok { background: #dcfce7; color: #166534; }
-        .d-warn { background: #fef9c3; color: #854d0e; }
-        .d-alert { background: #fee2e2; color: #991b1b; }
-
-        .tag-rec { background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; margin-left: 5px; }
+        /* --- ELEMENTOS DE LISTA --- */
+        .list-item { 
+            display: flex; align-items: center; padding: 15px; 
+            background: #fff; border: 1px solid var(--borde); 
+            border-radius: 12px; margin-bottom: 10px; 
+        }
+        .list-item.pagado { opacity: 0.5; background: #f9f9f9; }
+        
+        .icon-box { font-size: 1.5rem; margin-right: 15px; width: 40px; text-align: center; }
+        .info-box { flex-grow: 1; }
+        .main-text { font-weight: 700; font-size: 0.95rem; }
+        .sub-text { font-size: 0.75rem; color: #666; }
+        .money-box { text-align: right; margin-right: 15px; }
+        .amount-text { font-weight: 800; font-size: 1rem; }
+        
+        .tag { font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 5px; }
+        .tag-rec { background: #E0F2FE; color: #0284C7; }
+        .badge-days { font-size: 0.7rem; padding: 3px 8px; border-radius: 5px; font-weight: 700; margin-top: 4px; display: inline-block; }
+        .bg-ok { background: #DEF7EC; color: #03543F; }
+        .bg-warn { background: #FEF3C7; color: #92400E; }
+        .bg-danger { background: #FDE8E8; color: #9B1C1C; }
 
         /* --- FORMULARIOS --- */
-        .card { background: #fff; border-radius: 24px; padding: 30px; border: 1px solid var(--borde); margin-bottom: 30px; }
-        .card h3 { margin-top: 0; font-weight: 800; border-bottom: 2px solid var(--gris-claro); padding-bottom: 15px; margin-bottom: 20px; }
-
-        .form-row { display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 20px; }
-        input, select { padding: 15px; border: 2px solid var(--borde); border-radius: 14px; font-size: 1rem; outline: none; width: 100%; transition: 0.2s; }
-        input:focus { border-color: var(--verde); }
-        .btn-add { 
-            background: var(--verde); color: white; border: none; padding: 15px; 
-            border-radius: 14px; cursor: pointer; font-weight: 700; width: 100%; transition: 0.2s; 
+        .input-group { 
+            background: #fff; padding: 25px; border-radius: 15px; 
+            border: 1px solid var(--borde); margin-bottom: 25px; 
         }
-        .btn-add:hover { filter: brightness(1.1); }
-
-        .actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
-        .btn-mini { border: none; background: var(--gris-claro); padding: 10px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
-        .btn-mini:hover { background: #e2e8f0; }
+        .form-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            gap: 15px; margin-bottom: 15px; 
+        }
+        input, select { 
+            width: 100%; padding: 12px; border: 2px solid var(--borde); 
+            border-radius: 10px; font-size: 0.9rem; outline: none; 
+        }
+        input:focus { border-color: var(--verde); }
+        
+        .btn-action { 
+            width: 100%; padding: 12px; background: var(--verde); color: white; 
+            border: none; border-radius: 10px; font-weight: 700; cursor: pointer; 
+        }
+        .btn-action:hover { filter: brightness(1.1); }
+        
+        .btn-small { 
+            padding: 5px 10px; background: #f0f0f0; border: none; 
+            border-radius: 6px; cursor: pointer; font-size: 0.8rem; 
+        }
+        .btn-small:hover { background: #e0e0e0; }
+        .btn-del { color: var(--coral); }
+        .btn-edit { color: var(--violeta); }
 
     </style>
 </head>
 <body>
 
-<div id="login-screen">
-    <div class="login-box">
-        <h1 style="margin:0 0 10px 0; font-size: 2.2rem; letter-spacing: -1px;">Finanzas Pro</h1>
-        <p style="color:#64748b; margin-bottom:25px;">Sistema de Gestión Personal</p>
-        
-        <div id="existing-users" class="user-list"></div>
+    <div id="login-screen">
+        <div class="login-card">
+            <h1>🔐 Finanzas Pro</h1>
+            <p style="color:#666; font-size:0.9rem;">Selecciona tu usuario</p>
+            
+            <div id="user-selector" class="user-grid">
+                </div>
 
-        <input type="text" id="u-name" class="pill" style="width:100%; margin-bottom:12px; text-align:center; background:#fff;" placeholder="Usuario">
-        <input type="password" id="u-pin" style="width:100%; border:2px solid #ddd; padding:15px; border-radius:14px; text-align:center; font-size:1.5rem; letter-spacing:5px;" maxlength="4" placeholder="••••" inputmode="numeric">
-        <button class="btn-add" style="margin-top:25px" onclick="login()">Desbloquear</button>
-    </div>
-</div>
-
-<div class="wrap" id="app">
-    <header>
-        <h1 class="app-title">Finanzas Pro</h1>
-        <div class="header-controls">
-            <select id="ySel" class="pill"></select>
-            <select id="mSel" class="pill"></select>
-            <div class="pill">👤 <span id="display-user"></span></div>
-            <button class="btn-exit" onclick="logout()">🔒 Cerrar Sesión</button>
+            <div style="margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
+                <input type="text" id="login-name" placeholder="Nuevo Usuario" style="margin-bottom:10px;">
+                <input type="password" id="login-pin" placeholder="PIN (4 dígitos)" maxlength="4" style="text-align:center; letter-spacing:5px; font-size:1.2rem;">
+                <button class="btn-action" style="margin-top:15px;" onclick="app.login()">Entrar</button>
+            </div>
         </div>
-    </header>
+    </div>
 
-    <nav>
-        <button class="tab-btn active" data-page="dash">📊 Dashboard</button>
-        <button class="tab-btn" data-page="inc">💵 Ingresos</button>
-        <button class="tab-btn" data-page="fix">🏠 Servicios/Fijos</button>
-        <button class="tab-btn" data-page="cards">💳 Tarjetas</button>
-        <button class="tab-btn" data-page="gastos">🛒 Gastos Var.</button>
-        <button class="tab-btn" data-page="sav">🛡️ Ahorro</button>
-    </nav>
+    <div id="main-app" class="app-container">
+        
+        <header>
+            <div class="header-top">
+                <div class="logo">Finanzas Pro <span style="font-size:0.8rem; color:#888;">v4.0</span></div>
+                <div class="controls">
+                    <select id="year-sel" class="ctrl-item"></select>
+                    <select id="month-sel" class="ctrl-item"></select>
+                    <div class="ctrl-item">👤 <span id="user-display">Usuario</span></div>
+                    <button class="ctrl-item btn-logout" onclick="app.logout()">🔒 Salir</button>
+                </div>
+            </div>
+        </header>
 
-    <main>
-        <section id="dash" class="page active">
-            <div class="grid-summary">
-                <div class="tile"><div class="tile-label">Ingresos</div><div id="d-inc" class="tile-val">$0.00</div></div>
-                <div class="tile"><div class="tile-label">Total Gastos (Todo)</div><div id="d-egr" class="tile-val">$0.00</div></div>
-                <div class="tile" style="border-color:var(--verde)"><div class="tile-label" style="color:var(--verde)">Balance Real Disponible</div><div id="d-bal" class="tile-val" style="color:var(--verde)">$0.00</div></div>
-                <div class="tile" style="border-color:var(--dorado)"><div class="tile-label" style="color:var(--dorado)">Reserva Ahorro</div><div id="d-sav" class="tile-val" style="color:var(--dorado)">$0.00</div></div>
+        <nav>
+            <button class="nav-btn active" onclick="app.nav('dashboard')">📊 Dashboard</button>
+            <button class="nav-btn" onclick="app.nav('ingresos')">💵 Ingresos</button>
+            <button class="nav-btn" onclick="app.nav('servicios')">🏠 Servicios</button>
+            <button class="nav-btn" onclick="app.nav('tarjetas')">💳 Tarjetas</button>
+            <button class="nav-btn" onclick="app.nav('gastos')">🛒 Gastos Var.</button>
+            <button class="nav-btn" onclick="app.nav('ahorro')">🛡️ Ahorro</button>
+        </nav>
+
+        <main>
+            <div id="view-dashboard" class="view-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Ingresos</div>
+                        <div class="stat-value" id="dash-inc">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Egresos (Real)</div>
+                        <div class="stat-value" id="dash-exp">$0.00</div>
+                    </div>
+                    <div class="stat-card" style="border-left: 5px solid var(--verde);">
+                        <div class="stat-label c-verde">Balance Disponible</div>
+                        <div class="stat-value c-verde" id="dash-bal">$0.00</div>
+                    </div>
+                    <div class="stat-card" style="border-left: 5px solid var(--dorado);">
+                        <div class="stat-label c-dorado">Ahorro Total</div>
+                        <div class="stat-value c-dorado" id="dash-sav">$0.00</div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="acc-head" onclick="app.toggle('acc-q1', 'arr-q1')">
+                        <div class="acc-title"><span id="arr-q1" class="arrow">▼</span> 📅 Quincena 1 (Día 1-14)</div>
+                        <div class="acc-amount" id="head-q1">$0.00</div>
+                    </div>
+                    <div id="acc-q1" class="acc-body">
+                        <div id="list-q1"></div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="acc-head" onclick="app.toggle('acc-q2', 'arr-q2')">
+                        <div class="acc-title"><span id="arr-q2" class="arrow">▼</span> 📅 Quincena 2 (Día 15-31)</div>
+                        <div class="acc-amount" id="head-q2">$0.00</div>
+                    </div>
+                    <div id="acc-q2" class="acc-body">
+                        <div id="list-q2"></div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="acc-head" onclick="app.toggle('acc-rec', 'arr-rec')">
+                        <div class="acc-title"><span id="arr-rec" class="arrow">▼</span> 🔄 Cargos Recurrentes</div>
+                        <div class="acc-amount" id="head-rec">$0.00</div>
+                    </div>
+                    <div id="acc-rec" class="acc-body">
+                        <div id="list-rec"></div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="acc-head" onclick="app.toggle('acc-var', 'arr-var')">
+                        <div class="acc-title"><span id="arr-var" class="arrow">▼</span> 🛒 Gastos Variables del Mes</div>
+                        <div class="acc-amount" id="head-var">$0.00</div>
+                    </div>
+                    <div id="acc-var" class="acc-body">
+                        <div id="list-var"></div>
+                    </div>
+                </div>
             </div>
 
-            <div class="accordion-block" id="acc-q1">
-                <div class="acc-header" onclick="toggleAcc('acc-q1')">
-                    <div class="acc-title"><span class="arrow">▼</span> 📅 Quincena 1 (Día 1-14)</div>
-                    <div class="acc-total" id="q1-t">$0.00</div>
+            <div id="view-ingresos" class="view-section">
+                <div class="input-group">
+                    <h3>Registrar Ingreso</h3>
+                    <div class="form-grid">
+                        <input type="date" id="in-date">
+                        <input type="text" id="in-desc" placeholder="Descripción (Nómina, Venta...)">
+                        <input type="number" id="in-amt" placeholder="Monto $">
+                        <button class="btn-action" onclick="app.add('income')">Agregar</button>
+                    </div>
                 </div>
-                <div class="acc-content" id="q1-l"></div>
+                <div id="table-income"></div>
             </div>
 
-            <div class="accordion-block" id="acc-q2">
-                <div class="acc-header" onclick="toggleAcc('acc-q2')">
-                    <div class="acc-title"><span class="arrow">▼</span> 📅 Quincena 2 (Día 15-31)</div>
-                    <div class="acc-total" id="q2-t">$0.00</div>
+            <div id="view-servicios" class="view-section">
+                <div class="input-group">
+                    <h3>Servicios Fijos y Recurrentes</h3>
+                    <div class="form-grid">
+                        <input type="text" id="serv-name" placeholder="Nombre (Luz, Internet...)">
+                        <input type="number" id="serv-amt" placeholder="Monto Estimado $">
+                        <input type="number" id="serv-day" placeholder="Día de Pago (1-31)">
+                        <select id="serv-freq">
+                            <option value="Mensual">Mensual</option>
+                            <option value="Bimestral">Bimestral</option>
+                            <option value="Anual">Anual</option>
+                        </select>
+                    </div>
+                    <div class="form-grid">
+                        <select id="serv-card"></select>
+                        <label style="display:flex; align-items:center; gap:5px;">
+                            <input type="checkbox" id="serv-rec" style="width:20px; height:20px;"> Es Cargo Recurrente
+                        </label>
+                        <button class="btn-action" onclick="app.add('service')">Guardar Servicio</button>
+                    </div>
                 </div>
-                <div class="acc-content" id="q2-l"></div>
+                <div id="table-service"></div>
             </div>
 
-            <div class="accordion-block" id="acc-rec">
-                <div class="acc-header" onclick="toggleAcc('acc-rec')">
-                    <div class="acc-title"><span class="arrow">▼</span> 🔄 Cargos Recurrentes</div>
-                    <div class="acc-total" id="rec-t">$0.00</div>
+            <div id="view-tarjetas" class="view-section">
+                <div class="input-group">
+                    <h3>Mis Tarjetas de Crédito</h3>
+                    <div class="form-grid">
+                        <input type="text" id="card-name" placeholder="Banco (BBVA, Nu...)">
+                        <input type="text" id="card-dig" placeholder="Últimos 4 dígitos" maxlength="4">
+                        <input type="number" id="card-day" placeholder="Día de Pago">
+                        <button class="btn-action" onclick="app.add('card')">Registrar Tarjeta</button>
+                    </div>
                 </div>
-                <div class="acc-content" id="rec-l"></div>
+                <div id="table-card"></div>
             </div>
 
-            <div class="accordion-block" id="acc-exp">
-                <div class="acc-header" onclick="toggleAcc('acc-exp')">
-                    <div class="acc-title"><span class="arrow">▼</span> 🛒 Gastos Variables del Mes</div>
-                    <div class="acc-total" id="exp-t">$0.00</div>
+            <div id="view-gastos" class="view-section">
+                <div class="input-group">
+                    <h3>Gastos del Día a Día</h3>
+                    <div class="form-grid">
+                        <input type="date" id="exp-date">
+                        <input type="text" id="exp-desc" placeholder="¿Qué compraste?">
+                        <input type="number" id="exp-amt" placeholder="Monto $">
+                    </div>
+                    <div class="form-grid">
+                        <select id="exp-cat">
+                            <option value="Comida">🍔 Comida</option>
+                            <option value="Transporte">🚗 Transporte</option>
+                            <option value="Salud">🏥 Salud</option>
+                            <option value="Diversión">🎉 Diversión</option>
+                            <option value="Otros">📌 Otros</option>
+                        </select>
+                        <select id="exp-card"></select>
+                        <button class="btn-action" onclick="app.add('expense')">Registrar Gasto</button>
+                    </div>
                 </div>
-                <div class="acc-content" id="exp-l"></div>
+                <div id="table-expense"></div>
             </div>
-        </section>
 
-        <section id="inc" class="page">
-            <div class="card">
-                <h3>Registrar Ingreso</h3>
-                <div class="form-row">
-                    <input type="date" id="i-date">
-                    <input type="text" id="i-desc" placeholder="Descripción (Sueldo, Bono)">
-                    <input type="number" id="i-amt" placeholder="Monto $">
-                    <button class="btn-add" onclick="add('inc')">Añadir Ingreso</button>
+            <div id="view-ahorro" class="view-section">
+                <div style="text-align:center; margin-bottom:30px;">
+                    <div style="font-size:0.9rem; color:#888;">FONDO DE AHORRO</div>
+                    <div id="big-sav" style="font-size:3rem; font-weight:800; color:var(--dorado);">$0.00</div>
                 </div>
-                <div id="inc-list"></div>
+                <div class="input-group">
+                    <h3>Movimiento de Ahorro</h3>
+                    <div class="form-grid">
+                        <input type="date" id="sav-date">
+                        <input type="text" id="sav-desc" placeholder="Motivo">
+                        <input type="number" id="sav-amt" placeholder="Monto $">
+                        <select id="sav-type">
+                            <option value="in">➕ Depósito (Entrada)</option>
+                            <option value="out">➖ Retiro (Salida)</option>
+                        </select>
+                        <button class="btn-action" onclick="app.add('saving')">Registrar</button>
+                    </div>
+                </div>
+                <div id="table-saving"></div>
             </div>
-        </section>
 
-        <section id="fix" class="page">
-            <div class="card">
-                <h3>Servicios Fijos y Recurrentes</h3>
-                <div class="form-row">
-                    <input type="text" id="s-name" placeholder="Nombre Servicio">
-                    <input type="number" id="s-amt" placeholder="Monto $">
-                    <input type="number" id="s-day" placeholder="Día Pago (1-31)">
-                    <select id="s-freq">
-                        <option value="Mensual">Mensual</option>
-                        <option value="Bimestral">Bimestral</option>
-                        <option value="Anual">Anual</option>
-                    </select>
-                </div>
-                <div class="form-row">
-                    <select id="s-card-link"></select>
-                    <label style="display:flex; align-items:center; gap:8px; font-weight:700; color:#64748b;">
-                        <input type="checkbox" id="s-is-rec" style="width:20px; height:20px;"> Es Cargo Recurrente
-                    </label>
-                    <button class="btn-add" onclick="add('serv')">Guardar Servicio</button>
-                </div>
-                <div id="serv-list"></div>
-            </div>
-        </section>
-
-        <section id="cards" class="page">
-            <div class="card">
-                <h3>Mis Tarjetas de Crédito</h3>
-                <div class="form-row">
-                    <input type="text" id="c-name" placeholder="Banco / Alias">
-                    <input type="text" id="c-dig" placeholder="Últimos 4 Dígitos" maxlength="4">
-                    <input type="number" id="c-pay" placeholder="Día de Corte/Pago">
-                    <button class="btn-add" onclick="add('card')">Registrar Tarjeta</button>
-                </div>
-                <div id="card-list"></div>
-            </div>
-        </section>
-
-        <section id="gastos" class="page">
-            <div class="card">
-                <h3>Registrar Gasto Variable</h3>
-                <div class="form-row">
-                    <input type="date" id="e-date">
-                    <input type="text" id="e-desc" placeholder="Descripción">
-                    <input type="number" id="e-amt" placeholder="Monto $">
-                </div>
-                <div class="form-row">
-                    <select id="e-cat">
-                        <option value="Comida">🍔 Comida</option><option value="Transporte">🚗 Transporte</option>
-                        <option value="Hospital">🏥 Hospital</option><option value="Viajes">✈️ Viajes</option>
-                        <option value="Otros">📌 Otros</option>
-                    </select>
-                    <select id="e-card-link"></select>
-                    <button class="btn-add" onclick="add('exp')">Registrar Gasto</button>
-                </div>
-                <div id="exp-list"></div>
-            </div>
-        </section>
-
-        <section id="sav" class="page">
-            <div class="card" style="text-align:center; padding: 40px;">
-                <div class="tile-label">Fondo de Ahorro Total</div>
-                <div id="sav-total-view" style="font-size:3.5rem; font-weight:800; color:var(--dorado)">$0.00</div>
-            </div>
-            <div class="card">
-                <h3>Movimientos del Ahorro</h3>
-                <div class="form-row">
-                    <input type="date" id="sav-date">
-                    <input type="text" id="sav-desc" placeholder="Motivo">
-                    <input type="number" id="sav-amt" placeholder="Monto $">
-                    <select id="sav-op"><option value="in">➕ Depósito</option><option value="out">➖ Retiro</option></select>
-                    <button class="btn-add" onclick="add('sav')">Actualizar Saldo</button>
-                </div>
-                <div id="sav-list"></div>
-            </div>
-        </section>
-    </main>
-</div>
+        </main>
+    </div>
 
 <script>
-    /** FINANZAS PRO V3.5 - CÓDIGO MAESTRO **/
+/**
+ * 🧠 CEREBRO DE FINANZAS PRO V4.0
+ * Restaura funcionalidad, lógica de tiempo y acordeones.
+ */
+const app = {
+    data: { users: {}, activeUser: null },
+    state: { year: 2026, month: 0 }, // 0 = Enero
+    fmt: new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }),
     
-    // --- DATABASE ---
-    let db = JSON.parse(localStorage.getItem('finanzasMaster_V3.5')) || { users: {}, active: null };
-    let curY = new Date().getFullYear();
-    let curM = new Date().getMonth();
-    const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+    // Iconos
+    icons: {
+        renta:'🏠', luz:'💡', agua:'💧', gas:'🔥', internet:'🌐', netflix:'📺', spotify:'🎵',
+        comida:'🍔', tacos:'🌮', uber:'🚗', gasolina:'⛽', cine:'🍿', salud:'🏥',
+        banco:'🏦', tarjeta:'💳', amazon:'📦', tel:'📱'
+    },
 
-    // --- ICON MAP EXTENDIDO ---
-    const iconMap = { 
-        renta:'🏠', casa:'🏠', luz:'💡', agua:'💧', gas:'🔥', internet:'🌐', wifi:'🌐', 
-        netflix:'📺', amazon:'📦', spotify:'🎵', disney:'🎬', hbo:'📺', apple:'🍎',
-        comida:'🍔', tacos:'🌮', pizza:'🍕', sushi:'🍣', restaurante:'🍽️', super:'🛒', oxxo:'🏪',
-        hospital:'🏥', doctor:'👨‍⚕️', medicina:'💊', farmacia:'💊', seguro:'🛡️',
-        transporte:'🚗', gasolina:'⛽', uber:'🚖', didi:'🚖', bus:'🚌', metro:'🚇',
-        viaje:'✈️', hotel:'🏨', avion:'✈️', vacaciones:'🏖️',
-        tarjeta:'💳', banco:'🏦', cine:'🍿'
-    };
-    const getIcon = (n) => {
-        const name = (n||"").toLowerCase();
-        for(let k in iconMap) if(name.includes(k)) return iconMap[k];
+    getIcon: function(txt) {
+        if(!txt) return '📌';
+        txt = txt.toLowerCase();
+        for(let key in this.icons) {
+            if(txt.includes(key)) return this.icons[key];
+        }
         return '📌';
-    }
+    },
 
-    // --- ACCESO Y SEGURIDAD ---
-    function loadExistingUsers() {
-        const container = document.getElementById('existing-users');
-        container.innerHTML = '';
-        Object.keys(db.users).forEach(u => {
-            const btn = document.createElement('button');
-            btn.className = 'user-btn';
-            btn.innerText = u;
-            btn.onclick = () => { document.getElementById('u-name').value = u; };
-            container.appendChild(btn);
-        });
-    }
-
-    function login() {
-        const name = document.getElementById('u-name').value;
-        const pin = document.getElementById('u-pin').value;
-        if(!name || pin.length < 4) return alert("Por favor ingresa Nombre y PIN de 4 dígitos.");
-        
-        if(!db.users[name]) {
-            db.users[name] = { pin, cards: [], months: {}, savings: [] };
-        } else if (db.users[name].pin !== pin) {
-            return alert("PIN Incorrecto. Intenta de nuevo.");
-        }
-        db.active = name; save(); unlock();
-    }
-
-    function logout() { db.active = null; save(); location.reload(); }
-
-    function unlock() {
-        document.getElementById('login-screen').style.display='none';
-        document.getElementById('app').style.display='block';
-        document.getElementById('display-user').innerText = db.active;
-        init();
-    }
-
-    // --- INICIALIZACIÓN ---
-    function init() {
-        const ys = document.getElementById('ySel'), ms = document.getElementById('mSel');
-        ys.innerHTML = ''; ms.innerHTML = '';
-        for(let i=2024; i<=2030; i++) ys.innerHTML += `<option value="${i}" ${i==curY?'selected':''}>${i}</option>`;
-        ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"].forEach((m,i)=>ms.innerHTML += `<option value="${i}" ${i==curM?'selected':''}>${m}</option>`);
-        
-        ys.onchange = e => { curY = parseInt(e.target.value); render(); };
-        ms.onchange = e => { curM = parseInt(e.target.value); render(); };
-        
-        const hoy = new Date().toISOString().split('T')[0];
-        document.querySelectorAll('input[type="date"]').forEach(i => i.value = hoy);
-
-        setupTabs();
-        render();
-    }
-
-    function setupTabs() {
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                document.getElementById(btn.dataset.page).classList.add('active');
-            };
-        });
-    }
-
-    function toggleAcc(id) {
-        const el = document.getElementById(id);
-        const content = el.querySelector('.acc-content');
-        if(content.style.display === 'block') {
-            content.style.display = 'none';
-            el.classList.remove('open');
+    // --- INICIO ---
+    init: function() {
+        // Cargar datos (Intentamos recuperar lo anterior si existe)
+        const stored = localStorage.getItem('finanzas_pro_v4');
+        if(stored) {
+            this.data = JSON.parse(stored);
         } else {
-            content.style.display = 'block';
-            el.classList.add('open');
+            // Migración de emergencia si venimos de versiones rotas
+            // Creamos estructura vacía segura
+            this.data = { users: {} }; 
         }
-    }
 
-    // --- LÓGICA DE HERENCIA (ROLLOVER) ---
-    function getMonthData() {
-        const u = db.users[db.active];
-        const key = `${curY}-${curM}`;
+        // Llenar selectores de fecha
+        const ySel = document.getElementById('year-sel');
+        const mSel = document.getElementById('month-sel');
+        ySel.innerHTML = ''; mSel.innerHTML = '';
+
+        for(let y=2024; y<=2030; y++) {
+            ySel.innerHTML += `<option value="${y}" ${y===this.state.year?'selected':''}>${y}</option>`;
+        }
+        ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
+        .forEach((m, i) => {
+            mSel.innerHTML += `<option value="${i}" ${i===this.state.month?'selected':''}>${m}</option>`;
+        });
+
+        ySel.onchange = (e) => { this.state.year = parseInt(e.target.value); this.render(); };
+        mSel.onchange = (e) => { this.state.month = parseInt(e.target.value); this.render(); };
+
+        // Fechas por defecto en inputs
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('input[type="date"]').forEach(i => i.value = today);
+
+        this.renderLogin();
+    },
+
+    // --- LOGIN ---
+    renderLogin: function() {
+        const list = document.getElementById('user-selector');
+        list.innerHTML = '';
+        Object.keys(this.data.users).forEach(u => {
+            list.innerHTML += `<div class="user-chip" onclick="document.getElementById('login-name').value='${u}'">👤 ${u}</div>`;
+        });
+    },
+
+    login: function() {
+        const name = document.getElementById('login-name').value.trim();
+        const pin = document.getElementById('login-pin').value.trim();
         
-        if(!u.months[key]) {
-            // Crear mes nuevo VACÍO de gastos, pero copiando servicios
-            u.months[key] = { inc: [], serv: [], exp: [], pay: {}, cardAmts: {} };
-            
-            // Buscar mes anterior para heredar servicios
-            const prevM = curM === 0 ? 11 : curM - 1;
-            const prevY = curM === 0 ? curY - 1 : curY;
-            const prevKey = `${prevY}-${prevM}`;
-            const prevData = u.months[prevKey];
+        if(!name || pin.length < 4) return alert("Ingresa un nombre y un PIN de 4 dígitos.");
 
-            if(prevData) {
-                prevData.serv.forEach(s => {
-                    // Cálculo de frecuencia matemática
-                    const diff = (curY - s.sy) * 12 + (curM - s.sm);
-                    let show = false;
-                    if(s.f === 'Mensual') show = true;
-                    else if(s.f === 'Bimestral' && diff % 2 === 0) show = true;
-                    else if(s.f === 'Anual' && diff % 12 === 0) show = true;
+        if(!this.data.users[name]) {
+            // Crear nuevo usuario si no existe
+            this.data.users[name] = { pin: pin, cards: [], months: {}, savings: [] };
+        } else if (this.data.users[name].pin !== pin) {
+            return alert("PIN Incorrecto");
+        }
+
+        this.data.activeUser = name;
+        this.save();
+        
+        // UI Transition
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        document.getElementById('user-display').innerText = name;
+        
+        this.render();
+    },
+
+    logout: function() {
+        this.data.activeUser = null;
+        this.save();
+        location.reload();
+    },
+
+    // --- NAVEGACIÓN ---
+    nav: function(pageId) {
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-' + pageId).classList.add('active');
+        
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+    },
+
+    toggle: function(bodyId, arrowId) {
+        const body = document.getElementById(bodyId);
+        const arrow = document.getElementById(arrowId);
+        if(body.classList.contains('open')) {
+            body.classList.remove('open');
+            arrow.classList.remove('rotate');
+        } else {
+            body.classList.add('open');
+            arrow.classList.add('rotate');
+        }
+    },
+
+    // --- LÓGICA DE DATOS (EL CEREBRO) ---
+    getMonthData: function() {
+        const u = this.data.users[this.data.activeUser];
+        const key = `${this.state.year}-${this.state.month}`;
+
+        if(!u.months[key]) {
+            // Inicializar mes
+            u.months[key] = { income: [], services: [], expenses: [], payments: {}, cardAmts: {} };
+            
+            // ROLLOVER: Traer servicios del mes anterior
+            // Calculamos cuál fue el mes anterior cronológicamente
+            let prevM = this.state.month - 1;
+            let prevY = this.state.year;
+            if(prevM < 0) { prevM = 11; prevY--; }
+            
+            const prevKey = `${prevY}-${prevM}`;
+            if(u.months[prevKey]) {
+                const prevServs = u.months[prevKey].services;
+                // Filtrar según frecuencia
+                prevServs.forEach(s => {
+                    const startY = s.startY || prevY;
+                    const startM = s.startM !== undefined ? s.startM : prevM;
+                    // Meses transcurridos
+                    const diff = (this.state.year - startY) * 12 + (this.state.month - startM);
                     
-                    if(show) u.months[key].serv.push({...s, id: Date.now() + Math.random()});
+                    let copy = false;
+                    if(s.freq === 'Mensual') copy = true;
+                    else if(s.freq === 'Bimestral' && diff % 2 === 0) copy = true;
+                    else if(s.freq === 'Anual' && diff % 12 === 0) copy = true;
+
+                    if(copy) {
+                        // Clonamos con nuevo ID para no ligarlos por referencia
+                        u.months[key].services.push({ ...s, id: Date.now() + Math.random() });
+                    }
                 });
-                // NOTA: NO copiamos 'exp' (Gastos variables) porque esos no se repiten
             }
         }
         return u.months[key];
-    }
+    },
 
     // --- CRUD ---
-    function add(type) {
-        const u = db.users[db.active];
-        const m = getMonthData();
+    add: function(type) {
+        const u = this.data.users[this.data.activeUser];
+        const m = this.getMonthData();
         const id = Date.now();
 
-        if(type==='inc') {
-            const d = document.getElementById('i-date').value, desc = document.getElementById('i-desc').value, a = parseFloat(document.getElementById('i-amt').value || 0);
-            if(desc && a) m.inc.push({id, d, desc, a});
-        } else if(type==='serv') {
-            const n = document.getElementById('s-name').value, a = parseFloat(document.getElementById('s-amt').value || 0), dy = parseInt(document.getElementById('s-day').value || 1), f = document.getElementById('s-freq').value, c = document.getElementById('s-card-link').value, rec = document.getElementById('s-is-rec').checked;
-            if(n && a) m.serv.push({id, n, a, dy, f, c, rec, sy: curY, sm: curM});
-        } else if(type==='card') {
-            const n = document.getElementById('c-name').value, d = document.getElementById('c-dig').value, p = parseInt(document.getElementById('c-pay').value || 1);
-            if(n && d) u.cards.push({id, n, d, p});
-        } else if(type==='exp') {
-            const d = document.getElementById('e-date').value, desc = document.getElementById('e-desc').value, a = parseFloat(document.getElementById('e-amt').value || 0), cat = document.getElementById('e-cat').value, c = document.getElementById('e-card-link').value;
-            if(desc && a) m.exp.push({id, d, desc, a, cat, c});
-        } else if(type==='sav') {
-            const d = document.getElementById('sav-date').value, desc = document.getElementById('sav-desc').value, a = parseFloat(document.getElementById('sav-amt').value || 0), op = document.getElementById('sav-op').value;
-            if(a) u.savings.push({id, d, desc, a, op});
+        if(type === 'income') {
+            const date = document.getElementById('in-date').value;
+            const desc = document.getElementById('in-desc').value;
+            const amt = parseFloat(document.getElementById('in-amt').value);
+            if(desc && amt) {
+                m.income.push({ id, date, desc, amt });
+                this.save(); this.render();
+                document.getElementById('in-desc').value = '';
+                document.getElementById('in-amt').value = '';
+            }
         }
+        else if(type === 'service') {
+            const name = document.getElementById('serv-name').value;
+            const amt = parseFloat(document.getElementById('serv-amt').value);
+            const day = parseInt(document.getElementById('serv-day').value);
+            const freq = document.getElementById('serv-freq').value;
+            const card = document.getElementById('serv-card').value;
+            const isRec = document.getElementById('serv-rec').checked;
+            
+            if(name && amt) {
+                m.services.push({ 
+                    id, name, amt, day: day || 1, freq, card, isRec, 
+                    startY: this.state.year, startM: this.state.month 
+                });
+                this.save(); this.render();
+                document.getElementById('serv-name').value = '';
+                document.getElementById('serv-amt').value = '';
+            }
+        }
+        else if(type === 'card') {
+            const name = document.getElementById('card-name').value;
+            const dig = document.getElementById('card-dig').value;
+            const day = parseInt(document.getElementById('card-day').value);
+            if(name && dig) {
+                u.cards.push({ id, name, dig, day: day || 1 });
+                this.save(); this.render();
+                document.getElementById('card-name').value = '';
+                document.getElementById('card-dig').value = '';
+            }
+        }
+        else if(type === 'expense') {
+            const date = document.getElementById('exp-date').value;
+            const desc = document.getElementById('exp-desc').value;
+            const amt = parseFloat(document.getElementById('exp-amt').value);
+            const cat = document.getElementById('exp-cat').value;
+            const card = document.getElementById('exp-card').value;
+            
+            if(desc && amt) {
+                m.expenses.push({ id, date, desc, amt, cat, card });
+                this.save(); this.render();
+                document.getElementById('exp-desc').value = '';
+                document.getElementById('exp-amt').value = '';
+            }
+        }
+        else if(type === 'saving') {
+            const date = document.getElementById('sav-date').value;
+            const desc = document.getElementById('sav-desc').value;
+            const amt = parseFloat(document.getElementById('sav-amt').value);
+            const type = document.getElementById('sav-type').value; // in/out
+            
+            if(amt) {
+                u.savings.push({ id, date, desc, amt, type });
+                this.save(); this.render();
+                document.getElementById('sav-desc').value = '';
+                document.getElementById('sav-amt').value = '';
+            }
+        }
+    },
 
-        save(); render();
-        // Limpiar inputs excepto fecha
-        document.querySelectorAll('input:not([type="date"]):not([type="checkbox"])').forEach(i => i.value = '');
-    }
+    del: function(type, id) {
+        if(!confirm("¿Eliminar este registro?")) return;
+        const u = this.data.users[this.data.activeUser];
+        const m = this.getMonthData();
 
-    function editCardAmt(id) {
-        const m = getMonthData();
-        const amt = prompt("Monto a pagar de esta tarjeta este mes:", m.cardAmts[id] || 0);
-        if(amt !== null) { m.cardAmts[id] = parseFloat(amt); save(); render(); }
-    }
-
-    function edit(type, id) {
-        const u = db.users[db.active];
-        let list = (type==='sav') ? u.savings : (type==='card') ? u.cards : getMonthData()[type];
-        let item = list.find(x=>x.id===id);
+        if(type === 'card') u.cards = u.cards.filter(x => x.id !== id);
+        else if(type === 'saving') u.savings = u.savings.filter(x => x.id !== id);
+        else if(type === 'income') m.income = m.income.filter(x => x.id !== id);
+        else if(type === 'service') m.services = m.services.filter(x => x.id !== id);
+        else if(type === 'expense') m.expenses = m.expenses.filter(x => x.id !== id);
         
-        const newName = prompt("Editar Nombre/Descripción:", item.n || item.desc || "");
-        if(newName === null) return;
-        const newAmt = prompt("Editar Monto:", item.a || 0);
+        this.save(); this.render();
+    },
+
+    edit: function(type, id) {
+        const u = this.data.users[this.data.activeUser];
+        const m = this.getMonthData();
+        let item, list;
+
+        // Localizar item
+        if(type === 'card') { list = u.cards; }
+        else if(type === 'saving') { list = u.savings; }
+        else if(type === 'income') { list = m.income; }
+        else if(type === 'service') { list = m.services; }
+        else if(type === 'expense') { list = m.expenses; }
+        
+        item = list.find(x => x.id === id);
+        if(!item) return;
+
+        const newDesc = prompt("Nuevo Nombre/Descripción:", item.name || item.desc);
+        if(newDesc === null) return;
+        const newAmt = prompt("Nuevo Monto:", item.amt);
         if(newAmt === null) return;
 
-        if(item.n) item.n = newName; else item.desc = newName;
-        item.a = parseFloat(newAmt);
-        save(); render();
-    }
+        if(item.name) item.name = newDesc; else item.desc = newDesc;
+        item.amt = parseFloat(newAmt);
 
-    function del(type, id) {
-        const u = db.users[db.active];
-        if(type==='card') u.cards = u.cards.filter(x=>x.id!==id);
-        else if(type==='sav') u.savings = u.savings.filter(x=>x.id!==id);
-        else getMonthData()[type] = getMonthData()[type].filter(x=>x.id!==id);
-        save(); render();
-    }
+        this.save(); this.render();
+    },
 
-    function togglePay(id) {
-        const m = getMonthData();
-        m.pay[id] = !m.pay[id];
-        save(); render();
-    }
+    editCardAmt: function(id) {
+        const m = this.getMonthData();
+        const current = m.cardAmts[id] || 0;
+        const val = prompt("Monto a pagar de esta tarjeta este mes:", current);
+        if(val !== null) {
+            m.cardAmts[id] = parseFloat(val);
+            this.save(); this.render();
+        }
+    },
 
-    function save() { localStorage.setItem('finanzasMaster_V3.5', JSON.stringify(db)); }
+    togglePay: function(id) {
+        const m = this.getMonthData();
+        m.payments[id] = !m.payments[id];
+        this.save(); this.render();
+    },
 
-    function getDaysLeft(day) {
-        const today = new Date(); today.setHours(0,0,0,0);
-        const target = new Date(curY, curM, day);
-        const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
-        if(diff === 0) return { t: "Vence hoy", c: "d-warn" };
-        if(diff < 0) return { t: `Venció hace ${Math.abs(diff)} d`, c: "d-alert" };
-        return { t: `Faltan ${diff} días`, c: diff <= 3 ? "d-warn" : "d-ok" };
-    }
+    save: function() {
+        localStorage.setItem('finanzas_pro_v4', JSON.stringify(this.data));
+    },
 
-    // --- RENDERIZADO PRINCIPAL ---
-    function render() {
-        const u = db.users[db.active];
-        const m = getMonthData();
+    getDaysLeft: function(day) {
+        const today = new Date(); 
+        today.setHours(0,0,0,0);
+        // Construimos fecha objetivo con el año/mes actual del estado
+        const target = new Date(this.state.year, this.state.month, day);
+        
+        const diffTime = target - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if(diffDays === 0) return { txt: 'Vence Hoy', cls: 'bg-warn' };
+        if(diffDays < 0) return { txt: `Venció hace ${Math.abs(diffDays)}d`, cls: 'bg-danger' };
+        return { txt: `Faltan ${diffDays} días`, cls: diffDays <= 3 ? 'bg-warn' : 'bg-ok' };
+    },
 
-        // 1. Actualizar Dropdowns de tarjetas
-        ['s-card-link', 'e-card-link'].forEach(id => {
-            const s = document.getElementById(id); s.innerHTML = '<option value="">💸 Efectivo / Débito</option>';
-            u.cards.forEach(c => s.innerHTML += `<option value="${c.n}">💳 ${c.n}</option>`);
+    // --- RENDER (PINTAR PANTALLA) ---
+    render: function() {
+        if(!this.data.activeUser) return;
+        const u = this.data.users[this.data.activeUser];
+        const m = this.getMonthData();
+
+        // 1. Dropdowns Tarjetas
+        const selects = ['serv-card', 'exp-card'];
+        selects.forEach(sid => {
+            const el = document.getElementById(sid);
+            el.innerHTML = '<option value="">💵 Efectivo / Débito</option>';
+            u.cards.forEach(c => {
+                el.innerHTML += `<option value="${c.name}">💳 ${c.name}</option>`;
+            });
         });
 
         // 2. Cálculos Totales
-        const tInc = m.inc.reduce((s,x)=>s+x.a, 0);
-        const tServ = m.serv.reduce((s,x)=>s+x.a, 0);
-        const tExp = m.exp.reduce((s,x)=>s+x.a, 0); // Gastos variables sumados
-        const tCard = Object.values(m.cardAmts || {}).reduce((s,x)=>s+x, 0);
-        const tSav = u.savings.reduce((s,x)=>s + (x.op==='in' ? x.a : -x.a), 0);
-
-        // 3. Actualizar Tiles Dashboard
-        document.getElementById('d-inc').innerText = fmt.format(tInc);
-        document.getElementById('d-egr').innerText = fmt.format(tServ + tExp + tCard); // Suma todo
-        document.getElementById('d-bal').innerText = fmt.format(tInc - (tServ + tExp + tCard)); // Resta todo
-        document.getElementById('d-sav').innerText = fmt.format(tSav);
-        document.getElementById('sav-total-view').innerText = fmt.format(tSav);
-
-        // 4. Llenar Listas Dashboard (Acordeones)
-        const q1l = document.getElementById('q1-l'), q2l = document.getElementById('q2-l');
-        const rl = document.getElementById('rec-l'), el = document.getElementById('exp-l');
-        q1l.innerHTML = ''; q2l.innerHTML = ''; rl.innerHTML = ''; el.innerHTML = '';
+        const totalInc = m.income.reduce((s, x) => s + x.amt, 0);
         
-        let q1t = 0, q2t = 0, rt = 0;
+        // Sumamos servicios + gastos var + tarjetas
+        const sumServ = m.services.reduce((s, x) => s + x.amt, 0);
+        const sumExp = m.expenses.reduce((s, x) => s + x.amt, 0);
+        const sumCards = Object.values(m.cardAmts).reduce((s, x) => s + x, 0);
+        const totalOut = sumServ + sumExp + sumCards;
 
-        // A) Pagos (Servicios + Tarjetas)
-        const allPayments = [
-            ...m.serv.map(s => ({...s, type:'serv'})),
-            ...u.cards.map(c => ({id:c.id, n: `Pago ${c.n}`, a: m.cardAmts[c.id] || 0, dy: c.p, c: c.n, type: 'card'}))
-        ];
+        const totalSav = u.savings.reduce((s, x) => s + (x.type === 'in' ? x.amt : -x.amt), 0);
 
-        allPayments.sort((a,b)=>a.dy - b.dy).forEach(p => {
-            const isP = m.pay[p.id];
-            const dInfo = getDaysLeft(p.dy);
+        // Actualizar Tiles
+        document.getElementById('dash-inc').innerText = this.fmt.format(totalInc);
+        document.getElementById('dash-exp').innerText = this.fmt.format(totalOut);
+        document.getElementById('dash-bal').innerText = this.fmt.format(totalInc - totalOut);
+        document.getElementById('dash-sav').innerText = this.fmt.format(totalSav);
+        document.getElementById('big-sav').innerText = this.fmt.format(totalSav);
+
+        // 3. Generar Listas Dashboard (Acordeones)
+        const q1List = document.getElementById('list-q1');
+        const q2List = document.getElementById('list-q2');
+        const recList = document.getElementById('list-rec');
+        const varList = document.getElementById('list-var');
+        
+        q1List.innerHTML = ''; q2List.innerHTML = ''; recList.innerHTML = ''; varList.innerHTML = '';
+        
+        let tQ1 = 0, tQ2 = 0, tRec = 0;
+
+        // Unificar Servicios y Tarjetas para mostrar en quincenas
+        let allItems = [];
+        
+        // Agregar Servicios
+        m.services.forEach(s => {
+            allItems.push({ ...s, type: 'service', payAmt: s.amt });
+        });
+        
+        // Agregar Tarjetas (Con su deuda del mes)
+        u.cards.forEach(c => {
+            const amt = m.cardAmts[c.id] || 0;
+            allItems.push({ 
+                id: c.id, name: `Pago ${c.name}`, amt: amt, 
+                day: c.day, type: 'card', payAmt: amt 
+            });
+        });
+
+        // Ordenar por día
+        allItems.sort((a, b) => a.day - b.day);
+
+        allItems.forEach(item => {
+            const isPaid = m.payments[item.id];
+            const dInfo = this.getDaysLeft(item.day);
+            const icon = this.getIcon(item.name);
+            const isRec = item.isRec; // Si es marcado como recurrente
+
+            // HTML del elemento
             const html = `
-                <div class="item-row ${isP?'paid':''}">
-                    <div style="font-size:1.8rem; margin-right:15px;">${getIcon(p.n)}</div>
-                    <div style="flex-grow:1">
-                        <div style="font-weight:800">${p.n} ${p.rec?'<span class="tag-rec">REC</span>':''}</div>
-                        <div style="font-size:0.8rem; color:#888">Día ${p.dy} • ${p.c || 'Efectivo'}</div>
-                        ${(!isP && !p.rec) ? `<span class="days-badge ${dInfo.c}">${dInfo.t}</span>` : ''}
+                <div class="list-item ${isPaid ? 'pagado' : ''}">
+                    <div class="icon-box">${icon}</div>
+                    <div class="info-box">
+                        <div class="main-text">
+                            ${item.name} 
+                            ${isRec ? '<span class="tag tag-rec">REC</span>' : ''}
+                        </div>
+                        <div class="sub-text">
+                            Día ${item.day} • ${item.card || 'Efectivo'}
+                        </div>
+                        ${(!isPaid && !isRec) ? `<span class="badge-days ${dInfo.cls}">${dInfo.txt}</span>` : ''}
                     </div>
-                    <div class="actions">
-                        <span style="font-weight:800; margin-right:10px; cursor:pointer" onclick="${p.type==='card' ? `editCardAmt(${p.id})` : ''}">${fmt.format(p.a)}</span>
-                        <input type="checkbox" ${isP?'checked':''} onclick="togglePay(${p.id})" style="width:22px; height:22px;">
+                    <div class="money-box">
+                        <div class="amount-text" 
+                             onclick="${item.type === 'card' ? `app.editCardAmt(${item.id})` : ''}" 
+                             style="${item.type === 'card' ? 'cursor:pointer; border-bottom:1px dashed #ccc' : ''}">
+                             ${this.fmt.format(item.payAmt)}
+                        </div>
                     </div>
-                </div>`;
-            
-            if(p.rec) { rl.innerHTML += html; if(!isP) rt += p.a; }
-            else if(p.dy <= 14) { q1l.innerHTML += html; if(!isP) q1t += p.a; }
-            else { q2l.innerHTML += html; if(!isP) q2t += p.a; }
+                    <input type="checkbox" style="width:20px; height:20px;" 
+                           ${isPaid ? 'checked' : ''} onchange="app.togglePay(${item.id})">
+                </div>
+            `;
+
+            if(isRec) {
+                recList.innerHTML += html;
+                if(!isPaid) tRec += item.payAmt;
+            } else if (item.day <= 14) {
+                q1List.innerHTML += html;
+                if(!isPaid) tQ1 += item.payAmt;
+            } else {
+                q2List.innerHTML += html;
+                if(!isPaid) tQ2 += item.payAmt;
+            }
         });
 
-        // B) Gastos Variables en Dashboard (Lista Detallada por Fecha)
-        const sortedExp = m.exp.sort((a,b) => new Date(a.d) - new Date(b.d)); // Ordenar por fecha
-        if(sortedExp.length === 0) el.innerHTML = '<div style="padding:15px; color:#888; text-align:center">Aún no hay gastos registrados este mes.</div>';
-        
-        sortedExp.forEach(x => {
+        // Generar Lista de Gastos Variables (Día a día)
+        const sortedExp = m.expenses.sort((a, b) => new Date(a.date) - new Date(b.date));
+        sortedExp.forEach(ex => {
+            varList.innerHTML += `
+                <div class="list-item">
+                    <div class="icon-box">${this.getIcon(ex.desc)}</div>
+                    <div class="info-box">
+                        <div class="main-text">${ex.desc}</div>
+                        <div class="sub-text">${ex.date} • ${ex.cat}</div>
+                    </div>
+                    <div class="amount-text" style="color:var(--coral)">- ${this.fmt.format(ex.amt)}</div>
+                </div>
+            `;
+        });
+
+        // Actualizar Totales de Cabeceras
+        document.getElementById('head-q1').innerText = this.fmt.format(tQ1);
+        document.getElementById('head-q2').innerText = this.fmt.format(tQ2);
+        document.getElementById('head-rec').innerText = this.fmt.format(tRec);
+        document.getElementById('head-var').innerText = this.fmt.format(sumExp);
+
+        // 4. Renderizar Tablas Completas (Listas de Edición)
+        this.renderTable('table-income', m.income, 'income');
+        this.renderTable('table-service', m.services, 'service');
+        this.renderTable('table-card', u.cards, 'card');
+        this.renderTable('table-expense', m.expenses, 'expense');
+        this.renderTable('table-saving', u.savings, 'saving');
+    },
+
+    renderTable: function(domId, list, type) {
+        const el = document.getElementById(domId);
+        el.innerHTML = '';
+        // Invertir orden para ver nuevos primero
+        [...list].reverse().forEach(x => {
             el.innerHTML += `
-                <div class="item-row">
-                    <div style="font-size:1.5rem; margin-right:15px;">${getIcon(x.desc)}</div>
-                    <div style="flex-grow:1">
-                        <div style="font-weight:800">${x.desc}</div>
-                        <div style="font-size:0.75rem; color:#888">${x.d} • ${x.cat}</div>
+                <div class="list-item">
+                    <div class="icon-box">${this.getIcon(x.name || x.desc)}</div>
+                    <div class="info-box">
+                        <div class="main-text">
+                            ${x.name || x.desc} 
+                            ${x.type === 'out' ? '(Retiro)' : ''}
+                        </div>
+                        <div class="sub-text">
+                            ${x.date || ('Día ' + (x.day || x.day || '?'))} • 
+                            ${this.fmt.format(x.amt || 0)}
+                        </div>
                     </div>
-                    <div style="font-weight:800; color:var(--coral)">- ${fmt.format(x.a)}</div>
-                </div>`;
-        });
-
-        // 5. Actualizar Totales de Cabeceras Acordeón
-        document.getElementById('q1-t').innerText = fmt.format(q1t);
-        document.getElementById('q2-t').innerText = fmt.format(q2t);
-        document.getElementById('rec-t').innerText = fmt.format(rt);
-        document.getElementById('exp-t').innerText = fmt.format(tExp);
-
-        // 6. Renderizar Listas Completas (Edición)
-        renderEditableList('inc-list', m.inc, 'inc');
-        renderEditableList('serv-list', m.serv, 'serv');
-        renderEditableList('card-list', u.cards, 'card');
-        renderEditableList('exp-list', m.exp, 'exp');
-        renderEditableList('sav-list', u.savings, 'sav');
-    }
-
-    function renderEditableList(id, list, type) {
-        const el = document.getElementById(id); el.innerHTML = '';
-        list.forEach(x => {
-            el.innerHTML += `
-                <div class="item-row">
-                    <div style="font-size:1.3rem; margin-right:15px;">${getIcon(x.n || x.desc || '')}</div>
-                    <div style="flex-grow:1">
-                        <div style="font-weight:700">${x.n || x.desc} ${x.cat ? '• '+x.cat : ''} ${x.op==='out'?'(Retiro)':''}</div>
-                        <div style="font-size:0.75rem; color:#888">${x.d || ''} ${x.c ? '• '+x.c : ''} ${x.dy ? '• Día '+x.dy : ''}</div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-small btn-edit" onclick="app.edit('${type}', ${x.id})">✏️</button>
+                        <button class="btn-small btn-del" onclick="app.del('${type}', ${x.id})">🗑️</button>
                     </div>
-                    <div class="actions">
-                        <span style="font-weight:800; margin-right:10px;">${fmt.format(x.a || 0)}</span>
-                        <button class="btn-mini" onclick="edit('${type}', ${x.id})">✏️</button>
-                        <button class="btn-mini" onclick="del('${type}', ${x.id})" style="color:var(--coral)">🗑️</button>
-                    </div>
-                </div>`;
+                </div>
+            `;
         });
     }
+};
 
-    loadExistingUsers();
-    if(db.active) unlock();
+// Arrancar App
+window.onload = () => app.init();
 </script>
 </body>
 </html>
