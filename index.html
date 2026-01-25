@@ -3,246 +3,169 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Finanzas Pro V4.3 - Mega Fortress</title>
+    <title>Finanzas Pro V4.4 - CEO Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* ================================================================
-           I. SISTEMA DE VARIABLES Y DISEÑO VISUAL XL
-           ================================================================
-        */
         :root {
-            --verde: #20A39E; 
-            --dorado: #FFBA49; 
-            --coral: #EF5B5B; 
-            --violeta: #23001E;
-            --violeta-deep: #1A0016;
-            --gris-fondo: #F1F5F9;
-            --blanco: #FFFFFF;
-            --borde: #E2E8F0;
-            --texto-muted: #64748B;
-            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --verde: #20A39E; --dorado: #FFBA49; --coral: #EF5B5B; --violeta: #23001E;
+            --violeta-deep: #1A0016; --gris-fondo: #F1F5F9; --blanco: #FFFFFF;
+            --borde: #E2E8F0; --texto-muted: #64748B;
+            /* Sombras con Glow */
+            --glow-verde: 0 10px 20px -5px rgba(32, 163, 158, 0.3);
+            --glow-dorado: 0 10px 20px -5px rgba(255, 186, 73, 0.3);
+            --glow-coral: 0 10px 20px -5px rgba(239, 91, 91, 0.3);
+            --glow-violeta: 0 10px 20px -5px rgba(35, 0, 30, 0.2);
         }
 
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        /* Ajuste de escala general para evitar que se vea "gigante" */
+        html { font-size: 14px; } 
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
         body { 
-            margin: 0; 
-            background-color: var(--gris-fondo); 
-            color: var(--violeta); 
-            min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
+            margin: 0; background-color: var(--gris-fondo); color: var(--violeta); 
+            min-height: 100vh; line-height: 1.5; overflow-x: hidden;
         }
 
-        /* ================================================================
-           II. PANTALLA DE ACCESO (LOGIN) - SEGURIDAD NIVEL 1
-           ================================================================
-        */
+        /* --- LOGIN --- */
         #login-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: linear-gradient(135deg, var(--violeta), var(--violeta-deep)); 
-            z-index: 100000; 
-            display: flex; align-items: center; justify-content: center; 
+            z-index: 100000; display: flex; align-items: center; justify-content: center; 
         }
         .login-card { 
-            background: var(--blanco); padding: 50px; border-radius: 40px; 
-            width: 90%; max-width: 550px; text-align: center; 
-            box-shadow: var(--shadow-xl); 
-        }
-        .login-card h1 { font-size: 3.5rem; letter-spacing: -4px; margin: 0; color: var(--violeta); }
-        .user-grid { 
-            display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin: 40px 0; 
+            background: var(--blanco); padding: 40px; border-radius: 30px; 
+            width: 90%; max-width: 450px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.5); 
         }
         .user-chip { 
-            background: #F8FAFC; padding: 20px 35px; border-radius: 25px; 
-            cursor: pointer; font-weight: 800; border: 3px solid transparent; 
-            transition: 0.3s; font-size: 1.3rem;
+            background: #F8FAFC; padding: 12px 20px; border-radius: 15px; 
+            cursor: pointer; font-weight: 800; border: 2px solid transparent; 
+            transition: 0.3s; margin: 5px; display: inline-block;
         }
         .user-chip:hover { border-color: var(--verde); transform: scale(1.05); }
 
-        /* ================================================================
-           III. HEADER Y NAVEGACIÓN XL (OPTIMIZADO PARA VISTA PRO)
-           ================================================================
-        */
+        /* --- CONTAINER ANCHO (CEO VIEW) --- */
         .app-container { 
-            max-width: 1400px; margin: 0 auto; background: var(--blanco); 
-            min-height: 100vh; display: none; 
-            box-shadow: 0 0 100px rgba(0,0,0,0.1);
+            max-width: 1600px; margin: 0 auto; background: var(--blanco); 
+            min-height: 100vh; display: none; box-shadow: 0 0 50px rgba(0,0,0,0.05);
         }
 
         header { 
-            padding: 40px 50px; border-bottom: 2px solid var(--borde); 
-            background: var(--blanco);
+            padding: 30px 50px; border-bottom: 1px solid var(--borde); 
+            background: linear-gradient(to right, #fff, #fdfdfd);
         }
-        .header-top { 
-            display: flex; justify-content: space-between; align-items: center; 
-            flex-wrap: wrap; gap: 30px; 
-        }
-        .logo-text { font-size: 3.2rem; font-weight: 800; color: var(--violeta); letter-spacing: -3px; margin: 0; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-icon { font-size: 2.5rem; background: linear-gradient(var(--verde), var(--violeta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-text { font-size: 2.5rem; font-weight: 800; color: var(--violeta); letter-spacing: -2px; margin: 0; }
         
-        .controls { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
-        .ctrl-item { 
-            padding: 15px 25px; border-radius: 15px; border: 3px solid var(--borde); 
-            background: #fff; font-size: 1.2rem; font-weight: 800; cursor: pointer;
-            height: 60px; display: flex; align-items: center; transition: 0.2s;
+        /* TIPS SECTION */
+        #tip-banner {
+            background: #F0FDFA; color: var(--verde); padding: 10px 20px;
+            border-radius: 12px; font-weight: 700; font-size: 0.9rem;
+            margin-top: 15px; border-left: 5px solid var(--verde);
+            display: flex; align-items: center; gap: 10px;
         }
+
+        .controls { display: flex; gap: 10px; align-items: center; }
+        .ctrl-item { 
+            padding: 8px 15px; border-radius: 10px; border: 1px solid var(--borde); 
+            background: #fff; font-size: 0.9rem; font-weight: 800; cursor: pointer;
+        }
+        .btn-backup { background: var(--verde); color: white; border: none; }
         .btn-logout { background: var(--coral); color: white; border: none; }
-        .btn-backup { background: var(--dorado); color: var(--violeta); border: none; margin-left: 10px; }
 
         nav { 
-            display: flex; gap: 15px; padding: 25px 50px; overflow-x: auto; 
-            background: #fff; border-bottom: 2px solid var(--borde); 
-            justify-content: center;
+            display: flex; gap: 5px; padding: 10px 50px; background: #fff; 
+            border-bottom: 1px solid var(--borde); justify-content: center;
         }
         .nav-btn { 
-            padding: 22px 35px; border: none; background: transparent; 
+            padding: 12px 20px; border: none; background: transparent; 
             color: var(--texto-muted); font-weight: 800; cursor: pointer; 
-            white-space: nowrap; border-radius: 20px; transition: 0.3s; font-size: 1.3rem;
+            border-radius: 12px; transition: 0.3s; font-size: 1rem;
         }
-        .nav-btn.active { 
-            background: var(--violeta); color: white; 
-            box-shadow: 0 15px 30px rgba(35, 0, 30, 0.3);
-        }
+        .nav-btn.active { background: var(--violeta); color: white; }
 
-        /* ================================================================
-           IV. DASHBOARD - ESTADÍSTICAS Y ACORDEONES XL
-           ================================================================
-        */
-        main { padding: 50px; }
+        /* --- DASHBOARD TILES --- */
+        main { padding: 30px 50px; }
         .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeInUp 0.6s ease; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .view-section.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .stats-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 35px; margin-bottom: 60px; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 20px; margin-bottom: 40px; 
         }
         .stat-card { 
-            background: #fff; padding: 45px; border-radius: 35px; 
-            border: 2px solid var(--borde); box-shadow: var(--shadow-xl); 
-            transition: 0.4s;
+            background: #fff; padding: 30px; border-radius: 25px; 
+            border: 1px solid var(--borde); transition: 0.3s;
         }
-        .stat-card:hover { transform: scale(1.03); }
-        .stat-label { font-size: 1.1rem; color: var(--texto-muted); font-weight: 800; text-transform: uppercase; }
-        .stat-value { font-size: 3rem; font-weight: 800; margin-top: 15px; }
+        /* Sombras específicas */
+        .card-inc { box-shadow: var(--glow-verde); border-top: 5px solid var(--verde); }
+        .card-egr { box-shadow: var(--glow-coral); border-top: 5px solid var(--coral); }
+        .card-bal { box-shadow: var(--glow-violeta); border-top: 5px solid var(--violeta); }
+        .card-sav { box-shadow: var(--glow-dorado); border-top: 5px solid var(--dorado); }
+        
+        .stat-label { font-size: 0.8rem; color: var(--texto-muted); font-weight: 800; text-transform: uppercase; }
+        .stat-value { font-size: 2.2rem; font-weight: 800; margin-top: 10px; }
 
-        /* ACORDEONES MAESTROS */
-        .accordion { 
-            border: 3px solid var(--borde); border-radius: 30px; margin-bottom: 30px; 
-            background: #fff; overflow: hidden;
-        }
-        .acc-head { 
-            padding: 35px 50px; background: #fff; cursor: pointer; 
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .acc-title { font-weight: 800; font-size: 1.8rem; display: flex; align-items: center; gap: 25px; }
-        .acc-amount { 
-            background: var(--gris-fondo); padding: 12px 25px; border-radius: 20px; 
-            font-weight: 800; font-size: 1.5rem; color: var(--verde); 
-        }
-        .acc-body { 
-            display: none; padding: 0 50px 50px 50px; border-top: 2px solid var(--borde); background: #FBFCFE;
-        }
+        /* ACORDEONES */
+        .accordion { border: 1px solid var(--borde); border-radius: 20px; margin-bottom: 15px; background: #fff; overflow: hidden; }
+        .acc-head { padding: 20px 30px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .acc-title { font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; gap: 15px; }
+        .acc-amount { background: var(--gris-fondo); padding: 5px 15px; border-radius: 10px; font-weight: 800; color: var(--verde); }
+        .acc-body { display: none; padding: 0 30px 30px 30px; border-top: 1px solid var(--borde); }
         .acc-body.open { display: block; }
 
-        /* ================================================================
-           V. FILAS DE DATOS (LIST ITEMS) - ICONOS MASIVOS
-           ================================================================
-        */
+        /* LIST ITEMS */
         .list-item { 
-            display: flex; align-items: center; padding: 30px; 
-            background: #fff; border: 2px solid var(--borde); 
-            border-radius: 25px; margin-top: 20px; transition: 0.3s;
+            display: flex; align-items: center; padding: 15px 20px; 
+            background: #fff; border: 1px solid var(--borde); 
+            border-radius: 18px; margin-top: 10px; transition: 0.2s;
         }
-        .list-item:hover { border-color: var(--verde); transform: translateX(10px); }
-        .list-item.pagado { opacity: 0.4; filter: grayscale(1); }
-        .list-item.no-corresponde { opacity: 0.3; border-style: dashed; background: #f1f1f1; }
-        
-        .icon-box { font-size: 4.5rem; margin-right: 40px; width: 90px; text-align: center; }
+        .list-item.no-toca { opacity: 0.3; background: #f9f9f9; border-style: dashed; }
+        .icon-box { font-size: 3rem; margin-right: 20px; width: 60px; text-align: center; }
         .info-box { flex-grow: 1; }
-        .main-text { font-weight: 800; font-size: 1.6rem; color: var(--violeta); }
-        .sub-text { font-size: 1.1rem; color: var(--texto-muted); font-weight: 600; }
-        
-        .money-box { text-align: right; margin-right: 40px; }
-        .amount-text { font-weight: 800; font-size: 1.8rem; }
-        
-        /* ESTADOS Y BADGES */
-        .badge { font-size: 0.9rem; padding: 8px 18px; border-radius: 12px; font-weight: 800; margin-top: 12px; display: inline-block; }
-        .bg-ok { background: #D1FAE5; color: #065F46; }
-        .bg-warn { background: #FEF3C7; color: #92400E; }
-        .bg-danger { background: #FEE2E2; color: #991B1B; }
+        .main-text { font-weight: 800; font-size: 1.2rem; }
+        .amount-text { font-weight: 800; font-size: 1.3rem; }
 
-        /* ================================================================
-           VI. FORMULARIOS XL Y BOTONES DE ACCIÓN
-           ================================================================
-        */
-        .card-form { 
-            background: #fff; padding: 55px; border-radius: 40px; 
-            border: 3px solid var(--borde); margin-bottom: 50px; 
-        }
-        .card-form h3 { font-size: 2.2rem; margin-top: 0; border-bottom: 4px solid var(--gris-fondo); padding-bottom: 25px; margin-bottom: 35px; }
-        
-        .grid-inputs { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-            gap: 25px; margin-bottom: 30px; 
-        }
-        .btn-primary { 
-            width: 100%; padding: 25px; background: var(--verde); color: white; 
-            border: none; border-radius: 22px; font-weight: 800; cursor: pointer; 
-            font-size: 1.4rem; transition: 0.3s;
-        }
-        .btn-primary:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(32, 163, 158, 0.4); }
-
-        .btn-row { 
-            padding: 15px 25px; background: #F1F5F9; border: none; 
-            border-radius: 15px; cursor: pointer; font-size: 1.1rem; font-weight: 800;
-        }
-
-        /* ================================================================
-           VII. RESPONSIVIDAD (MOBILE OPTIMIZATION)
-           ================================================================
-        */
-        @media (max-width: 768px) {
-            header, nav, main { padding: 20px; }
-            .logo-text { font-size: 2.2rem; }
-            .stat-card { padding: 25px; }
-            .icon-box { font-size: 3rem; width: 60px; margin-right: 20px; }
-            .main-text { font-size: 1.2rem; }
-            .amount-text { font-size: 1.3rem; }
-            .acc-head { padding: 20px; }
-            .acc-title { font-size: 1.2rem; }
-        }
+        /* FORMS */
+        .card-form { background: #fff; padding: 30px; border-radius: 25px; border: 1px solid var(--borde); margin-bottom: 30px; }
+        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        input, select { padding: 12px; border: 1px solid var(--borde); border-radius: 10px; font-weight: 700; width: 100%; }
+        .btn-primary { width: 100%; padding: 15px; background: var(--verde); color: white; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="login-card">
+            <div style="font-size:3rem">🏦</div>
             <h1>Finanzas Pro</h1>
-            <p style="color:var(--texto-muted); font-weight: 800; font-size: 1.3rem;">Bóveda Financiera Segura</p>
-            <div id="user-selector" class="user-grid"></div>
-            <div style="margin-top:40px; border-top:4px solid #F1F5F9; padding-top:40px;">
-                <input type="text" id="login-name" class="ctrl-item" style="width:100%; margin-bottom:15px; text-align:center" placeholder="Nombre de Usuario">
-                <input type="password" id="login-pin" class="ctrl-item" style="width:100%; text-align:center; letter-spacing:10px; font-size:2.5rem;" maxlength="4" placeholder="••••">
-                <button class="btn-primary" style="margin-top:25px;" onclick="vault.login()">ACCEDER A LA BÓVEDA</button>
-            </div>
+            <div id="user-selector" style="margin:20px 0"></div>
+            <input type="text" id="login-name" placeholder="Nombre" style="margin-bottom:10px; text-align:center">
+            <input type="password" id="login-pin" placeholder="PIN" maxlength="4" style="text-align:center; letter-spacing:8px">
+            <button class="btn-primary" style="margin-top:20px" onclick="vault.login()">ENTRAR</button>
         </div>
     </div>
 
     <div id="app-wrap" class="app-container">
         <header>
             <div class="header-top">
-                <div>
+                <div class="logo-area">
+                    <span class="logo-icon">💎</span>
                     <p class="logo-text">Finanzas Pro</p>
-                    <p style="color:var(--verde); font-weight:800; text-transform:uppercase;">Master Ultimate V4.3</p>
                 </div>
                 <div class="controls">
                     <select id="sel-year" class="ctrl-item"></select>
                     <select id="sel-month" class="ctrl-item"></select>
-                    <div class="ctrl-item">👤 <span id="active-user">Jose</span></div>
-                    <button class="ctrl-item btn-backup" onclick="vault.exportData()">💾 BACKUP</button>
+                    <div class="ctrl-item">👤 <span id="active-user">Toño</span></div>
+                    <button class="ctrl-item btn-backup" onclick="vault.exportReport()">📊 REPORTE JSON</button>
                     <button class="ctrl-item btn-logout" onclick="vault.logout()">🔒 SALIR</button>
                 </div>
+            </div>
+            <div id="tip-banner">
+                <span>💡 Tip del Momento:</span>
+                <span id="tip-text">Cargando consejos...</span>
             </div>
         </header>
 
@@ -258,10 +181,10 @@
         <main>
             <div id="v-dashboard" class="view-section active">
                 <div class="stats-grid">
-                    <div class="stat-card"><p class="stat-label">Ingresos</p><div class="stat-value" id="val-inc">$0.00</div></div>
-                    <div class="stat-card"><p class="stat-label">Egresos</p><div class="stat-value" id="val-egr">$0.00</div></div>
-                    <div class="stat-card" style="border-bottom: 12px solid var(--verde);"><p class="stat-label c-verde">Balance Real</p><div class="stat-value c-verde" id="val-bal">$0.00</div></div>
-                    <div class="stat-card" style="border-bottom: 12px solid var(--dorado);"><p class="stat-label c-dorado">Reserva Ahorro</p><div class="stat-value c-dorado" id="val-sav">$0.00</div></div>
+                    <div class="stat-card card-inc"><p class="stat-label">Ingresos</p><div class="stat-value" id="val-inc">$0.00</div></div>
+                    <div class="stat-card card-egr"><p class="stat-label">Egresos</p><div class="stat-value" id="val-egr">$0.00</div></div>
+                    <div class="stat-card card-bal"><p class="stat-label">Balance General</p><div class="stat-value" id="val-bal">$0.00</div></div>
+                    <div class="stat-card card-sav"><p class="stat-label">Ahorro</p><div class="stat-value" id="val-sav">$0.00</div></div>
                 </div>
 
                 <div class="accordion">
@@ -282,22 +205,9 @@
                 </div>
             </div>
 
-            <div id="v-ingresos" class="view-section">
-                <div class="card-form">
-                    <h3>Registrar Ingreso</h3>
-                    <div class="grid-inputs">
-                        <input type="date" id="f-in-date">
-                        <input type="text" id="f-in-desc" placeholder="Descripción">
-                        <input type="number" id="f-in-amt" placeholder="Monto $">
-                    </div>
-                    <button class="btn-primary" onclick="vault.add('income')">AGREGAR INGRESO</button>
-                </div>
-                <div id="list-income"></div>
-            </div>
-
             <div id="v-servicios" class="view-section">
                 <div class="card-form">
-                    <h3>Servicios y Fijos</h3>
+                    <h3>Registrar Servicio o Pago Fijo</h3>
                     <div class="grid-inputs">
                         <input type="text" id="f-se-name" placeholder="Servicio">
                         <input type="number" id="f-se-amt" placeholder="Monto $">
@@ -306,83 +216,40 @@
                     </div>
                     <div class="grid-inputs">
                         <select id="f-se-card"></select>
-                        <label style="display:flex; align-items:center; gap:15px; font-weight:800;"><input type="checkbox" id="f-se-rec" style="width:30px; height:30px;"> ¿Recurrente?</label>
+                        <label style="display:flex; align-items:center; gap:10px; font-weight:800;"><input type="checkbox" id="f-se-rec" style="width:25px; height:25px;"> ¿Es Recurrente?</label>
                     </div>
                     <button class="btn-primary" onclick="vault.add('service')">GUARDAR</button>
                 </div>
                 <div id="list-service"></div>
             </div>
 
-            <div id="v-tarjetas" class="view-section">
-                <div class="card-form">
-                    <h3>Tarjetas de Crédito</h3>
-                    <div class="grid-inputs">
-                        <input type="text" id="f-ca-name" placeholder="Banco">
-                        <input type="text" id="f-ca-dig" placeholder="4 Dígitos" maxlength="4">
-                        <input type="number" id="f-ca-day" placeholder="Día de Pago">
-                        <button class="btn-primary" onclick="vault.add('card')">VINCULAR</button>
-                    </div>
-                </div>
-                <div id="list-card"></div>
-            </div>
-
-            <div id="v-gastos" class="view-section">
-                <div class="card-form">
-                    <h3>Nuevo Gasto Variable</h3>
-                    <div class="grid-inputs">
-                        <input type="date" id="f-ex-date">
-                        <input type="text" id="f-ex-desc" placeholder="Descripción">
-                        <input type="number" id="f-ex-amt" placeholder="Monto $">
-                    </div>
-                    <div class="grid-inputs">
-                        <select id="f-ex-cat">
-                            <option value="Comida">🍔 Comida</option><option value="Transporte">🚗 Transporte</option>
-                            <option value="Salud">🏥 Salud</option><option value="Diversión">🎉 Diversión</option>
-                            <option value="Otros">📌 Otros</option>
-                        </select>
-                        <select id="f-ex-card"></select>
-                        <button class="btn-primary" onclick="vault.add('expense')">REGISTRAR</button>
-                    </div>
-                </div>
-                <div id="list-expense"></div>
-            </div>
-
-            <div id="v-ahorro" class="view-section">
-                <div style="text-align:center; margin-bottom:50px;">
-                    <div id="txt-sav-big" style="font-size:6rem; font-weight:800; color:var(--dorado);">$0.00</div>
-                    <p style="font-weight:800; color:var(--texto-muted); text-transform:uppercase;">Reserva Estratégica</p>
-                </div>
-                <div class="card-form">
-                    <h3>Movimiento de Ahorro</h3>
-                    <div class="grid-inputs">
-                        <input type="date" id="f-sa-date">
-                        <input type="text" id="f-sa-desc" placeholder="Concepto">
-                        <input type="number" id="f-sa-amt" placeholder="Monto $">
-                        <select id="f-sa-type"><option value="in">➕ Aportar</option><option value="out">➖ Retirar</option></select>
-                        <button class="btn-primary" onclick="vault.add('saving')">ACTUALIZAR</button>
-                    </div>
-                </div>
-                <div id="list-saving"></div>
-            </div>
+            <div id="v-ingresos" class="view-section"><div class="card-form"><h3>Ingresos</h3><div class="grid-inputs"><input type="date" id="f-in-date"><input type="text" id="f-in-desc" placeholder="Desc"><input type="number" id="f-in-amt" placeholder="$"></div><button class="btn-primary" onclick="vault.add('income')">AGREGAR</button></div><div id="list-income"></div></div>
+            <div id="v-tarjetas" class="view-section"><div class="card-form"><h3>Tarjetas</h3><div class="grid-inputs"><input type="text" id="f-ca-name" placeholder="Banco"><input type="text" id="f-ca-dig" maxlength="4" placeholder="4 Dígitos"><input type="number" id="f-ca-day" placeholder="Día Pago"></div><button class="btn-primary" onclick="vault.add('card')">VINCULAR</button></div><div id="list-card"></div></div>
+            <div id="v-gastos" class="view-section"><div class="card-form"><h3>Gastos Variables</h3><div class="grid-inputs"><input type="date" id="f-ex-date"><input type="text" id="f-ex-desc" placeholder="¿Qué compraste?"><input type="number" id="f-ex-amt" placeholder="$"></div><div class="grid-inputs"><select id="f-ex-cat"><option value="Comida">🍔 Comida</option><option value="Transporte">🚗 Transporte</option><option value="Salud">🏥 Salud</option><option value="Otros">📌 Otros</option></select><select id="f-ex-card"></select><button class="btn-primary" onclick="vault.add('expense')">REGISTRAR</button></div></div><div id="list-expense"></div></div>
+            <div id="v-ahorro" class="view-section"><div style="text-align:center; margin-bottom:30px;"><div id="txt-sav-big" style="font-size:5rem; font-weight:800; color:var(--dorado);">$0.00</div></div><div class="card-form"><h3>Ahorro</h3><div class="grid-inputs"><input type="date" id="f-sa-date"><input type="text" id="f-sa-desc" placeholder="Motivo"><input type="number" id="f-sa-amt" placeholder="$"><select id="f-sa-type"><option value="in">➕ Aportar</option><option value="out">➖ Retirar</option></select></div><button class="btn-primary" onclick="vault.add('saving')">ACTUALIZAR</button></div><div id="list-saving"></div></div>
         </main>
     </div>
 
 <script>
-/**
- * * ============================================================================
- * III. LÓGICA DE PROGRAMACIÓN (CEREBRO V4.3)
- * ============================================================================
- */
 const vault = {
     db: { users: {}, active: null, lastY: 2026, lastM: 0 },
     cur: { y: 2026, m: 0 },
     fmt: new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }),
+    tips: [
+        "Ahorra el 10% de tu ingreso apenas lo recibas.", "El interés compuesto es la octava maravilla del mundo.",
+        "Evita los gastos hormiga: ese café diario suma miles al año.", "Antes de comprar algo, espera 24 horas para evitar impulsos.",
+        "Tu casa es un pasivo, no un activo (a menos que te dé renta).", "Invierte en tu educación financiera, es la mejor rentabilidad.",
+        "No pongas todos los huevos en la misma canasta. Diversifica.", "El presupuesto no es para limitarte, es para darte libertad.",
+        "Paga tus deudas de mayor interés primero.", "Tener un fondo de emergencia te da paz mental.",
+        "La inflación es el impuesto silencioso. No dejes tu dinero quieto.", "Vive por debajo de tus posibilidades para crecer más rápido.",
+        "Automatiza tus ahorros, así no tendrás que recordarlo.", "Revisa tus suscripciones, seguro hay una que no usas.",
+        "Comprar en rebajas cosas que no necesitas no es ahorrar.", "El dinero es una herramienta, no el fin último.",
+        "Aprende a decir 'no' a planes que no puedes costear.", "Tu salud es tu mayor activo financiero. Cuídate.",
+        "Define metas claras: ¿Para qué estás ahorrando hoy?", "Lo que no se mide, no se puede mejorar. ¡Usa esta app!"
+    ],
 
-    // DICCIONARIO DE ICONOS XL AMPLIADO
     icons: {
-        renta:'🏠', casa:'🏠', luz:'💡', cfe:'💡', agua:'💧', gas:'🔥', internet:'🌐', netflix:'📺', youtube:'📺',
-        spotify:'🎵', amazon:'📦', comida:'🍔', tacos:'🌮', pizza:'🍕', uber:'🚗', gasolina:'⛽', cine:'🍿',
-        salud:'🏥', banco:'🏦', tarjeta:'💳', apple:'🍎', tel:'📱', super:'🛒', gym:'💪', oxxo:'🏪', via:'✈️'
+        renta:'🏠', luz:'💡', agua:'💧', gas:'🔥', internet:'🌐', netflix:'📺', comida:'🍔', tacos:'🌮', uber:'🚗', gasolina:'⛽', cine:'🍿', salud:'🏥', banco:'🏦', tarjeta:'💳', amazon:'📦', via:'✈️'
     },
     cats: { Comida:'🍔', Transporte:'🚗', Salud:'🏥', Diversión:'🎉', Otros:'📌' },
 
@@ -393,16 +260,13 @@ const vault = {
         return this.cats[cat] || '📌';
     },
 
-    // --- INICIALIZACIÓN Y SEGURIDAD ---
     init: function() {
-        try {
-            const saved = localStorage.getItem('finanzas_master_v4_3');
-            if(saved) {
-                this.db = JSON.parse(saved);
-                this.cur.y = this.db.lastY || 2026;
-                this.cur.m = this.db.lastM || 0;
-            }
-        } catch(e) { console.error("Error al cargar datos", e); }
+        const saved = localStorage.getItem('finanzas_master_v4_3');
+        if(saved) {
+            this.db = JSON.parse(saved);
+            this.cur.y = this.db.lastY || 2026;
+            this.cur.m = this.db.lastM || 0;
+        }
         
         const yS = document.getElementById('sel-year'), mS = document.getElementById('sel-month');
         for(let y=2024; y<=2030; y++) yS.innerHTML += `<option value="${y}" ${y==this.cur.y?'selected':''}>${y}</option>`;
@@ -412,9 +276,14 @@ const vault = {
         yS.onchange = (e) => { this.cur.y = parseInt(e.target.value); this.db.lastY = this.cur.y; this.save(); this.render(); };
         mS.onchange = (e) => { this.cur.m = parseInt(e.target.value); this.db.lastM = this.cur.m; this.save(); this.render(); };
 
-        const hoy = "2026-01-24";
-        document.querySelectorAll('input[type="date"]').forEach(i => i.value = hoy);
+        document.querySelectorAll('input[type="date"]').forEach(i => i.value = "2026-01-24");
         this.drawLogin();
+        this.updateTip();
+    },
+
+    updateTip: function() {
+        const idx = Math.floor(Math.random() * this.tips.length);
+        document.getElementById('tip-text').innerText = this.tips[idx];
     },
 
     drawLogin: function() {
@@ -425,11 +294,10 @@ const vault = {
     },
 
     login: function() {
-        const n = document.getElementById('login-name').value.trim();
-        const p = document.getElementById('login-pin').value.trim();
-        if(!n || p.length < 4) return alert("Ingresa Nombre y PIN.");
-        if(!this.db.users[n]) this.db.users[n] = { pin:p, cards:[], months:{}, savings:[] };
-        else if (this.db.users[n].pin !== p) return alert("PIN Incorrecto.");
+        const n = document.getElementById('login-name').value.trim(), p = document.getElementById('login-pin').value.trim();
+        if(!n || p.length < 4) return alert("Datos incompletos.");
+        if(!this.db.users[n]) this.db.users[n] = { pin:p, cards:[], months:{} };
+        else if (this.db.users[n].pin !== p) return alert("PIN Erróneo.");
         this.db.active = n; this.save();
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('app-wrap').style.display = 'block';
@@ -439,103 +307,71 @@ const vault = {
 
     logout: function() { this.db.active = null; this.save(); location.reload(); },
 
-    exportData: function() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.db));
-        const dlAnchor = document.createElement('a');
-        dlAnchor.setAttribute("href", dataStr);
-        dlAnchor.setAttribute("download", `Backup_Finanzas_${this.db.active}_2026.json`);
-        dlAnchor.click();
+    exportReport: function() {
+        const report = JSON.parse(JSON.stringify(this.db));
+        // Ocultar PINs para reporte financiero
+        Object.keys(report.users).forEach(u => report.users[u].pin = "****");
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(report, null, 2));
+        const dl = document.createElement('a');
+        dl.setAttribute("href", dataStr);
+        dl.setAttribute("download", `Finanzas_Reporte_${this.db.active}.json`);
+        dl.click();
     },
 
-    // --- NAVEGACIÓN ---
     view: function(id) {
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
         document.getElementById('v-' + id).classList.add('active');
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         event.currentTarget.classList.add('active');
+        this.updateTip();
     },
 
-    toggleAcc: function(id) {
-        document.getElementById(id).classList.toggle('open');
-    },
+    toggleAcc: function(id) { document.getElementById(id).classList.toggle('open'); },
 
-    // --- INTELIGENCIA DE TIEMPO ---
+    /* INTELIGENCIA GLOBAL (Scan de toda la historia) */
     getM: function() {
         const u = this.db.users[this.db.active], key = `${this.cur.y}-${this.cur.m}`;
         if(!u.months[key]) {
             u.months[key] = { inc:[], serv:[], exp:[], pay:{}, cardAmts:{} };
-            let pM = this.cur.m - 1, pY = this.cur.y;
-            if(pM < 0) { pM = 11; pY--; }
-            const pKey = `${pY}-${pM}`;
-            if(u.months[pKey]) {
-                u.months[pKey].serv.forEach(s => {
+            // Scan histórico para servicios
+            Object.keys(u.months).forEach(oldKey => {
+                if(oldKey === key) return;
+                u.months[oldKey].serv.forEach(s => {
                     const diff = (this.cur.y - s.sy) * 12 + (this.cur.m - s.sm);
+                    if(diff <= 0) return; 
+                    // Evitar duplicados si ya se clonó
+                    const exists = u.months[key].serv.some(x => x.name === s.name && x.sy === s.sy);
+                    if(exists) return;
+
                     let ok = false;
                     if(s.rec) ok = true;
                     else if(s.f === 'Mensual') ok = true;
                     else if(s.f === 'Bimestral' && diff % 2 === 0) ok = true;
                     else if(s.f === 'Anual' && diff % 12 === 0) ok = true;
+                    
                     if(ok) u.months[key].serv.push({ ...s, id: Date.now() + Math.random() });
                 });
-            }
+            });
         }
         return u.months[key];
     },
 
-    // --- CRUD ---
     add: function(t) {
         const u = this.db.users[this.db.active], m = this.getM(), id = Date.now();
         if(t==='income') {
-            const date = document.getElementById('f-in-date').value, desc = document.getElementById('f-in-desc').value, amt = parseFloat(document.getElementById('f-in-amt').value || 0);
-            if(desc && amt) m.inc.push({id, date, desc, amt});
+            m.inc.push({id, date:document.getElementById('f-in-date').value, desc:document.getElementById('f-in-desc').value, amt:parseFloat(document.getElementById('f-in-amt').value||0)});
         } else if(t==='service') {
-            const name = document.getElementById('f-se-name').value, amt = parseFloat(document.getElementById('f-se-amt').value || 0), day = parseInt(document.getElementById('f-se-day').value || 1), freq = document.getElementById('f-se-freq').value, card = document.getElementById('f-se-card').value, rec = document.getElementById('f-se-rec').checked;
-            if(name && amt) m.serv.push({id, name, amt, day, f:freq, card, rec, sy:this.cur.y, sm:this.cur.m});
+            m.serv.push({id, name:document.getElementById('f-se-name').value, amt:parseFloat(document.getElementById('f-se-amt').value||0), day:parseInt(document.getElementById('f-se-day').value||1), f:document.getElementById('f-se-freq').value, card:document.getElementById('f-se-card').value, rec:document.getElementById('f-se-rec').checked, sy:this.cur.y, sm:this.cur.m});
         } else if(t==='card') {
-            const name = document.getElementById('f-ca-name').value, dig = document.getElementById('f-ca-dig').value, day = parseInt(document.getElementById('f-ca-day').value || 1);
-            if(name && dig) u.cards.push({id, name, dig, day});
+            u.cards.push({id, name:document.getElementById('f-ca-name').value, dig:document.getElementById('f-ca-dig').value, day:parseInt(document.getElementById('f-ca-day').value||1)});
         } else if(t==='expense') {
-            const date = document.getElementById('f-ex-date').value, desc = document.getElementById('f-ex-desc').value, amt = parseFloat(document.getElementById('f-ex-amt').value || 0), cat = document.getElementById('f-ex-cat').value, card = document.getElementById('f-ex-card').value;
-            if(desc && amt) m.exp.push({id, date, desc, amt, cat, card});
+            m.exp.push({id, date:document.getElementById('f-ex-date').value, desc:document.getElementById('f-ex-desc').value, amt:parseFloat(document.getElementById('f-ex-amt').value||0), cat:document.getElementById('f-ex-cat').value, card:document.getElementById('f-ex-card').value});
         } else if(t==='saving') {
-            const date = document.getElementById('f-sa-date').value, desc = document.getElementById('f-sa-desc').value, amt = parseFloat(document.getElementById('f-sa-amt').value || 0), type = document.getElementById('f-sa-type').value;
-            if(amt) u.savings.push({id, date, desc, amt, type});
+            if(!u.savings) u.savings = [];
+            u.savings.push({id, date:document.getElementById('f-sa-date').value, desc:document.getElementById('f-sa-desc').value, amt:parseFloat(document.getElementById('f-sa-amt').value||0), type:document.getElementById('f-sa-type').value});
         }
         this.save(); this.render();
         document.querySelectorAll('input:not([type="date"]):not([type="checkbox"])').forEach(i => i.value = '');
-    },
-
-    edit: function(t, id) {
-        const u = this.db.users[this.db.active], m = this.getM();
-        let list = (t==='card'?u.cards:(t==='saving'?u.savings:m[t]));
-        const item = list.find(x => x.id === id);
-        const n = prompt("Actualizar Nombre:", item.name || item.desc);
-        const a = prompt("Actualizar Monto $:", item.amt);
-        if(n && a) {
-            if(item.name) item.name = n; else item.desc = n;
-            item.amt = parseFloat(a);
-            this.save(); this.render();
-        }
-    },
-
-    del: function(t, id) {
-        if(!confirm("¿Eliminar para siempre?")) return;
-        const u = this.db.users[this.db.active], m = this.getM();
-        if(t==='card') u.cards = u.cards.filter(x=>x.id!==id);
-        else if(t==='saving') u.savings = u.savings.filter(x=>x.id!==id);
-        else m[t] = m[t].filter(x=>x.id!==id);
-        this.save(); this.render();
-    },
-
-    save: function() { localStorage.setItem('finanzas_master_v4_3', JSON.stringify(this.db)); },
-
-    getD: function(day) {
-        const now = new Date(2026, 0, 24); now.setHours(0,0,0,0);
-        const target = new Date(this.cur.y, this.cur.m, day);
-        const diff = Math.ceil((target - now)/(1000*60*60*24));
-        if(diff === 0) return {t:'Vence hoy', c:'bg-warn'};
-        if(diff < 0) return {t:`Vencido ${Math.abs(diff)}d`, c:'bg-danger'};
-        return {t:`Faltan ${diff}d`, c: diff<=3?'bg-warn':'bg-ok'};
     },
 
     render: function() {
@@ -548,7 +384,7 @@ const vault = {
 
         const tInc = m.inc.reduce((s,x)=>s+x.amt,0), tServ = m.serv.reduce((s,x)=>s+x.amt,0), tExp = m.exp.reduce((s,x)=>s+x.amt,0);
         const tCards = Object.values(m.cardAmts).reduce((s,x)=>s+x,0), tOut = tServ+tExp+tCards;
-        const tSav = u.savings.reduce((s,x)=>s+(x.type==='in'?x.amt:-x.amt),0);
+        const tSav = (u.savings||[]).reduce((s,x)=>s+(x.type==='in'?x.amt:-x.amt),0);
 
         document.getElementById('val-inc').innerText = this.fmt.format(tInc);
         document.getElementById('val-egr').innerText = this.fmt.format(tOut);
@@ -562,52 +398,32 @@ const vault = {
 
         let all = [...m.serv.map(s=>({...s, k:'s'})), ...u.cards.map(c=>({id:c.id, name:`PAGO ${c.name}`, amt:m.cardAmts[c.id]||0, day:c.day, k:'c'}))];
         all.sort((a,b)=>a.day-b.day).forEach(i => {
-            const paid = m.pay[i.id], d = this.getD(i.day), ico = this.getIcon(i.name, '', i.k==='c');
+            const paid = m.pay[i.id], ico = this.getIcon(i.name, '', i.k==='c');
             const diff = (this.cur.y - i.sy)*12 + (this.cur.m - i.sm);
             let no = false; if(!i.rec && i.k==='s') { if(i.f==='Bimestral' && diff%2!==0) no=true; if(i.f==='Anual' && diff%12!==0) no=true; }
 
-            const html = `
-                <div class="list-item ${paid?'pagado':''} ${no?'no-corresponde':''}">
-                    <div class="icon-box">${ico}</div>
-                    <div class="info-box">
-                        <div class="main-text">${i.name} ${i.rec?'<span class="badge bg-ok">REC</span>':''}</div>
-                        <div class="sub-text">Día ${i.day} ${no?'• ⚠️ NO TOCA':''}</div>
-                        ${(!paid && !i.rec && !no)?`<span class="badge ${d.c}">${d.t}</span>`:''}
-                    </div>
-                    <div class="money-box"><div class="amount-text" onclick="${i.k==='c'?`vault.editCardAmt(${i.id})`:''}" style="${i.k==='c'?'cursor:pointer; border-bottom:3px dashed var(--dorado)':''}">${this.fmt.format(i.amt)}</div></div>
-                    ${no?'':`<input type="checkbox" ${paid?'checked':''} onchange="vault.togglePay(${i.id})" style="width:35px; height:35px;">`}
-                </div>`;
+            const html = `<div class="list-item ${paid?'pagado':''} ${no?'no-toca':''}"><div class="icon-box">${ico}</div><div class="info-box"><div class="main-text">${i.name} ${i.rec?'(REC)':''}</div><div class="sub-text">Día ${i.day} ${no?'• ⚠️ NO CORRESPONDE':''}</div></div><div class="money-box"><div class="amount-text" onclick="${i.k==='c'?`vault.editCardAmt(${i.id})`:''}" style="${i.k==='c'?'cursor:pointer; border-bottom:3px dashed var(--dorado)':''}">${this.fmt.format(i.amt)}</div></div>${no?'':`<input type="checkbox" ${paid?'checked':''} onchange="vault.togglePay(${i.id})" style="width:35px; height:35px;">`}</div>`;
             if(i.rec) { rec.innerHTML += html; if(!paid) sRec += i.amt; }
             else if(i.day <= 14) { q1.innerHTML += html; if(!paid && !no) sQ1 += i.amt; }
             else { q2.innerHTML += html; if(!paid && !no) sQ2 += i.amt; }
         });
+        m.exp.forEach(ex => { vlist.innerHTML += `<div class="list-item"><div class="icon-box">${this.getIcon(ex.desc, ex.cat)}</div><div class="info-box"><div class="main-text">${ex.desc}</div><div class="sub-text">${ex.cat}</div></div><div class="money-box"><div class="amount-text" style="color:var(--coral)">- ${this.fmt.format(ex.amt)}</div></div></div>`; });
 
-        m.exp.sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(ex => {
-            vlist.innerHTML += `<div class="list-item"><div class="icon-box">${this.getIcon(ex.desc, ex.cat)}</div><div class="info-box"><div class="main-text">${ex.desc}</div><div class="sub-text">${ex.date} • ${ex.cat}</div></div><div class="money-box"><div class="amount-text" style="color:var(--coral)">- ${this.fmt.format(ex.amt)}</div></div></div>`;
-        });
-
-        document.getElementById('sum-q1').innerText = this.fmt.format(sQ1);
-        document.getElementById('sum-q2').innerText = this.fmt.format(sQ2);
-        document.getElementById('sum-rec').innerText = this.fmt.format(sRec);
-        document.getElementById('sum-var').innerText = this.fmt.format(tExp);
-
-        this.drawT('list-income', m.inc, 'inc'); this.drawT('list-service', m.serv, 'serv'); this.drawT('list-card', u.cards, 'card');
-        this.drawT('list-expense', m.exp, 'exp'); this.drawT('list-saving', u.savings, 'saving');
+        document.getElementById('sum-q1').innerText = this.fmt.format(sQ1); document.getElementById('sum-q2').innerText = this.fmt.format(sQ2); document.getElementById('sum-rec').innerText = this.fmt.format(sRec); document.getElementById('sum-var').innerText = this.fmt.format(tExp);
+        this.drawT('list-income', m.inc, 'inc'); this.drawT('list-service', m.serv, 'serv'); this.drawT('list-card', u.cards, 'card'); this.drawT('list-expense', m.exp, 'exp'); this.drawT('list-saving', u.savings||[], 'saving');
     },
 
     drawT: function(did, list, t) {
         const el = document.getElementById(did); el.innerHTML = '';
-        [...list].reverse().forEach(x => {
-            el.innerHTML += `<div class="list-item"><div class="icon-box">${this.getIcon(x.name||x.desc, x.cat)}</div><div class="info-box"><div class="main-text">${x.name||x.desc}</div><div class="sub-text">${x.date||('Día '+x.day)} • ${this.fmt.format(x.amt||0)}</div></div><div style="display:flex; gap:15px;"><button class="btn-row" onclick="vault.edit('${t}', ${x.id})">✏️</button><button class="btn-row" style="color:var(--coral)" onclick="vault.del('${t}', ${x.id})">🗑️</button></div></div>`;
-        });
+        list.forEach(x => { el.innerHTML += `<div class="list-item"><div class="icon-box">${this.getIcon(x.name||x.desc, x.cat)}</div><div class="info-box"><div class="main-text">${x.name||x.desc}</div><div class="sub-text">${x.date||''}</div></div><div style="display:flex; gap:10px;"><button style="padding:10px; border-radius:10px; border:none" onclick="vault.edit('${t}', ${x.id})">✏️</button><button style="padding:10px; border-radius:10px; border:none; color:var(--coral)" onclick="vault.del('${t}', ${x.id})">🗑️</button></div></div>`; });
     },
 
-    editCardAmt: function(id) {
-        const m = this.getM(); const cur = m.cardAmts[id] || 0;
-        const val = prompt("Monto de tarjeta este mes:", cur);
-        if(val !== null) { m.cardAmts[id] = parseFloat(val); this.save(); this.render(); }
-    },
-    togglePay: function(id) { const m = this.getM(); m.pay[id] = !m.pay[id]; this.save(); this.render(); }
+    save: function() { localStorage.setItem('finanzas_master_v4_3', JSON.stringify(this.db)); },
+    toggleAcc: function(id) { document.getElementById(id).classList.toggle('open'); },
+    togglePay: function(id) { const m = this.getM(); m.pay[id] = !m.pay[id]; this.save(); this.render(); },
+    editCardAmt: function(id) { const m = this.getM(); const val = prompt("Monto:", m.cardAmts[id]||0); if(val!==null){ m.cardAmts[id]=parseFloat(val); this.save(); this.render(); } },
+    edit: function(t, id) { const u=this.db.users[this.db.active], m=this.getM(); let list=(t==='card'?u.cards:(t==='saving'?u.savings:m[t])); const item=list.find(x=>x.id===id); const n=prompt("Nombre:",item.name||item.desc), a=prompt("Monto:",item.amt); if(n&&a){ if(item.name)item.name=n; else item.desc=n; item.amt=parseFloat(a); this.save(); this.render(); } },
+    del: function(t, id) { if(!confirm("¿Eliminar?"))return; const u=this.db.users[this.db.active], m=this.getM(); if(t==='card')u.cards=u.cards.filter(x=>x.id!==id); else if(t==='saving')u.savings=u.savings.filter(x=>x.id!==id); else m[t]=m[t].filter(x=>x.id!==id); this.save(); this.render(); }
 };
 window.onload = () => vault.init();
 </script>
