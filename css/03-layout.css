@@ -1,0 +1,319 @@
+/* ===================================
+   FINANZAS PRO V5.0 - LAYOUT
+   =================================== */
+
+/* === PANTALLA DE LOGIN === */
+.login-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-primary);
+}
+
+.login-card {
+  background: var(--white);
+  padding: var(--space-12);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow-2xl);
+}
+
+.login-icon {
+  font-size: 4rem;
+  margin-bottom: var(--space-4);
+}
+
+.login-title {
+  margin: 0;
+  color: var(--primary);
+}
+
+.login-subtitle {
+  color: var(--gray-600);
+  margin-bottom: var(--space-8);
+}
+
+.btn-login {
+  width: 100%;
+  padding: var(--space-4);
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: all var(--transition-base);
+}
+
+.btn-login:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.app-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  background: var(--white);
+  min-height: 100vh;
+  box-shadow: var(--shadow-xl);
+}
+
+/* === HEADER === */
+.header {
+  background: var(--gradient-primary);
+  padding: var(--space-6);
+  color: var(--white);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  box-shadow: var(--shadow-lg);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.brand-icon {
+  font-size: 2.5rem;
+}
+
+.brand-title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.selector {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--gray-900);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.selector:hover {
+  background: var(--white);
+  border-color: var(--white);
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--gray-900);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.user-chip:hover {
+  background: var(--white);
+  transform: translateY(-2px);
+}
+
+.user-photo {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+
+.btn-icon {
+  padding: var(--space-2);
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.btn-danger {
+  background: rgba(239, 91, 91, 0.2);
+}
+
+.btn-danger:hover {
+  background: rgba(239, 91, 91, 0.4);
+}
+
+/* === TIP BANNER === */
+.tip-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  margin-top: var(--space-4);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.tip-icon {
+  font-size: 1.5rem;
+}
+
+/* === NAVEGACIÓN PRINCIPAL === */
+.nav-main {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-6);
+  background: var(--primary-dark);
+  overflow-x: auto;
+  box-shadow: var(--shadow-md);
+}
+
+.nav-btn {
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: none;
+  color: var(--white);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  transition: all var(--transition-base);
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-btn.active {
+  background: var(--warning);
+  color: var(--gray-900);
+}
+
+/* === CONTENIDO PRINCIPAL === */
+.main-content {
+  padding: var(--space-6);
+  min-height: calc(100vh - 200px);
+}
+
+.view {
+  display: none;
+  animation: fadeIn var(--transition-slow);
+}
+
+.view.active {
+  display: block;
+}
+
+/* === NAVEGACIÓN MÓVIL (Bottom Bar) === */
+.nav-mobile {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--white);
+  display: none;
+  justify-content: space-around;
+  padding: var(--space-2);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: var(--z-sticky);
+}
+
+.nav-mobile-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background: transparent;
+  border: none;
+  color: var(--gray-600);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.nav-mobile-btn.active {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.nav-mobile-icon {
+  font-size: 1.5rem;
+}
+
+.nav-mobile-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .nav-main {
+    display: none;
+  }
+  
+  .nav-mobile {
+    display: flex;
+  }
+  
+  .main-content {
+    padding: var(--space-4);
+    padding-bottom: 80px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+```
+
+**PASO 4:** Commit message: `Agregar estilos de layout`
+
+**PASO 5:** Commit
+
+---
+
+## 📊 PROGRESO: 40% ✅
+```
+✅ css/01-variables.css
+✅ css/02-base.css
+⏳ css/03-layout.css (creando ahora)
+⬜ css/04-components.css
