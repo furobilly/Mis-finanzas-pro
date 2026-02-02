@@ -1,0 +1,379 @@
+/* ===================================
+   FINANZAS PRO V5.0 - COMPONENTS
+   =================================== */
+
+/* === STATS GRID === */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.stat-card {
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  border-top: 4px solid;
+  transition: all var(--transition-base);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.card-income {
+  border-color: var(--secondary);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(255, 255, 255, 0.9));
+}
+
+.card-expense {
+  border-color: var(--energy);
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(255, 255, 255, 0.9));
+}
+
+.card-balance {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(255, 255, 255, 0.9));
+}
+
+.card-savings {
+  border-color: var(--warning);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(255, 255, 255, 0.9));
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-top: var(--space-2);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* === ACORDEONES === */
+.accordion {
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--white);
+  border: 2px solid var(--border);
+  transition: all var(--transition-base);
+}
+
+.accordion:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-4) var(--space-6);
+  cursor: pointer;
+  background: var(--gray-50);
+  transition: all var(--transition-base);
+}
+
+.accordion-header:hover {
+  background: var(--gray-100);
+}
+
+.accordion-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--primary);
+}
+
+.accordion-icon {
+  font-size: 1.5rem;
+}
+
+.accordion-amount {
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--warning);
+  padding: var(--space-2) var(--space-4);
+  background: var(--warning-light);
+  border-radius: var(--radius-md);
+}
+
+.accordion-body {
+  display: none;
+  padding: var(--space-6);
+  border-top: 1px solid var(--border);
+  animation: fadeIn var(--transition-base);
+}
+
+.accordion.open .accordion-body {
+  display: block;
+}
+
+/* === PAYMENT ITEMS === */
+.payment-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+  transition: all var(--transition-base);
+}
+
+.payment-item:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(4px);
+}
+
+.payment-item.paid {
+  opacity: 0.6;
+  background: var(--secondary-light);
+  border-color: var(--secondary);
+}
+
+.payment-icon {
+  font-size: 2.5rem;
+  min-width: 50px;
+  text-align: center;
+}
+
+.payment-info {
+  flex: 1;
+}
+
+.payment-name {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--gray-900);
+}
+
+.payment-detail {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  margin-top: var(--space-1);
+}
+
+.payment-amount {
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--primary);
+  margin-right: var(--space-4);
+}
+
+.payment-checkbox {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+/* === TOAST NOTIFICATIONS === */
+.toast-container {
+  position: fixed;
+  top: var(--space-6);
+  right: var(--space-6);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  min-width: 300px;
+  border-left: 4px solid;
+  animation: slideInRight var(--transition-base);
+}
+
+.toast.success {
+  border-color: var(--secondary);
+}
+
+.toast.warning {
+  border-color: var(--warning);
+}
+
+.toast.error {
+  border-color: var(--danger);
+}
+
+.toast-icon {
+  font-size: 1.5rem;
+}
+
+.toast-message {
+  flex: 1;
+  font-weight: 600;
+}
+
+/* === UNSAVED BANNER === */
+.unsaved-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--warning);
+  color: var(--gray-900);
+  padding: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  z-index: var(--z-modal);
+  box-shadow: var(--shadow-lg);
+  animation: slideInDown var(--transition-base);
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.unsaved-icon {
+  font-size: 1.5rem;
+}
+
+.unsaved-text {
+  font-weight: 700;
+}
+
+.btn-save-changes {
+  padding: var(--space-2) var(--space-4);
+  background: var(--gray-900);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.btn-save-changes:hover {
+  background: var(--black);
+  transform: scale(1.05);
+}
+
+/* === BUTTONS === */
+.btn {
+  padding: var(--space-3) var(--space-6);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-success {
+  background: var(--secondary);
+  color: var(--white);
+}
+
+.btn-success:hover {
+  background: var(--secondary-dark);
+}
+
+/* === FORMS === */
+.form-group {
+  margin-bottom: var(--space-4);
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+  color: var(--gray-700);
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--space-3);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all var(--transition-base);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .toast-container {
+    top: var(--space-2);
+    right: var(--space-2);
+    left: var(--space-2);
+  }
+  
+  .toast {
+    min-width: auto;
+  }
+  
+  .payment-item {
+    flex-wrap: wrap;
+  }
+  
+  .payment-amount {
+    width: 100%;
+    text-align: right;
+    margin-top: var(--space-2);
+  }
+}
+```
+
+**PASO 4:** Commit message: `Agregar componentes CSS`
+
+**PASO 5:** Commit
+
+---
+
+## 🎉 PROGRESO: 50% ✅
+```
+✅ css/01-variables.css
+✅ css/02-base.css
+✅ css/03-layout.css
+⏳ css/04-components.css (creando ahora)
