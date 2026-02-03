@@ -274,9 +274,7 @@ export const Auth = {
     localStorage.removeItem(CURRENT_USER_KEY);
     AppState.setUser(null);
     this.showLogin();
-  }
-};
-,
+  },
   
   showWelcomeMessage(userName) {
     const messages = [
@@ -290,4 +288,6 @@ export const Auth = {
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
     alert(randomMessage);
   }
+};
+
 window.Auth = Auth;
