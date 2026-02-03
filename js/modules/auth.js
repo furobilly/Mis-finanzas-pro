@@ -58,14 +58,26 @@ export const Auth = {
     const name = prompt('Ingresa tu nombre:');
     
     if (!name || name.trim() === '') {
-      Alerts.error('Debes ingresar un nombre');
+      alert('ERROR: Debes ingresar un nombre');
       return;
     }
     
-    const pin = prompt('Crea un PIN de 4 digitos:');
+    let pin = prompt('Crea un PIN de EXACTAMENTE 4 digitos:');
     
-    if (!pin || pin.length !== 4 || isNaN(pin)) {
-      Alerts.error('El PIN debe ser de 4 digitos');
+    if (!pin) {
+      alert('ERROR: Debes crear un PIN');
+      return;
+    }
+    
+    pin = pin.trim();
+    
+    if (pin.length !== 4) {
+      alert('ERROR: El PIN debe tener EXACTAMENTE 4 digitos (ahora tiene ' + pin.length + ')');
+      return;
+    }
+    
+    if (isNaN(pin)) {
+      alert('ERROR: El PIN debe contener solo numeros');
       return;
     }
     
@@ -79,7 +91,10 @@ export const Auth = {
     AppState.setUser(user);
     
     this.showApp();
-    Alerts.success('Bienvenido ' + user.name);
+    
+    setTimeout(() => {
+      alert('Bienvenido ' + user.name + '!');
+    }, 500);
   },
   
   handleLogout() {
@@ -89,7 +104,7 @@ export const Auth = {
       localStorage.removeItem('finanzas-pro-user');
       AppState.setUser(null);
       this.showLogin();
-      Alerts.info('Sesion cerrada');
+      alert('Sesion cerrada correctamente');
     }
   }
 };
