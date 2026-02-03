@@ -1,180 +1,95 @@
-// ===================================
-// FINANZAS PRO V5.0 - AUTENTICACIÓN
-// ===================================
+// AUTH - AUTENTICACION SIMPLE
 
 import { AppState } from '../core/state.js';
 import { Storage } from '../core/storage.js';
+import { Alerts } from '../ui/alerts.js';
 
 export const Auth = {
   
-  // Inicializar autenticación
   init() {
-    console.log('🔐 Inicializando autenticación...');
-    
-    // Por ahora, login simple (sin Firebase)
-    // En Fase 2 agregaremos Google OAuth
-    
-    const loginBtn = document.getElementById('btn-google-login');
-    const logoutBtn = document.getElementById('btn-logout');
-    
-    if (loginBtn) {
-      loginBtn.addEventListener('click', () => this.login());
-    }
-    
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => this.logout());
-    }
-    
-    // Verificar si hay sesión guardada
     this.checkSession();
+    this.setupLoginButton();
   },
   
-  // Login (por ahora sin Google, solo simular)
-  async login() {
-    try {
-      console.log('🔑 Iniciando sesión...');
-      
-      // Simular login exitoso
-      const mockUser = {
-        uid: 'user-' + Date.now(),
-        displayName: 'Usuario Demo',
-        email: 'demo@finanzas.pro',
-        photoURL: 'https://ui-avatars.com/api/?name=Usuario+Demo&background=8B5CF6&color=fff'
-      };
-      
-      // Guardar usuario
-      AppState.setUser(mockUser);
-      localStorage.setItem('finanzas-user', JSON.stringify(mockUser));
-      
-      // Mostrar app
-      this.showApp();
-      
-      console.log('✅ Sesión iniciada exitosamente');
-      
-      // Toast de bienvenida
-      this.showToast('¡Bienvenido!', 'success');
-      
-    } catch (error) {
-      console.error('❌ Error al iniciar sesión:', error);
-      this.showToast('Error al iniciar sesión', 'error');
-    }
-  },
-  
-  // Logout
-  async logout() {
-    try {
-      const confirmed = confirm('¿Seguro que deseas cerrar sesión?');
-      
-      if (!confirmed) return;
-      
-      console.log('🔒 Cerrando sesión...');
-      
-      // Limpiar estado
-      AppState.setUser(null);
-      localStorage.removeItem('finanzas-user');
-      
-      // Mostrar login
-      this.showLogin();
-      
-      console.log('✅ Sesión cerrada');
-      
-    } catch (error) {
-      console.error('❌ Error al cerrar sesión:', error);
-    }
-  },
-  
-  // Verificar si hay sesión guardada
   checkSession() {
-    const savedUser = localStorage.getItem('finanzas-user');
+    const savedUser = localStorage.getItem('finanzas-pro-user');
     
     if (savedUser) {
-      try {
-        const user = JSON.parse(savedUser);
-        AppState.setUser(user);
-        this.showApp();
-        console.log('✅ Sesión restaurada');
-      } catch (error) {
-        console.error('❌ Error al restaurar sesión:', error);
-        this.showLogin();
-      }
+      AppState.setUser(JSON.parse(savedUser));
+      this.showApp();
     } else {
       this.showLogin();
     }
   },
   
-  // Mostrar pantalla de login
   showLogin() {
-    const loginScreen = document.getElementById('login-screen');
-    const appContainer = document.getElementById('app-container');
-    
-    if (loginScreen) loginScreen.classList.remove('hidden');
-    if (appContainer) appContainer.classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('app-container').classList.add('hidden');
   },
   
-  // Mostrar app
   showApp() {
-    const loginScreen = document.getElementById('login-screen');
-    const appContainer = document.getElementById('app-container');
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-container').classList.remove('hidden');
     
-    if (loginScreen) loginScreen.classList.add('hidden');
-    if (appContainer) appContainer.classList.remove('hidden');
-    
-    // Actualizar info de usuario
-    this.updateUserInfo();
-  },
-  
-  // Actualizar información del usuario en el header
-  updateUserInfo() {
-    const user = AppState.currentUser;
-    if (!user) return;
-    
-    const userPhoto = document.getElementById('user-photo');
     const userName = document.getElementById('user-name');
-    
-    if (userPhoto) userPhoto.src = user.photoURL || '';
-    if (userName) userName.textContent = user.displayName || 'Usuario';
+    if (userName && AppState.user) {
+      userName.textContent = AppState.user.name;
+    }
   },
   
-  // Mostrar toast notification
-  showToast(message, type = 'success') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
+  setupLoginButton() {
+    const loginBtn = document.getElementById('btn-google-login');
     
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
+    if (loginBtn) {
+      loginBtn.addEventListener('click', () => {
+        this.handleLogin();
+      });
+    }
     
-    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+    const logoutBtn = document.getElementById('btn-logout');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        this.handleLogout();
+      });
+    }
+  },
+  
+  handleLogin() {
+    const name = prompt('Ingresa tu nombre:');
     
-    toast.innerHTML = `
-      <span class="toast-icon">${icon}</span>
-      <span class="toast-message">${message}</span>
-    `;
+    if (!name || name.trim() === '') {
+      Alerts.error('Debes ingresar un nombre');
+      return;
+    }
     
-    container.appendChild(toast);
+    const pin = prompt('Crea un PIN de 4 digitos:');
     
-    // Auto-remove después de 3 segundos
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    if (!pin || pin.length !== 4 || isNaN(pin)) {
+      Alerts.error('El PIN debe ser de 4 digitos');
+      return;
+    }
+    
+    const user = {
+      name: name.trim(),
+      pin: pin,
+      loginDate: new Date().toISOString()
+    };
+    
+    localStorage.setItem('finanzas-pro-user', JSON.stringify(user));
+    AppState.setUser(user);
+    
+    this.showApp();
+    Alerts.success('Bienvenido ' + user.name);
+  },
+  
+  handleLogout() {
+    const confirmed = confirm('¿Seguro que quieres cerrar sesion?');
+    
+    if (confirmed) {
+      localStorage.removeItem('finanzas-pro-user');
+      AppState.setUser(null);
+      this.showLogin();
+      Alerts.info('Sesion cerrada');
+    }
   }
 };
-
-export default Auth;
-```
-
-**PASO 5:** Commit message: `Crear módulo de autenticación`
-
-**PASO 6:** Commit
-
----
-
-## 📊 PROGRESO: 70% ✅
-```
-✅ css/ (4 archivos)
-✅ js/core/ (3 archivos)
-⏳ js/modules/auth.js (creando ahora)
-⬜ js/modules/ (6 archivos más)
-⬜ js/ui/ (3 archivos)
-⬜ js/app.js
-⬜ index.html
