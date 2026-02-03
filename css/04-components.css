@@ -21,23 +21,23 @@
 }
 
 .card-income {
-  border-color: var(--success);
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+  border-color: #10b981;
+  background: #d1fae5;
 }
 
 .card-expense {
-  border-color: var(--danger);
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+  border-color: #ef4444;
+  background: #fee2e2;
 }
 
 .card-balance {
-  border-color: var(--primary);
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(124, 58, 237, 0.05));
+  border-color: #7c3aed;
+  background: #ede9fe;
 }
 
 .card-savings {
-  border-color: var(--warning);
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+  border-color: #f59e0b;
+  background: #fef3c7;
 }
 
 .stat-label {
