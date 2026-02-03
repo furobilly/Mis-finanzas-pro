@@ -225,7 +225,7 @@ export const Auth = {
     this.showApp();
     
     setTimeout(() => {
-      alert('Usuario creado: ' + name);
+      this.showWelcomeMessage(name);
     }, 300);
   },
   
@@ -276,5 +276,18 @@ export const Auth = {
     this.showLogin();
   }
 };
-
+,
+  
+  showWelcomeMessage(userName) {
+    const messages = [
+      `Bienvenido ${userName}! Estas por comenzar tu organizacion financiera.`,
+      `Hola ${userName}! Listo para llevar el control de tus finanzas?`,
+      `Bienvenido ${userName}! Comienza a organizar tu dinero de forma inteligente.`,
+      `Hola ${userName}! Es hora de tomar control de tus finanzas personales.`,
+      `Bienvenido ${userName}! Tu camino hacia la libertad financiera comienza aqui.`
+    ];
+    
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    alert(randomMessage);
+  }
 window.Auth = Auth;
