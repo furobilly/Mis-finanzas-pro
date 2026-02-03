@@ -1,50 +1,44 @@
-// ===================================
 // FINANZAS PRO V5.0 - STORAGE
-// ===================================
 
 import { AppState } from './state.js';
 
 const STORAGE_KEY = 'finanzas-pro-v5';
 
-// Sistema de almacenamiento
 export const Storage = {
   
-  // Cargar todos los datos
   async load() {
     try {
-      console.log('💾 Cargando datos desde localStorage...');
+      console.log('Cargando datos desde localStorage...');
       const data = localStorage.getItem(STORAGE_KEY);
       
       if (data) {
         const parsed = JSON.parse(data);
-        console.log('✅ Datos cargados exitosamente');
+        console.log('Datos cargados exitosamente');
         return parsed;
       }
       
-      console.log('📝 No hay datos previos, iniciando con estructura vacía');
+      console.log('No hay datos previos, iniciando con estructura vacia');
       return this.getEmptyDatabase();
       
     } catch (error) {
-      console.error('❌ Error al cargar datos:', error);
+      console.error('Error al cargar datos:', error);
       return this.getEmptyDatabase();
     }
   },
   
-  // Guardar todos los datos
   async save(data) {
     try {
-      console.log('💾 Guardando datos en localStorage...');
+      console.log('Guardando datos en localStorage...');
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      console.log('✅ Datos guardados exitosamente');
+      console.log('Datos guardados exitosamente');
       AppState.markSaved();
       return true;
     } catch (error) {
-      console.error('❌ Error al guardar datos:', error);
+      console.error('Error al guardar datos:', error);
       return false;
     }
   },
   
-  // Obtener datos de un mes específico
   async getMonthData(year, month) {
     const allData = await this.load();
     const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
@@ -53,11 +47,9 @@ export const Storage = {
       return allData.months[monthKey];
     }
     
-    // Si no existe, crear mes nuevo con rollover
     return this.createNewMonth(allData, year, month);
   },
   
-  // Guardar datos de un mes específico
   async saveMonthData(year, month, monthData) {
     const allData = await this.load();
     const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
@@ -70,7 +62,6 @@ export const Storage = {
     return await this.save(allData);
   },
   
-  // Crear estructura de base de datos vacía
   getEmptyDatabase() {
     return {
       user: null,
@@ -78,23 +69,24 @@ export const Storage = {
     };
   },
   
-  // Crear nuevo mes con rollover del anterior
   createNewMonth(allData, year, month) {
     const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
     
-    // Mes vacío por defecto
     const newMonth = {
       income: [],
       services: [],
       cards: [],
       loans: [],
       expenses: [],
-      savings: [],
+      savings: {
+        opening: 0,
+        goal: 0,
+        transactions: []
+      },
       payments: {},
-      cardAmounts: {}
+      cardSettings: {}
     };
     
-    // Buscar mes anterior
     const prevMonth = month === 0 ? 11 : month - 1;
     const prevYear = month === 0 ? year - 1 : year;
     const prevKey = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}`;
@@ -102,68 +94,54 @@ export const Storage = {
     if (allData.months && allData.months[prevKey]) {
       const prevData = allData.months[prevKey];
       
-      // Rollover de servicios
       if (prevData.services) {
-        newMonth.services = prevData.services.map(service => ({
+        newMonth.services = prevData.services.map((service, i) => ({
           ...service,
-          id: Date.now() + Math.random(), // Nuevo ID
-          paid: false // Reset estado de pago
+          id: Date.now() + i,
+          paid: false
         }));
       }
       
-      // Rollover de tarjetas
       if (prevData.cards) {
-        newMonth.cards = prevData.cards.map(card => ({
+        newMonth.cards = prevData.cards.map((card, i) => ({
           ...card,
-          id: Date.now() + Math.random()
+          id: Date.now() + 100 + i
         }));
       }
       
-      // Rollover de préstamos activos
       if (prevData.loans) {
         newMonth.loans = prevData.loans
-          .filter(loan => loan.paidPayments < loan.totalPayments)
-          .map(loan => ({
+          .filter(loan => loan.status !== 'liquidado')
+          .map((loan, i) => ({
             ...loan,
-            id: Date.now() + Math.random(),
-            paidPayments: loan.paidPayments + 1 // Incrementar pagos
+            id: Date.now() + 200 + i
           }));
       }
       
-      // Rollover de saldo de ahorros
-      if (prevData.savings && prevData.savings.length > 0) {
-        const totalSavings = prevData.savings.reduce((sum, item) => {
-          return sum + (item.type === 'in' ? item.amount : -item.amount);
-        }, 0);
+      if (prevData.savings) {
+        const prevBalance = prevData.savings.opening + 
+          prevData.savings.transactions.reduce((sum, tx) => sum + (parseFloat(tx.amount) || 0), 0);
         
-        // Crear movimiento de apertura
-        newMonth.savings = [{
-          id: Date.now(),
-          date: `${year}-${String(month + 1).padStart(2, '0')}-01`,
-          description: 'Saldo inicial del mes anterior',
-          type: 'in',
-          amount: totalSavings
-        }];
+        newMonth.savings.opening = prevBalance;
+        newMonth.savings.goal = prevData.savings.goal || 0;
       }
     }
     
     return newMonth;
   },
   
-  // Borrar todos los datos (reset)
   async reset() {
     try {
-      console.log('🗑️ Borrando todos los datos...');
+      console.log('Borrando todos los datos...');
       localStorage.removeItem(STORAGE_KEY);
-      console.log('✅ Datos borrados exitosamente');
+      console.log('Datos borrados exitosamente');
       return true;
     } catch (error) {
-      console.error('❌ Error al borrar datos:', error);
+      console.error('Error al borrar datos:', error);
       return false;
     }
   },
   
-  // Exportar datos como JSON
   async export() {
     const data = await this.load();
     const json = JSON.stringify(data, null, 2);
@@ -176,10 +154,9 @@ export const Storage = {
     a.click();
     
     URL.revokeObjectURL(url);
-    console.log('📦 Datos exportados exitosamente');
+    console.log('Datos exportados exitosamente');
   },
   
-  // Importar datos desde JSON
   async import(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -188,10 +165,10 @@ export const Storage = {
         try {
           const data = JSON.parse(e.target.result);
           await this.save(data);
-          console.log('📥 Datos importados exitosamente');
+          console.log('Datos importados exitosamente');
           resolve(true);
         } catch (error) {
-          console.error('❌ Error al importar datos:', error);
+          console.error('Error al importar datos:', error);
           reject(error);
         }
       };
@@ -203,19 +180,3 @@ export const Storage = {
 };
 
 export default Storage;
-```
-
-**PASO 4:** Commit message: `Crear sistema de almacenamiento`
-
-**PASO 5:** Commit
-
----
-
-## 🎉 PROGRESO: 65% - CORE COMPLETO! ✅
-```
-✅ css/ (completo - 4 archivos)
-✅ js/core/ (completo - 3 archivos)
-⬜ js/modules/ (7 archivos pendientes)
-⬜ js/ui/ (3 archivos pendientes)
-⬜ js/app.js
-⬜ index.html
