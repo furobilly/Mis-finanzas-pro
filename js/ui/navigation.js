@@ -1,132 +1,69 @@
-// ===================================
-// FINANZAS PRO V5.0 - NAVEGACIÓN
-// ===================================
-
 import { Dashboard } from './dashboard.js';
 
 export const Navigation = {
   
   currentView: 'dashboard',
   
-  // Inicializar navegación
   init() {
-    console.log('🧭 Inicializando navegación...');
-    
-    // Botones de navegación principal
-    const navButtons = document.querySelectorAll('.nav-btn');
-    navButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const view = e.target.dataset.view;
-        this.switchView(view);
-      });
-    });
-    
-    // Botones de navegación móvil
-    const mobileButtons = document.querySelectorAll('.nav-mobile-btn');
-    mobileButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const view = e.target.closest('.nav-mobile-btn').dataset.view;
-        this.switchView(view);
-      });
-    });
-    
-    // Mostrar vista inicial
-    this.switchView('dashboard');
+    this.setupDesktopNav();
+    this.setupMobileNav();
+    this.renderView('dashboard');
   },
   
-  // Cambiar de vista
-  switchView(viewName) {
-    console.log(`🔄 Cambiando a vista: ${viewName}`);
+  setupDesktopNav() {
+    const navButtons = document.querySelectorAll('#nav-main .nav-btn');
     
-    // Ocultar todas las vistas
-    document.querySelectorAll('.view').forEach(view => {
-      view.classList.remove('active');
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        this.switchView(view);
+      });
     });
+  },
+  
+  setupMobileNav() {
+    const navButtons = document.querySelectorAll('#nav-mobile .nav-mobile-btn');
     
-    // Mostrar vista seleccionada
-    const targetView = document.getElementById(`view-${viewName}`);
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        this.switchView(view);
+      });
+    });
+  },
+  
+  switchView(viewName) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    
+    const targetView = document.getElementById('view-' + viewName);
     if (targetView) {
       targetView.classList.add('active');
     }
     
-    // Actualizar botones activos (navegación principal)
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.classList.remove('active');
-      if (btn.dataset.view === viewName) {
-        btn.classList.add('active');
-      }
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.nav-mobile-btn').forEach(b => b.classList.remove('active'));
+    
+    document.querySelectorAll(`[data-view="${viewName}"]`).forEach(b => {
+      b.classList.add('active');
     });
     
-    // Actualizar botones activos (navegación móvil)
-    document.querySelectorAll('.nav-mobile-btn').forEach(btn => {
-      btn.classList.remove('active');
-      if (btn.dataset.view === viewName) {
-        btn.classList.add('active');
-      }
-    });
-    
-    // Guardar vista actual
     this.currentView = viewName;
-    
-    // Renderizar contenido específico de la vista
     this.renderView(viewName);
-    
-    // Scroll al top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   },
   
-  // Renderizar contenido de la vista
   renderView(viewName) {
-    switch(viewName) {
-      case 'dashboard':
-        Dashboard.render();
-        break;
-      
-      case 'income':
-        console.log('📊 Vista de ingresos');
-        // TODO: Implementar en siguiente fase
-        break;
-      
-      case 'services':
-        console.log('🏠 Vista de servicios');
-        // TODO: Implementar en siguiente fase
-        break;
-      
-      case 'cards':
-        console.log('💳 Vista de tarjetas');
-        // TODO: Implementar en siguiente fase
-        break;
-      
-      case 'loans':
-        console.log('🏦 Vista de préstamos');
-        // TODO: Implementar en siguiente fase
-        break;
-      
-      case 'expenses':
-        console.log('🛒 Vista de gastos');
-        // TODO: Implementar en siguiente fase
-        break;
-      
-      case 'savings':
-        console.log('🛡️ Vista de ahorros');
-        // TODO: Implementar en siguiente fase
-        break;
+    if (viewName === 'dashboard') {
+      Dashboard.render();
     }
   },
   
-  // Toggle de acordeón
   toggleAccordion(accordionId) {
     const accordion = document.getElementById(accordionId);
-    if (!accordion) return;
-    
-    accordion.classList.toggle('open');
+    if (accordion) {
+      accordion.classList.toggle('open');
+    }
   }
 };
 
-// Hacer accesible globalmente para onclick en HTML
 window.FinanzasApp = window.FinanzasApp || {};
-window.FinanzasApp.ui = {
-  toggleAccordion: (id) => Navigation.toggleAccordion(id)
-};
-
-export default Navigation;
+window.FinanzasApp.ui = { toggleAccordion: Navigation.toggleAccordion.bind(Navigation) };
