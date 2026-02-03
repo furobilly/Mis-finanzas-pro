@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💎 Finanzas Pro v5.0 - Modular</title>
+    <title>💰 Finanzas Pro v5.0 - Modular</title>
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- CSS Modular -->
     <link rel="stylesheet" href="css/01-variables.css">
     <link rel="stylesheet" href="css/02-base.css">
     <link rel="stylesheet" href="css/03-layout.css">
@@ -16,28 +14,44 @@
 </head>
 <body>
     
-    <!-- PANTALLA DE LOGIN -->
     <div id="login-screen" class="login-screen">
         <div class="login-card glass">
             <div class="login-icon">💰</div>
             <h1 class="login-title">Finanzas Pro</h1>
-            <p class="login-subtitle">Gestión financiera inteligente</p>
+            <p class="login-subtitle">Gestion financiera inteligente</p>
             
-            <button id="btn-google-login" class="btn-login">
-                <span class="btn-icon">🔐</span>
-                INICIAR SESION
-            </button>
+            <div id="user-selector" class="user-selector">
+                <h3 style="margin: 0 0 16px 0; color: var(--primary);">Selecciona o crea usuario</h3>
+                <div id="users-list"></div>
+                <button id="btn-new-user" class="btn-new-user">
+                    ➕ Crear nuevo usuario
+                </button>
+            </div>
             
-            <div class="login-footer">
-                <p class="muted">Versión 5.0 - Modular Edition</p>
+            <div id="login-form" class="login-form hidden">
+                <h3 style="margin: 0 0 16px 0; color: var(--primary);">Crear cuenta</h3>
+                <input type="text" id="input-name" class="input-field" placeholder="Tu nombre" maxlength="20">
+                <input type="password" id="input-pin" class="input-field" placeholder="PIN (4 digitos)" maxlength="4" pattern="[0-9]*" inputmode="numeric">
+                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                    <button id="btn-create-user" class="btn-login">Crear</button>
+                    <button id="btn-cancel-create" class="btn-cancel">Cancelar</button>
+                </div>
+            </div>
+            
+            <div id="pin-form" class="pin-form hidden">
+                <h3 style="margin: 0 0 16px 0; color: var(--primary);">Ingresa tu PIN</h3>
+                <p id="pin-user-name" style="margin: 0 0 16px 0; font-weight: 600;"></p>
+                <input type="password" id="input-pin-login" class="input-field" placeholder="PIN (4 digitos)" maxlength="4" pattern="[0-9]*" inputmode="numeric">
+                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                    <button id="btn-login-pin" class="btn-login">Entrar</button>
+                    <button id="btn-cancel-pin" class="btn-cancel">Cancelar</button>
+                </div>
             </div>
         </div>
     </div>
     
-    <!-- APLICACIÓN PRINCIPAL -->
     <div id="app-container" class="app-container hidden">
         
-        <!-- HEADER -->
         <header class="header">
             <div class="header-content">
                 <div class="brand">
@@ -47,15 +61,12 @@
                 
                 <div class="header-controls">
                     <select id="year-selector" class="selector">
-                        <!-- Generado por JS -->
                     </select>
                     
                     <select id="month-selector" class="selector">
-                        <!-- Generado por JS -->
                     </select>
                     
-                    <div class="user-chip glass" id="user-info">
-                        <img id="user-photo" src="" alt="User" class="user-photo">
+                    <div id="user-info">
                         <span id="user-name">Usuario</span>
                     </div>
                     
@@ -63,34 +74,30 @@
                         📊
                     </button>
                     
-                    <button id="btn-logout" class="btn-icon btn-danger" title="Cerrar sesión">
+                    <button id="btn-logout" class="btn-icon btn-danger" title="Cerrar sesion">
                         🔒
                     </button>
                 </div>
             </div>
             
-            <!-- TIP DEL DÍA -->
             <div class="tip-banner glass">
                 <span class="tip-icon">💡</span>
                 <span id="tip-text">Cargando consejos...</span>
             </div>
         </header>
         
-        <!-- NAVEGACIÓN PRINCIPAL -->
         <nav class="nav-main" id="nav-main">
             <button class="nav-btn active" data-view="dashboard">📊 Dashboard</button>
             <button class="nav-btn" data-view="income">💵 Ingresos</button>
             <button class="nav-btn" data-view="services">🏠 Servicios</button>
             <button class="nav-btn" data-view="cards">💳 Tarjetas</button>
-            <button class="nav-btn" data-view="loans">🏦 Préstamos</button>
+            <button class="nav-btn" data-view="loans">🏦 Prestamos</button>
             <button class="nav-btn" data-view="expenses">🛒 Gastos</button>
             <button class="nav-btn" data-view="savings">🛡️ Ahorro</button>
         </nav>
         
-        <!-- CONTENIDO PRINCIPAL -->
         <main class="main-content" id="main-content">
             
-            <!-- VISTA: DASHBOARD -->
             <section id="view-dashboard" class="view active">
                 <div class="stats-grid">
                     <div class="stat-card card-income glass">
@@ -114,12 +121,11 @@
                     </div>
                 </div>
                 
-                <!-- ACORDEONES -->
                 <div class="accordion glass" id="accordion-q1">
                     <div class="accordion-header" onclick="FinanzasApp.ui.toggleAccordion('accordion-q1')">
                         <div class="accordion-title">
                             <span class="accordion-icon">📅</span>
-                            Quincena 1 (1–14)
+                            Quincena 1 (1-14)
                         </div>
                         <div class="accordion-amount" id="total-q1">$0.00</div>
                     </div>
@@ -132,7 +138,7 @@
                     <div class="accordion-header" onclick="FinanzasApp.ui.toggleAccordion('accordion-q2')">
                         <div class="accordion-title">
                             <span class="accordion-icon">📅</span>
-                            Quincena 2 (15–31)
+                            Quincena 2 (15-31)
                         </div>
                         <div class="accordion-amount" id="total-q2">$0.00</div>
                     </div>
@@ -168,40 +174,38 @@
                 </div>
             </section>
             
-            <!-- OTRAS VISTAS (Placeholder) -->
             <section id="view-income" class="view">
                 <h2>💵 Ingresos</h2>
-                <p class="muted">Módulo en construcción - Fase 2...</p>
+                <p class="muted">Modulo en construccion - Fase 2...</p>
             </section>
             
             <section id="view-services" class="view">
                 <h2>🏠 Servicios</h2>
-                <p class="muted">Módulo en construcción - Fase 2...</p>
+                <p class="muted">Modulo en construccion - Fase 2...</p>
             </section>
             
             <section id="view-cards" class="view">
                 <h2>💳 Tarjetas</h2>
-                <p class="muted">Módulo en construcción - Fase 2...</p>
+                <p class="muted">Modulo en construccion - Fase 2...</p>
             </section>
             
             <section id="view-loans" class="view">
-                <h2>🏦 Préstamos</h2>
-                <p class="muted">Módulo en construcción - Fase 2...</p>
+                <h2>🏦 Prestamos</h2>
+                <p class="muted">Modulo en construccion - Fase 2...</p>
             </section>
             
             <section id="view-expenses" class="view">
                 <h2>🛒 Gastos Variables</h2>
-                <p class="muted">Módulo en construcción - Fase 2...</p>
+                <p class="muted">Modulo en construccion - Fase 2...</p>
             </section>
             
             <section id="view-savings" class="view">
                 <h2>🛡️ Ahorro</h2>
-                <p class="muted">Módulo en construcción - Fase 2...</p>
+                <p class="muted">Modulo en construccion - Fase 2...</p>
             </section>
             
         </main>
         
-        <!-- NAVEGACIÓN MÓVIL (Bottom Bar) -->
         <nav class="nav-mobile" id="nav-mobile">
             <button class="nav-mobile-btn active" data-view="dashboard">
                 <span class="nav-mobile-icon">🏠</span>
@@ -227,10 +231,8 @@
         
     </div>
     
-    <!-- TOAST NOTIFICATIONS -->
     <div id="toast-container" class="toast-container"></div>
     
-    <!-- BANNER CAMBIOS SIN GUARDAR -->
     <div id="unsaved-banner" class="unsaved-banner hidden">
         <span class="unsaved-icon">⚠️</span>
         <span class="unsaved-text">Tienes cambios sin guardar</span>
@@ -239,7 +241,6 @@
         </button>
     </div>
     
-    <!-- SCRIPT MODULAR -->
     <script type="module" src="js/app.js"></script>
     
 </body>
