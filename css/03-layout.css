@@ -193,9 +193,9 @@
 .btn-cancel {
   flex: 1;
   padding: 14px;
-  background: var(--text-secondary);
+  background: #94a3b8;
   color: white;
-  border: none;
+  border: 2px solid #64748b;
   border-radius: var(--radius-md);
   font-weight: 700;
   cursor: pointer;
@@ -203,7 +203,8 @@
 }
 
 .btn-cancel:hover {
-  background: var(--text-primary);
+  background: #64748b;
+  border-color: #475569;
 }
 
 /* APP CONTAINER */
