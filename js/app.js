@@ -1,4 +1,4 @@
-// FINANZAS PRO V5.0 - APLICACION PRINCIPAL
+// FINANZAS PRO V5.0 - APP PRINCIPAL
 
 import { CONFIG, getRandomTip } from './core/config.js';
 import { AppState } from './core/state.js';
@@ -26,13 +26,13 @@ class FinanzasProApp {
       this.initSaveButton();
       this.initExportButton();
       
-      console.log('Aplicacion inicializada correctamente');
+      console.log('App inicializada correctamente');
       
     } catch (error) {
-      console.error('Error al inicializar aplicacion:', error);
+      console.error('Error al inicializar:', error);
       Alerts.error('Error al inicializar la aplicacion');
     }
-  }
+  },
   
   initSelectors() {
     const yearSelector = document.getElementById('year-selector');
@@ -58,7 +58,7 @@ class FinanzasProApp {
     
     yearSelector.addEventListener('change', () => this.onPeriodChange());
     monthSelector.addEventListener('change', () => this.onPeriodChange());
-  }
+  },
   
   async onPeriodChange() {
     const yearSelector = document.getElementById('year-selector');
@@ -73,7 +73,7 @@ class FinanzasProApp {
     Navigation.renderView(Navigation.currentView);
     
     Alerts.success('Cambiado a ' + CONFIG.MONTHS[newMonth] + ' ' + newYear);
-  }
+  },
   
   async loadMonthData() {
     console.log('Cargando datos del mes...');
@@ -85,15 +85,15 @@ class FinanzasProApp {
     
     AppState.currentMonthData = monthData;
     
-    console.log('Datos del mes cargados');
-  }
+    console.log('Datos cargados');
+  },
   
   showTip() {
     const tipElement = document.getElementById('tip-text');
     if (tipElement) {
       tipElement.textContent = getRandomTip();
     }
-  }
+  },
   
   initSaveButton() {
     const saveButton = document.getElementById('btn-save-changes');
@@ -102,7 +102,7 @@ class FinanzasProApp {
     saveButton.addEventListener('click', async () => {
       await this.saveChanges();
     });
-  }
+  },
   
   async saveChanges() {
     try {
@@ -113,15 +113,15 @@ class FinanzasProApp {
       );
       
       AppState.markSaved();
-      Alerts.success('Cambios guardados correctamente');
+      Alerts.success('Cambios guardados');
       
       Navigation.renderView(Navigation.currentView);
       
     } catch (error) {
       console.error('Error al guardar:', error);
-      Alerts.error('Error al guardar los cambios');
+      Alerts.error('Error al guardar');
     }
-  }
+  },
   
   initExportButton() {
     const exportButton = document.getElementById('btn-export');
@@ -129,7 +129,7 @@ class FinanzasProApp {
     
     exportButton.addEventListener('click', () => {
       Storage.export();
-      Alerts.success('Datos exportados correctamente');
+      Alerts.success('Datos exportados');
     });
   }
 }
@@ -143,5 +143,3 @@ if (document.readyState === 'loading') {
 }
 
 window.FinanzasProApp = FinanzasProApp;
-window.AppState = AppState;
-window.Storage = Storage;
