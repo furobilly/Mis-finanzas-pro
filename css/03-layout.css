@@ -247,8 +247,10 @@
 }
 
 .nav-btn.active {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--warning);
+  color: var(--text-primary);
   border-bottom-color: var(--warning);
+  font-weight: 800;
 }
 
 /* MAIN CONTENT */
