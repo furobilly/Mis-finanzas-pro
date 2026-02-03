@@ -277,17 +277,27 @@ export const Auth = {
   },
   
   showWelcomeMessage(userName) {
-    const messages = [
-      `Bienvenido ${userName}! Estas por comenzar tu organizacion financiera.`,
-      `Hola ${userName}! Listo para llevar el control de tus finanzas?`,
-      `Bienvenido ${userName}! Comienza a organizar tu dinero de forma inteligente.`,
-      `Hola ${userName}! Es hora de tomar control de tus finanzas personales.`,
-      `Bienvenido ${userName}! Tu camino hacia la libertad financiera comienza aqui.`
-    ];
-    
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    alert(randomMessage);
-  }
+  const messages = [
+    `Bienvenido ${userName}! Estas por comenzar tu organizacion financiera.`,
+    `Hola ${userName}! Listo para llevar el control de tus finanzas?`,
+    `Bienvenido ${userName}! Comienza a organizar tu dinero de forma inteligente.`,
+    `Hola ${userName}! Es hora de tomar control de tus finanzas personales.`,
+    `Bienvenido ${userName}! Tu camino hacia la libertad financiera comienza aqui.`
+  ];
+  
+  const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+  
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
+  modal.innerHTML = `
+    <div style="background:white;padding:30px;border-radius:16px;max-width:400px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-size:48px;margin-bottom:16px;">🎉</div>
+      <p style="font-size:18px;font-weight:600;color:#1f2937;margin:0;">${randomMessage}</p>
+      <button onclick="this.parentElement.parentElement.remove()" style="margin-top:24px;padding:12px 32px;background:linear-gradient(135deg,#7c3aed,#6366f1);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:16px;">Comenzar</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
 };
 
 window.Auth = Auth;
