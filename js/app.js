@@ -1,17 +1,14 @@
-// FINANZAS PRO V5.0 - APP PRINCIPAL
-
 import { CONFIG, getRandomTip } from './core/config.js';
 import { AppState } from './core/state.js';
 import { Storage } from './core/storage.js';
 import { Auth } from './modules/auth.js';
 import { Navigation } from './ui/navigation.js';
-import { Dashboard } from './ui/dashboard.js';
 import { Alerts } from './ui/alerts.js';
 
 class FinanzasProApp {
   
   constructor() {
-    console.log('Finanzas Pro v5.0 - Iniciando...');
+    console.log('Iniciando aplicacion...');
     this.init();
   }
   
@@ -23,16 +20,12 @@ class FinanzasProApp {
       await this.loadMonthData();
       Navigation.init();
       this.showTip();
-      this.initSaveButton();
-      this.initExportButton();
-      
-      console.log('App inicializada correctamente');
-      
+      this.initButtons();
+      console.log('App inicializada');
     } catch (error) {
-      console.error('Error al inicializar:', error);
-      Alerts.error('Error al inicializar la aplicacion');
+      console.error('Error:', error);
     }
-  },
+  }
   
   initSelectors() {
     const yearSelector = document.getElementById('year-selector');
@@ -58,7 +51,7 @@ class FinanzasProApp {
     
     yearSelector.addEventListener('change', () => this.onPeriodChange());
     monthSelector.addEventListener('change', () => this.onPeriodChange());
-  },
+  }
   
   async onPeriodChange() {
     const yearSelector = document.getElementById('year-selector');
@@ -68,69 +61,45 @@ class FinanzasProApp {
     const newMonth = parseInt(monthSelector.value);
     
     AppState.setYearMonth(newYear, newMonth);
-    
     await this.loadMonthData();
     Navigation.renderView(Navigation.currentView);
-    
-    Alerts.success('Cambiado a ' + CONFIG.MONTHS[newMonth] + ' ' + newYear);
-  },
+  }
   
   async loadMonthData() {
-    console.log('Cargando datos del mes...');
-    
-    const monthData = await Storage.getMonthData(
-      AppState.currentYear,
-      AppState.currentMonth
-    );
-    
+    const monthData = await Storage.getMonthData(AppState.currentYear, AppState.currentMonth);
     AppState.currentMonthData = monthData;
-    
-    console.log('Datos cargados');
-  },
+  }
   
   showTip() {
     const tipElement = document.getElementById('tip-text');
     if (tipElement) {
       tipElement.textContent = getRandomTip();
     }
-  },
+  }
   
-  initSaveButton() {
+  initButtons() {
     const saveButton = document.getElementById('btn-save-changes');
-    if (!saveButton) return;
+    if (saveButton) {
+      saveButton.addEventListener('click', async () => {
+        await this.saveChanges();
+      });
+    }
     
-    saveButton.addEventListener('click', async () => {
-      await this.saveChanges();
-    });
-  },
+    const exportButton = document.getElementById('btn-export');
+    if (exportButton) {
+      exportButton.addEventListener('click', () => {
+        Storage.export();
+      });
+    }
+  }
   
   async saveChanges() {
     try {
-      await Storage.saveMonthData(
-        AppState.currentYear,
-        AppState.currentMonth,
-        AppState.currentMonthData
-      );
-      
+      await Storage.saveMonthData(AppState.currentYear, AppState.currentMonth, AppState.currentMonthData);
       AppState.markSaved();
-      Alerts.success('Cambios guardados');
-      
-      Navigation.renderView(Navigation.currentView);
-      
     } catch (error) {
       console.error('Error al guardar:', error);
-      Alerts.error('Error al guardar');
     }
-  },
-  
-  initExportButton() {
-    const exportButton = document.getElementById('btn-export');
-    if (!exportButton) return;
-    
-    exportButton.addEventListener('click', () => {
-      Storage.export();
-      Alerts.success('Datos exportados');
-    });
   }
 }
 
@@ -141,5 +110,3 @@ if (document.readyState === 'loading') {
 } else {
   new FinanzasProApp();
 }
-
-window.FinanzasProApp = FinanzasProApp;
