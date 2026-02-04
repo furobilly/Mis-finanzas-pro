@@ -1,112 +1,128 @@
-import { CONFIG, getRandomTip } from './core/config.js';
+// APP - INICIALIZACION PRINCIPAL
+
+import { CONFIG } from './core/config.js';
 import { AppState } from './core/state.js';
 import { Storage } from './core/storage.js';
 import { Auth } from './modules/auth.js';
-import { Navigation } from './ui/navigation.js';
+import { Income } from './modules/income.js';
 import { Alerts } from './ui/alerts.js';
+import { Navigation } from './ui/navigation.js';
+import { Dashboard } from './ui/dashboard.js';
 
-class FinanzasProApp {
-  
-  constructor() {
-    console.log('Iniciando aplicacion...');
-    this.init();
+window.FinanzasApp = {
+  state: AppState,
+  storage: Storage,
+  config: CONFIG,
+  ui: {
+    alerts: Alerts,
+    navigation: Navigation,
+    dashboard: Dashboard
   }
+};
+
+function setupYearMonthSelectors() {
+  const yearSelector = document.getElementById('year-selector');
+  const monthSelector = document.getElementById('month-selector');
   
-  async init() {
-    try {
-      AppState.init();
-      Auth.init();
-      this.initSelectors();
-      await this.loadMonthData();
-      Navigation.init();
-      this.showTip();
-      this.initButtons();
-      console.log('App inicializada');
-    } catch (error) {
-      console.error('Error:', error);
+  if (!yearSelector || !monthSelector) return;
+  
+  yearSelector.innerHTML = '';
+  for (let year = 2025; year <= 2035; year++) {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    if (year === AppState.currentYear) {
+      option.selected = true;
     }
+    yearSelector.appendChild(option);
   }
   
-  initSelectors() {
-    const yearSelector = document.getElementById('year-selector');
-    const monthSelector = document.getElementById('month-selector');
-    
-    if (!yearSelector || !monthSelector) return;
-    
-    CONFIG.YEARS.forEach(year => {
-      const option = document.createElement('option');
-      option.value = year;
-      option.textContent = year;
-      if (year === AppState.currentYear) option.selected = true;
-      yearSelector.appendChild(option);
-    });
-    
-    CONFIG.MONTHS.forEach((month, index) => {
-      const option = document.createElement('option');
-      option.value = index;
-      option.textContent = month;
-      if (index === AppState.currentMonth) option.selected = true;
-      monthSelector.appendChild(option);
-    });
-    
-    yearSelector.addEventListener('change', () => this.onPeriodChange());
-    monthSelector.addEventListener('change', () => this.onPeriodChange());
-  }
-  
-  async onPeriodChange() {
-    const yearSelector = document.getElementById('year-selector');
-    const monthSelector = document.getElementById('month-selector');
-    
-    const newYear = parseInt(yearSelector.value);
-    const newMonth = parseInt(monthSelector.value);
-    
-    AppState.setYearMonth(newYear, newMonth);
-    await this.loadMonthData();
-    Navigation.renderView(Navigation.currentView);
-  }
-  
-  async loadMonthData() {
-    const monthData = await Storage.getMonthData(AppState.currentYear, AppState.currentMonth);
-    AppState.currentMonthData = monthData;
-  }
-  
-  showTip() {
-    const tipElement = document.getElementById('tip-text');
-    if (tipElement) {
-      tipElement.textContent = getRandomTip();
+  monthSelector.innerHTML = '';
+  CONFIG.MONTHS.forEach((month, index) => {
+    const option = document.createElement('option');
+    option.value = index;
+    option.textContent = month;
+    if (index === AppState.currentMonth) {
+      option.selected = true;
     }
-  }
+    monthSelector.appendChild(option);
+  });
   
-  initButtons() {
-    const saveButton = document.getElementById('btn-save-changes');
-    if (saveButton) {
-      saveButton.addEventListener('click', async () => {
-        await this.saveChanges();
-      });
-    }
-    
-    const exportButton = document.getElementById('btn-export');
-    if (exportButton) {
-      exportButton.addEventListener('click', () => {
-        Storage.export();
-      });
-    }
-  }
+  yearSelector.onchange = () => {
+    AppState.currentYear = parseInt(yearSelector.value);
+    Storage.loadMonth();
+    refreshAllModules();
+  };
   
-  async saveChanges() {
-    try {
-      await Storage.saveMonthData(AppState.currentYear, AppState.currentMonth, AppState.currentMonthData);
-      AppState.markSaved();
-    } catch (error) {
-      console.error('Error al guardar:', error);
-    }
+  monthSelector.onchange = () => {
+    AppState.currentMonth = parseInt(monthSelector.value);
+    Storage.loadMonth();
+    refreshAllModules();
+  };
+}
+
+function setupSaveButton() {
+  const btnSave = document.getElementById('btn-save-changes');
+  if (btnSave) {
+    btnSave.onclick = () => {
+      Storage.save();
+      Alerts.success('Cambios guardados correctamente');
+    };
   }
 }
 
+function setupExportButton() {
+  const btnExport = document.getElementById('btn-export');
+  if (btnExport) {
+    btnExport.onclick = () => {
+      const data = Storage.exportData();
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `finanzas-pro-${AppState.currentYear}-${AppState.currentMonth + 1}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      Alerts.success('Datos exportados correctamente');
+    };
+  }
+}
+
+function refreshAllModules() {
+  if (Income && Income.render) {
+    Income.render();
+  }
+  
+  if (Dashboard && Dashboard.renderStats) {
+    Dashboard.renderStats();
+  }
+  
+  if (Dashboard && Dashboard.renderQuincenas) {
+    Dashboard.renderQuincenas();
+  }
+}
+
+function init() {
+  console.log('Iniciando aplicacion...');
+  
+  CONFIG.init();
+  AppState.init();
+  Storage.init();
+  Auth.init();
+  Alerts.init();
+  Navigation.init();
+  Dashboard.init();
+  Income.init();
+  
+  setupYearMonthSelectors();
+  setupSaveButton();
+  setupExportButton();
+  
+  console.log('App inicializada');
+}
+
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    new FinanzasProApp();
-  });
+  document.addEventListener('DOMContentLoaded', init);
 } else {
-  new FinanzasProApp();
+  init();
 }
