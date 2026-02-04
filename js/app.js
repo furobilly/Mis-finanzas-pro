@@ -66,7 +66,9 @@ function setupSaveButton() {
   if (btnSave) {
     btnSave.onclick = () => {
       Storage.save();
-      Alerts.success('Cambios guardados correctamente');
+      if (Alerts && Alerts.success) {
+        Alerts.success('Cambios guardados correctamente');
+      }
     };
   }
 }
@@ -83,7 +85,9 @@ function setupExportButton() {
       a.download = `finanzas-pro-${AppState.currentYear}-${AppState.currentMonth + 1}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      Alerts.success('Datos exportados correctamente');
+      if (Alerts && Alerts.success) {
+        Alerts.success('Datos exportados correctamente');
+      }
     };
   }
 }
@@ -105,13 +109,34 @@ function refreshAllModules() {
 function init() {
   console.log('Iniciando aplicacion...');
   
-  AppState.init();
-  Storage.init();
-  Auth.init();
-  Alerts.init();
-  Navigation.init();
-  Dashboard.init();
-  Income.init();
+  // Solo llamar init() si existe
+  if (AppState && AppState.init) {
+    AppState.init();
+  }
+  
+  if (Storage && Storage.init) {
+    Storage.init();
+  }
+  
+  if (Auth && Auth.init) {
+    Auth.init();
+  }
+  
+  if (Alerts && Alerts.init) {
+    Alerts.init();
+  }
+  
+  if (Navigation && Navigation.init) {
+    Navigation.init();
+  }
+  
+  if (Dashboard && Dashboard.init) {
+    Dashboard.init();
+  }
+  
+  if (Income && Income.init) {
+    Income.init();
+  }
   
   setupYearMonthSelectors();
   setupSaveButton();
