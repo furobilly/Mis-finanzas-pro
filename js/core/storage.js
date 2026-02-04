@@ -1,4 +1,4 @@
-// FINANZAS PRO V5.0 - STORAGE
+// STORAGE - PERSISTENCIA DE DATOS
 
 import { AppState } from './state.js';
 
@@ -6,177 +6,135 @@ const STORAGE_KEY = 'finanzas-pro-v5';
 
 export const Storage = {
   
-  async load() {
+  init() {
+    this.loadMonth();
+  },
+  
+  loadMonth() {
     try {
-      console.log('Cargando datos desde localStorage...');
-      const data = localStorage.getItem(STORAGE_KEY);
-      
-      if (data) {
-        const parsed = JSON.parse(data);
-        console.log('Datos cargados exitosamente');
-        return parsed;
+      const allData = localStorage.getItem(STORAGE_KEY);
+      if (!allData) {
+        this.initializeEmptyMonth();
+        return;
       }
       
-      console.log('No hay datos previos, iniciando con estructura vacia');
-      return this.getEmptyDatabase();
+      const parsed = JSON.parse(allData);
+      const monthKey = `${AppState.currentYear}-${String(AppState.currentMonth + 1).padStart(2, '0')}`;
       
+      if (parsed[monthKey]) {
+        AppState.currentMonthData = parsed[monthKey];
+      } else {
+        this.initializeEmptyMonth();
+        this.rolloverFromPreviousMonth(parsed);
+      }
     } catch (error) {
-      console.error('Error al cargar datos:', error);
-      return this.getEmptyDatabase();
+      console.error('Error loading month:', error);
+      this.initializeEmptyMonth();
     }
   },
   
-  async save(data) {
-    try {
-      console.log('Guardando datos en localStorage...');
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      console.log('Datos guardados exitosamente');
-      AppState.markSaved();
-      return true;
-    } catch (error) {
-      console.error('Error al guardar datos:', error);
-      return false;
-    }
-  },
-  
-  async getMonthData(year, month) {
-    const allData = await this.load();
-    const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
-    
-    if (allData.months && allData.months[monthKey]) {
-      return allData.months[monthKey];
-    }
-    
-    return this.createNewMonth(allData, year, month);
-  },
-  
-  async saveMonthData(year, month, monthData) {
-    const allData = await this.load();
-    const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
-    
-    if (!allData.months) {
-      allData.months = {};
-    }
-    
-    allData.months[monthKey] = monthData;
-    return await this.save(allData);
-  },
-  
-  getEmptyDatabase() {
-    return {
-      user: null,
-      months: {}
-    };
-  },
-  
-  createNewMonth(allData, year, month) {
-    const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
-    
-    const newMonth = {
+  initializeEmptyMonth() {
+    AppState.currentMonthData = {
       income: [],
+      expenses: [],
       services: [],
       cards: [],
       loans: [],
-      expenses: [],
       savings: {
         opening: 0,
         goal: 0,
         transactions: []
-      },
-      payments: {},
-      cardSettings: {}
+      }
     };
-    
-    const prevMonth = month === 0 ? 11 : month - 1;
-    const prevYear = month === 0 ? year - 1 : year;
-    const prevKey = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}`;
-    
-    if (allData.months && allData.months[prevKey]) {
-      const prevData = allData.months[prevKey];
-      
-      if (prevData.services) {
-        newMonth.services = prevData.services.map((service, i) => ({
-          ...service,
-          id: Date.now() + i,
-          paid: false
-        }));
-      }
-      
-      if (prevData.cards) {
-        newMonth.cards = prevData.cards.map((card, i) => ({
-          ...card,
-          id: Date.now() + 100 + i
-        }));
-      }
-      
-      if (prevData.loans) {
-        newMonth.loans = prevData.loans
-          .filter(loan => loan.status !== 'liquidado')
-          .map((loan, i) => ({
-            ...loan,
-            id: Date.now() + 200 + i
-          }));
-      }
-      
-      if (prevData.savings) {
-        const prevBalance = prevData.savings.opening + 
-          prevData.savings.transactions.reduce((sum, tx) => sum + (parseFloat(tx.amount) || 0), 0);
-        
-        newMonth.savings.opening = prevBalance;
-        newMonth.savings.goal = prevData.savings.goal || 0;
-      }
-    }
-    
-    return newMonth;
   },
   
-  async reset() {
+  rolloverFromPreviousMonth(allData) {
+    const prevMonth = AppState.currentMonth === 0 ? 11 : AppState.currentMonth - 1;
+    const prevYear = AppState.currentMonth === 0 ? AppState.currentYear - 1 : AppState.currentYear;
+    const prevKey = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}`;
+    
+    const prevData = allData[prevKey];
+    if (!prevData) return;
+    
+    if (prevData.services) {
+      AppState.currentMonthData.services = prevData.services.map(s => ({
+        ...s,
+        id: Date.now() + Math.random(),
+        paid: false
+      }));
+    }
+    
+    if (prevData.cards) {
+      AppState.currentMonthData.cards = prevData.cards.map(c => ({
+        ...c,
+        id: Date.now() + Math.random()
+      }));
+    }
+    
+    if (prevData.loans) {
+      AppState.currentMonthData.loans = prevData.loans
+        .filter(l => l.done < l.total)
+        .map(l => ({
+          ...l,
+          id: Date.now() + Math.random()
+        }));
+    }
+    
+    if (prevData.savings) {
+      const prevBalance = this.calculateSavingsBalance(prevData.savings);
+      AppState.currentMonthData.savings.opening = prevBalance;
+      AppState.currentMonthData.savings.goal = prevData.savings.goal || 0;
+    }
+  },
+  
+  calculateSavingsBalance(savings) {
+    let balance = savings.opening || 0;
+    if (savings.transactions) {
+      savings.transactions.forEach(tx => {
+        balance += tx.amount || 0;
+      });
+    }
+    return balance;
+  },
+  
+  save() {
     try {
-      console.log('Borrando todos los datos...');
-      localStorage.removeItem(STORAGE_KEY);
-      console.log('Datos borrados exitosamente');
+      const allData = localStorage.getItem(STORAGE_KEY);
+      const parsed = allData ? JSON.parse(allData) : {};
+      
+      const monthKey = `${AppState.currentYear}-${String(AppState.currentMonth + 1).padStart(2, '0')}`;
+      parsed[monthKey] = AppState.currentMonthData;
+      
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+      AppState.hasUnsavedChanges = false;
+      AppState.hideUnsavedBanner();
+      
       return true;
     } catch (error) {
-      console.error('Error al borrar datos:', error);
+      console.error('Error saving:', error);
       return false;
     }
   },
   
-  async export() {
-    const data = await this.load();
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `finanzas-pro-backup-${Date.now()}.json`;
-    a.click();
-    
-    URL.revokeObjectURL(url);
-    console.log('Datos exportados exitosamente');
+  exportData() {
+    const allData = localStorage.getItem(STORAGE_KEY);
+    return allData || '{}';
   },
   
-  async import(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      
-      reader.onload = async (e) => {
-        try {
-          const data = JSON.parse(e.target.result);
-          await this.save(data);
-          console.log('Datos importados exitosamente');
-          resolve(true);
-        } catch (error) {
-          console.error('Error al importar datos:', error);
-          reject(error);
-        }
-      };
-      
-      reader.onerror = reject;
-      reader.readAsText(file);
-    });
+  importData(jsonString) {
+    try {
+      const parsed = JSON.parse(jsonString);
+      localStorage.setItem(STORAGE_KEY, jsonString);
+      this.loadMonth();
+      return true;
+    } catch (error) {
+      console.error('Error importing:', error);
+      return false;
+    }
+  },
+  
+  clearAll() {
+    localStorage.removeItem(STORAGE_KEY);
+    this.initializeEmptyMonth();
   }
 };
-
-export default Storage;
