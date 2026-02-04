@@ -105,7 +105,6 @@ function refreshAllModules() {
 function init() {
   console.log('Iniciando aplicacion...');
   
-  CONFIG.init();
   AppState.init();
   Storage.init();
   Auth.init();
