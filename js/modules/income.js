@@ -8,60 +8,73 @@ import { Alerts } from '../ui/alerts.js';
 export const Income = {
   
   init() {
+    console.log('Income module initialized');
     this.setupForm();
     this.render();
   },
   
   setupForm() {
-    const form = document.querySelector('#view-income .form-row');
-    if (!form) return;
-    
-    const descInput = form.querySelector('input[placeholder="Descripción"]');
-    const amountInput = form.querySelector('input[type="number"]');
-    const categorySelect = form.querySelector('select');
-    const dateInput = form.querySelector('input[type="date"]');
     const btnAdd = document.querySelector('#view-income .btn-primary');
     
-    if (dateInput) {
-      dateInput.value = new Date().toISOString().slice(0, 10);
+    if (!btnAdd) {
+      console.error('Botón Agregar no encontrado');
+      return;
     }
     
-    if (btnAdd) {
-      btnAdd.onclick = () => {
-        const desc = descInput?.value.trim() || '';
-        const amount = parseFloat(amountInput?.value) || 0;
-        const category = categorySelect?.value || 'sueldo';
-        const date = dateInput?.value || new Date().toISOString().slice(0, 10);
-        
-        if (!desc) {
-          if (Alerts && Alerts.error) {
-            Alerts.error('La descripción es requerida');
-          } else {
-            alert('La descripción es requerida');
-          }
-          return;
-        }
-        
-        if (amount <= 0) {
-          if (Alerts && Alerts.error) {
-            Alerts.error('El monto debe ser mayor a cero');
-          } else {
-            alert('El monto debe ser mayor a cero');
-          }
-          return;
-        }
-        
-        this.add(desc, amount, date, category);
-        
-        if (descInput) descInput.value = '';
-        if (amountInput) amountInput.value = '';
-        if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
-        if (categorySelect) categorySelect.value = 'sueldo';
-      };
+    console.log('Botón encontrado, agregando evento...');
+    
+    btnAdd.onclick = (e) => {
+      e.preventDefault();
+      console.log('Click en Agregar Ingreso');
+      
+      const form = document.querySelector('#view-income .form-row');
+      if (!form) {
+        console.error('Formulario no encontrado');
+        return;
+      }
+      
+      const inputs = form.querySelectorAll('input');
+      const select = form.querySelector('select');
+      
+      const descInput = inputs[0];
+      const amountInput = inputs[1];
+      const dateInput = inputs[2];
+      const categorySelect = select;
+      
+      const desc = descInput?.value.trim() || '';
+      const amount = parseFloat(amountInput?.value) || 0;
+      const date = dateInput?.value || CONFIG.getToday();
+      const category = categorySelect?.value || 'sueldo';
+      
+      console.log('Datos capturados:', { desc, amount, date, category });
+      
+      if (!desc) {
+        alert('La descripción es requerida');
+        return;
+      }
+      
+      if (amount <= 0) {
+        alert('El monto debe ser mayor a cero');
+        return;
+      }
+      
+      this.add(desc, amount, date, category);
+      
+      if (descInput) descInput.value = '';
+      if (amountInput) amountInput.value = '';
+      if (dateInput) dateInput.value = CONFIG.getToday();
+      if (categorySelect) categorySelect.value = 'sueldo';
+    };
+    
+    const dateInput = document.querySelector('#view-income input[type="date"]');
+    if (dateInput && !dateInput.value) {
+      dateInput.value = CONFIG.getToday();
     }
   },
   
   add(desc, amount, date, category) {
+    console.log('Agregando ingreso...', { desc, amount, date, category });
+    
     if (!AppState.currentMonthData.income) {
       AppState.currentMonthData.income = [];
     }
@@ -76,15 +89,15 @@ export const Income = {
     };
     
     AppState.currentMonthData.income.push(newIncome);
+    console.log('Ingreso agregado:', newIncome);
+    
     AppState.markUnsaved();
     Storage.save();
     
     this.render();
     this.updateTotal();
     
-    if (Alerts && Alerts.success) {
-      Alerts.success('Ingreso agregado correctamente');
-    }
+    alert('✅ Ingreso agregado correctamente');
   },
   
   edit(id) {
@@ -96,9 +109,7 @@ export const Income = {
     
     const newAmount = parseFloat(prompt('Monto:', income.amount));
     if (isNaN(newAmount) || newAmount <= 0) {
-      if (Alerts && Alerts.error) {
-        Alerts.error('Monto inválido');
-      }
+      alert('Monto inválido');
       return;
     }
     
@@ -114,9 +125,7 @@ export const Income = {
     this.render();
     this.updateTotal();
     
-    if (Alerts && Alerts.success) {
-      Alerts.success('Ingreso actualizado');
-    }
+    alert('✅ Ingreso actualizado');
   },
   
   remove(id) {
@@ -131,16 +140,18 @@ export const Income = {
     this.render();
     this.updateTotal();
     
-    if (Alerts && Alerts.success) {
-      Alerts.success('Ingreso eliminado');
-    }
+    alert('✅ Ingreso eliminado');
   },
   
   render() {
     const tbody = document.querySelector('#view-income tbody');
-    if (!tbody) return;
+    if (!tbody) {
+      console.error('Tbody no encontrado');
+      return;
+    }
     
     const incomes = AppState.currentMonthData.income || [];
+    console.log('Renderizando', incomes.length, 'ingresos');
     
     if (incomes.length === 0) {
       tbody.innerHTML = `
@@ -182,6 +193,8 @@ export const Income = {
   updateTotal() {
     const total = (AppState.currentMonthData.income || [])
       .reduce((sum, i) => sum + (i.amount || 0), 0);
+    
+    console.log('Total ingresos:', total);
     
     const totalElement = document.querySelector('#view-income .stat-value');
     if (totalElement) {
