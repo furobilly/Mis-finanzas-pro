@@ -1,7 +1,13 @@
+// DASHBOARD - Vista principal
+
 import { AppState } from '../core/state.js';
-import { formatMoney } from '../core/config.js';
+import { CONFIG } from '../core/config.js';
 
 export const Dashboard = {
+  
+  init() {
+    this.render();
+  },
   
   render() {
     this.renderStats();
@@ -16,10 +22,10 @@ export const Dashboard = {
     const statBalance = document.getElementById('stat-balance');
     const statSavings = document.getElementById('stat-savings');
     
-    if (statIncome) statIncome.textContent = formatMoney(totals.income);
-    if (statExpense) statExpense.textContent = formatMoney(totals.expenses);
-    if (statBalance) statBalance.textContent = formatMoney(totals.balance);
-    if (statSavings) statSavings.textContent = formatMoney(totals.savings);
+    if (statIncome) statIncome.textContent = CONFIG.formatMoney(totals.income);
+    if (statExpense) statExpense.textContent = CONFIG.formatMoney(totals.expenses);
+    if (statBalance) statBalance.textContent = CONFIG.formatMoney(totals.balance);
+    if (statSavings) statSavings.textContent = CONFIG.formatMoney(totals.savings);
   },
   
   renderQuincenas() {
@@ -30,7 +36,7 @@ export const Dashboard = {
     
     if (q1List) q1List.innerHTML = '<div class="empty-state">Sin pagos pendientes</div>';
     if (q2List) q2List.innerHTML = '<div class="empty-state">Sin pagos pendientes</div>';
-    if (q1Total) q1Total.textContent = formatMoney(0);
-    if (q2Total) q2Total.textContent = formatMoney(0);
+    if (q1Total) q1Total.textContent = CONFIG.formatMoney(0);
+    if (q2Total) q2Total.textContent = CONFIG.formatMoney(0);
   }
 };
