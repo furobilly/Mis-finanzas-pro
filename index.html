@@ -1,331 +1,308 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💰 Finanzas Pro v5.0 - Modular</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="css/01-variables.css">
-    <link rel="stylesheet" href="css/02-base.css">
-    <link rel="stylesheet" href="css/03-layout.css">
-    <link rel="stylesheet" href="css/04-components.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💰 Finanzas Pro</title>
+  
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/01-variables.css">
+  <link rel="stylesheet" href="css/02-base.css">
+  <link rel="stylesheet" href="css/03-layout.css">
+  <link rel="stylesheet" href="css/04-components.css">
 </head>
 <body>
+
+<!-- Login Screen -->
+<div id="login-screen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">💰</div>
+    <h1 class="login-title">Finanzas Pro</h1>
+    <p class="login-subtitle">Gestión financiera inteligente</p>
     
-    <div id="login-screen" class="login-screen">
-        <div class="login-card glass">
-            <div class="login-icon">💰</div>
-            <h1 class="login-title">Finanzas Pro</h1>
-            <p class="login-subtitle">Gestion financiera inteligente</p>
-            
-            <div id="user-selector" class="user-selector">
-                <h3 style="margin: 0 0 16px 0; color: var(--primary);">Selecciona o crea usuario</h3>
-                <div id="users-list"></div>
-                <button id="btn-new-user" class="btn-new-user">
-                    ➕ Crear nuevo usuario
-                </button>
-            </div>
-            
-            <div id="login-form" class="login-form hidden">
-                <h3 style="margin: 0 0 16px 0; color: var(--primary);">Crear cuenta</h3>
-                <input type="text" id="input-name" class="input-field" placeholder="Tu nombre" maxlength="20">
-                <input type="password" id="input-pin" class="input-field" placeholder="PIN (4 digitos)" maxlength="4" pattern="[0-9]*" inputmode="numeric">
-                <div style="display: flex; gap: 12px; margin-top: 16px;">
-                    <button id="btn-create-user" class="btn-login">Crear</button>
-                    <button id="btn-cancel-create" class="btn-cancel">Cancelar</button>
-                </div>
-            </div>
-            
-            <div id="pin-form" class="pin-form hidden">
-                <h3 style="margin: 0 0 16px 0; color: var(--primary);">Ingresa tu PIN</h3>
-                <p id="pin-user-name" style="margin: 0 0 16px 0; font-weight: 600;"></p>
-                <input type="password" id="input-pin-login" class="input-field" placeholder="PIN (4 digitos)" maxlength="4" pattern="[0-9]*" inputmode="numeric">
-                <div style="display: flex; gap: 12px; margin-top: 16px;">
-                    <button id="btn-login-pin" class="btn-login">Entrar</button>
-                    <button id="btn-cancel-pin" class="btn-cancel">Cancelar</button>
-                </div>
-            </div>
-        </div>
+    <div class="login-section">
+      <h2 class="login-section-title">Selecciona o crea usuario</h2>
+      <div id="user-list" class="user-list"></div>
+      <button id="btn-create-user" class="btn-create-user">➕ Crear nuevo usuario</button>
+    </div>
+  </div>
+</div>
+
+<!-- Main App -->
+<div id="main-app" class="main-app" style="display: none;">
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">💰 <span class="logo-text">Finanzas Pro</span></div>
     </div>
     
-    <div id="app-container" class="app-container hidden">
-        
-        <header class="header">
-            <div class="header-content">
-                <div class="brand">
-                    <span class="brand-icon">💰</span>
-                    <h1 class="brand-title">Finanzas Pro</h1>
-                </div>
-                
-                <div class="header-controls">
-                    <select id="year-selector" class="selector">
-                    </select>
-                    
-                    <select id="month-selector" class="selector">
-                    </select>
-                    
-                    <div id="user-info">
-                        <span id="user-name">Usuario</span>
-                    </div>
-                    
-                    <button id="btn-export" class="btn-icon" title="Exportar PDF">
-                        📊
-                    </button>
-                    
-                    <button id="btn-logout" class="btn-icon btn-danger" title="Cerrar sesion">
-                        🔒
-                    </button>
-                </div>
-            </div>
-            
-            <div class="tip-banner glass">
-                <span class="tip-icon">💡</span>
-                <span id="tip-text">Cargando consejos...</span>
-            </div>
-        </header>
-        
-        <nav class="nav-main" id="nav-main">
-            <button class="nav-btn active" data-view="dashboard">📊 Dashboard</button>
-            <button class="nav-btn" data-view="income">💵 Ingresos</button>
-            <button class="nav-btn" data-view="services">🏠 Servicios</button>
-            <button class="nav-btn" data-view="cards">💳 Tarjetas</button>
-            <button class="nav-btn" data-view="loans">🏦 Prestamos</button>
-            <button class="nav-btn" data-view="expenses">🛒 Gastos</button>
-            <button class="nav-btn" data-view="savings">🛡️ Ahorro</button>
-        </nav>
-        
-        <main class="main-content" id="main-content">
-            
-            <section id="view-dashboard" class="view active">
-                <div class="stats-grid">
-                    <div class="stat-card card-income glass">
-                        <div class="stat-label">Ingresos</div>
-                        <div class="stat-value" id="stat-income">$0.00</div>
-                    </div>
-                    
-                    <div class="stat-card card-expense glass">
-                        <div class="stat-label">Egresos</div>
-                        <div class="stat-value" id="stat-expense">$0.00</div>
-                    </div>
-                    
-                    <div class="stat-card card-balance glass">
-                        <div class="stat-label">Balance</div>
-                        <div class="stat-value" id="stat-balance">$0.00</div>
-                    </div>
-                    
-                    <div class="stat-card card-savings glass">
-                        <div class="stat-label">Ahorro</div>
-                        <div class="stat-value" id="stat-savings">$0.00</div>
-                    </div>
-                </div>
-                
-                <div class="accordion glass" id="accordion-q1">
-                    <div class="accordion-header" onclick="FinanzasApp.ui.toggleAccordion('accordion-q1')">
-                        <div class="accordion-title">
-                            <span class="accordion-icon">📅</span>
-                            Quincena 1 (1-14)
-                        </div>
-                        <div class="accordion-amount" id="total-q1">$0.00</div>
-                    </div>
-                    <div class="accordion-body">
-                        <div id="list-q1"></div>
-                    </div>
-                </div>
-                
-                <div class="accordion glass" id="accordion-q2">
-                    <div class="accordion-header" onclick="FinanzasApp.ui.toggleAccordion('accordion-q2')">
-                        <div class="accordion-title">
-                            <span class="accordion-icon">📅</span>
-                            Quincena 2 (15-31)
-                        </div>
-                        <div class="accordion-amount" id="total-q2">$0.00</div>
-                    </div>
-                    <div class="accordion-body">
-                        <div id="list-q2"></div>
-                    </div>
-                </div>
-                
-                <div class="accordion glass" id="accordion-recurrent">
-                    <div class="accordion-header" onclick="FinanzasApp.ui.toggleAccordion('accordion-recurrent')">
-                        <div class="accordion-title">
-                            <span class="accordion-icon">🔄</span>
-                            Cargos Recurrentes
-                        </div>
-                        <div class="accordion-amount" id="total-recurrent">$0.00</div>
-                    </div>
-                    <div class="accordion-body">
-                        <div id="list-recurrent"></div>
-                    </div>
-                </div>
-                
-                <div class="accordion glass" id="accordion-expenses">
-                    <div class="accordion-header" onclick="FinanzasApp.ui.toggleAccordion('accordion-expenses')">
-                        <div class="accordion-title">
-                            <span class="accordion-icon">🛒</span>
-                            Gastos Variables
-                        </div>
-                        <div class="accordion-amount" id="total-expenses">$0.00</div>
-                    </div>
-                    <div class="accordion-body">
-                        <div id="list-expenses"></div>
-                    </div>
-                </div>
-            </section>
-            
-            <section id="view-income" class="view">
-  <div class="card glass">
-    <h2 style="margin:0 0 8px 0; color:var(--primary); display:flex; align-items:center; gap:12px;">
-      <span style="font-size:32px;">💵</span>
-      Registrar Ingreso
-    </h2>
-    <p class="muted" style="margin:0 0 24px 0;">Agrega tus ingresos del mes para llevar control total</p>
-    
-    <div class="income-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Descripcion</label>
-          <input 
-            type="text" 
-            id="income-desc" 
-            class="form-input" 
-            placeholder="Ej: Sueldo Quincenal"
-            maxlength="50"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Monto</label>
-          <input 
-            type="number" 
-            id="income-amount" 
-            class="form-input" 
-            placeholder="0.00"
-            step="0.01"
-            min="0"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Categoria</label>
-          <select id="income-category" class="form-input">
-            <option value="sueldo">💼 Sueldo</option>
-            <option value="bono">🎁 Bono</option>
-            <option value="freelance">💻 Freelance</option>
-            <option value="inversion">📈 Inversion</option>
-            <option value="otro">💰 Otro</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Fecha</label>
-          <input 
-            type="date" 
-            id="income-date" 
-            class="form-input"
-          >
-        </div>
+    <div class="header-right">
+      <select id="year-selector" class="selector"></select>
+      <select id="month-selector" class="selector"></select>
+      <div class="user-badge" id="user-badge">
+        <span class="user-icon">👤</span>
+        <span id="current-user-name">Usuario</span>
       </div>
-      
-      <button id="btn-add-income" class="btn-primary btn-large">
-        ➕ Agregar Ingreso
-      </button>
+      <button id="btn-stats" class="icon-btn" title="Estadísticas">📊</button>
+      <button id="btn-logout" class="icon-btn" title="Cerrar sesión">🔒</button>
     </div>
+  </header>
+  
+  <!-- Unsaved Changes Banner -->
+  <div id="unsaved-banner" class="unsaved-banner" style="display: none;">
+    <span>⚠️ Tienes cambios sin guardar</span>
+    <button id="btn-save-changes" class="btn-save-changes">💾 Guardar ahora</button>
   </div>
   
-  <div class="card glass" style="margin-top:24px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h3 style="margin:0; color:var(--primary);">📋 Historial de Ingresos</h3>
-      <div style="text-align:right;">
-        <div class="muted" style="font-size:14px; margin-bottom:4px;">Total del mes</div>
-        <div id="income-total" style="font-size:28px; font-weight:800; color:#10b981; font-family:'JetBrains Mono',monospace;">
-          $0.00
+  <!-- Navigation -->
+  <nav class="nav">
+    <button class="nav-item active" data-view="dashboard">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Dashboard</span>
+    </button>
+    <button class="nav-item" data-view="income">
+      <span class="nav-icon">💵</span>
+      <span class="nav-label">Ingresos</span>
+    </button>
+    <button class="nav-item" data-view="services">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Servicios</span>
+    </button>
+    <button class="nav-item" data-view="cards">
+      <span class="nav-icon">💳</span>
+      <span class="nav-label">Tarjetas</span>
+    </button>
+    <button class="nav-item" data-view="loans">
+      <span class="nav-icon">🏦</span>
+      <span class="nav-label">Préstamos</span>
+    </button>
+    <button class="nav-item" data-view="expenses">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label">Gastos</span>
+    </button>
+    <button class="nav-item" data-view="savings">
+      <span class="nav-icon">💜</span>
+      <span class="nav-label">Ahorro</span>
+    </button>
+    <button class="nav-item" data-view="reports">
+      <span class="nav-icon">📈</span>
+      <span class="nav-label">Reportes</span>
+    </button>
+  </nav>
+  
+  <!-- Content -->
+  <main class="content">
+    
+    <!-- Loading State -->
+    <div id="loading-state" class="loading-state">
+      <div class="loading-icon">💰</div>
+      <div class="loading-text">Cargando consejos...</div>
+    </div>
+    
+    <!-- Vista Dashboard -->
+    <section id="view-dashboard" class="view active">
+      
+      <!-- Stats Cards -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 32px;">
+        
+        <div class="stat-card card-income">
+          <div class="stat-label">INGRESOS</div>
+          <div class="stat-value" id="stat-income">$0.00</div>
+        </div>
+        
+        <div class="stat-card card-expense">
+          <div class="stat-label">EGRESOS</div>
+          <div class="stat-value" id="stat-expense">$0.00</div>
+        </div>
+        
+        <div class="stat-card card-balance">
+          <div class="stat-label">BALANCE</div>
+          <div class="stat-value" id="stat-balance">$0.00</div>
+        </div>
+        
+        <div class="stat-card card-savings">
+          <div class="stat-label">MIS AHORROS</div>
+          <div class="stat-value" id="stat-savings">$0.00</div>
+        </div>
+        
+      </div>
+
+      <!-- Próximos Pagos -->
+      <div class="content-card" style="margin-bottom: 24px;">
+        <h3 class="section-title">📅 Próximos Pagos</h3>
+        
+        <div style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+          
+          <div>
+            <h4 style="color: #7c3aed; font-size: 16px; margin-bottom: 12px;">
+              📆 Quincena del 30 (1–14)
+              <span style="float: right; font-weight: 700;" id="total-q1">$0.00</span>
+            </h4>
+            <div id="list-q1">
+              <div class="empty-state">Sin pagos pendientes</div>
+            </div>
+          </div>
+          
+          <div>
+            <h4 style="color: #7c3aed; font-size: 16px; margin-bottom: 12px;">
+              📆 Quincena del 15 (15–31)
+              <span style="float: right; font-weight: 700;" id="total-q2">$0.00</span>
+            </h4>
+            <div id="list-q2">
+              <div class="empty-state">Sin pagos pendientes</div>
+            </div>
+          </div>
+          
         </div>
       </div>
-    </div>
+
+      <!-- Cargos Recurrentes -->
+      <div class="content-card" style="margin-bottom: 24px;">
+        <h3 class="section-title">📋 Cargos Recurrentes</h3>
+        <div class="empty-state">Sin cargos recurrentes configurados</div>
+      </div>
+
+      <!-- Gastos Variables -->
+      <div class="content-card">
+        <h3 class="section-title">💰 Gastos Variables</h3>
+        <div class="empty-state">Sin gastos registrados este mes</div>
+      </div>
+
+    </section>
     
-    <div style="overflow-x:auto;">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Descripcion</th>
-            <th>Categoria</th>
-            <th>Monto</th>
-            <th style="width:120px;">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="income-list">
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-            
-            <section id="view-services" class="view">
-                <h2>🏠 Servicios</h2>
-                <p class="muted">Modulo en construccion - Fase 2...</p>
-            </section>
-            
-            <section id="view-cards" class="view">
-                <h2>💳 Tarjetas</h2>
-                <p class="muted">Modulo en construccion - Fase 2...</p>
-            </section>
-            
-            <section id="view-loans" class="view">
-                <h2>🏦 Prestamos</h2>
-                <p class="muted">Modulo en construccion - Fase 2...</p>
-            </section>
-            
-            <section id="view-expenses" class="view">
-                <h2>🛒 Gastos Variables</h2>
-                <p class="muted">Modulo en construccion - Fase 2...</p>
-            </section>
-            
-            <section id="view-savings" class="view">
-                <h2>🛡️ Ahorro</h2>
-                <p class="muted">Modulo en construccion - Fase 2...</p>
-            </section>
-            
-        </main>
+    <!-- Vista Ingresos -->
+    <section id="view-income" class="view">
+      
+      <!-- Formulario -->
+      <div class="form-section">
+        <h2 class="form-title">💵 Registrar Ingreso</h2>
+        <p style="color: #64748b; margin-bottom: 24px;">Agrega tus ingresos del mes para llevar control total</p>
         
-        <nav class="nav-mobile" id="nav-mobile">
-            <button class="nav-mobile-btn active" data-view="dashboard">
-                <span class="nav-mobile-icon">🏠</span>
-                <span class="nav-mobile-label">Inicio</span>
-            </button>
-            <button class="nav-mobile-btn" data-view="income">
-                <span class="nav-mobile-icon">💵</span>
-                <span class="nav-mobile-label">Ingresos</span>
-            </button>
-            <button class="nav-mobile-btn" data-view="services">
-                <span class="nav-mobile-icon">🏠</span>
-                <span class="nav-mobile-label">Servicios</span>
-            </button>
-            <button class="nav-mobile-btn" data-view="cards">
-                <span class="nav-mobile-icon">💳</span>
-                <span class="nav-mobile-label">Tarjetas</span>
-            </button>
-            <button class="nav-mobile-btn" data-view="add">
-                <span class="nav-mobile-icon">➕</span>
-                <span class="nav-mobile-label">Agregar</span>
-            </button>
-        </nav>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">DESCRIPCION</label>
+            <input type="text" class="form-input" placeholder="Descripción">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">MONTO</label>
+            <input type="number" class="form-input" placeholder="Monto" step="0.01">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">CATEGORIA</label>
+            <select class="form-select">
+              <option value="sueldo">💼 Sueldo</option>
+              <option value="bono">🎁 Bono</option>
+              <option value="freelance">💻 Freelance</option>
+              <option value="inversion">📈 Inversión</option>
+              <option value="otro">💰 Otro</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">FECHA</label>
+            <input type="date" class="form-input">
+          </div>
+        </div>
         
-    </div>
+        <button class="btn-primary">➕ Agregar Ingreso</button>
+      </div>
+      
+      <!-- Tabla -->
+      <div class="form-section" style="margin-top: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 class="section-title" style="text-align: center; margin: 0; flex: 1;">📋 Historial de Ingresos</h3>
+          <div style="text-align: right;">
+            <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">Total del mes</div>
+            <div class="stat-value" style="font-size: 24px; color: #10b981;">$0.00</div>
+          </div>
+        </div>
+        
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>FECHA</th>
+              <th>DESCRIPCION</th>
+              <th>CATEGORIA</th>
+              <th>MONTO</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="5" class="empty-state">
+                <div style="font-size: 48px; margin-bottom: 16px;">📭</div>
+                <div style="font-size: 16px; font-weight: 500;">No hay ingresos registrados este mes</div>
+                <div style="font-size: 14px; margin-top: 8px;">Agrega tu primer ingreso arriba</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+    </section>
     
-    <div id="toast-container" class="toast-container"></div>
+    <!-- Vista Servicios -->
+    <section id="view-services" class="view">
+      <div class="content-card">
+        <h2 class="section-title">🏠 Servicios (Próximamente)</h2>
+        <div class="empty-state">Esta sección estará disponible pronto</div>
+      </div>
+    </section>
     
-    <div id="unsaved-banner" class="unsaved-banner hidden">
-        <span class="unsaved-icon">⚠️</span>
-        <span class="unsaved-text">Tienes cambios sin guardar</span>
-        <button id="btn-save-changes" class="btn-save-changes">
-            💾 GUARDAR AHORA
-        </button>
-    </div>
+    <!-- Vista Tarjetas -->
+    <section id="view-cards" class="view">
+      <div class="content-card">
+        <h2 class="section-title">💳 Tarjetas (Próximamente)</h2>
+        <div class="empty-state">Esta sección estará disponible pronto</div>
+      </div>
+    </section>
     
-    <script type="module" src="js/app.js"></script>
+    <!-- Vista Préstamos -->
+    <section id="view-loans" class="view">
+      <div class="content-card">
+        <h2 class="section-title">🏦 Préstamos (Próximamente)</h2>
+        <div class="empty-state">Esta sección estará disponible pronto</div>
+      </div>
+    </section>
     
+    <!-- Vista Gastos -->
+    <section id="view-expenses" class="view">
+      <div class="content-card">
+        <h2 class="section-title">🛒 Gastos (Próximamente)</h2>
+        <div class="empty-state">Esta sección estará disponible pronto</div>
+      </div>
+    </section>
+    
+    <!-- Vista Ahorros -->
+    <section id="view-savings" class="view">
+      <div class="content-card">
+        <h2 class="section-title">💜 Mis Ahorros (Próximamente)</h2>
+        <div class="empty-state">Esta sección estará disponible pronto</div>
+      </div>
+    </section>
+    
+    <!-- Vista Reportes -->
+    <section id="view-reports" class="view">
+      <div class="content-card">
+        <h2 class="section-title">📈 Reportes (Próximamente)</h2>
+        <div class="empty-state">Esta sección estará disponible pronto</div>
+      </div>
+    </section>
+    
+  </main>
+  
+</div>
+
+<!-- JavaScript Modules -->
+<script type="module" src="js/app.js"></script>
+
 </body>
 </html>
