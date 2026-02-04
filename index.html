@@ -175,9 +175,93 @@
             </section>
             
             <section id="view-income" class="view">
-                <h2>💵 Ingresos</h2>
-                <p class="muted">Modulo en construccion - Fase 2...</p>
-            </section>
+  <div class="card glass">
+    <h2 style="margin:0 0 8px 0; color:var(--primary); display:flex; align-items:center; gap:12px;">
+      <span style="font-size:32px;">💵</span>
+      Registrar Ingreso
+    </h2>
+    <p class="muted" style="margin:0 0 24px 0;">Agrega tus ingresos del mes para llevar control total</p>
+    
+    <div class="income-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Descripcion</label>
+          <input 
+            type="text" 
+            id="income-desc" 
+            class="form-input" 
+            placeholder="Ej: Sueldo Quincenal"
+            maxlength="50"
+          >
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Monto</label>
+          <input 
+            type="number" 
+            id="income-amount" 
+            class="form-input" 
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+          >
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Categoria</label>
+          <select id="income-category" class="form-input">
+            <option value="sueldo">💼 Sueldo</option>
+            <option value="bono">🎁 Bono</option>
+            <option value="freelance">💻 Freelance</option>
+            <option value="inversion">📈 Inversion</option>
+            <option value="otro">💰 Otro</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Fecha</label>
+          <input 
+            type="date" 
+            id="income-date" 
+            class="form-input"
+          >
+        </div>
+      </div>
+      
+      <button id="btn-add-income" class="btn-primary btn-large">
+        ➕ Agregar Ingreso
+      </button>
+    </div>
+  </div>
+  
+  <div class="card glass" style="margin-top:24px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h3 style="margin:0; color:var(--primary);">📋 Historial de Ingresos</h3>
+      <div style="text-align:right;">
+        <div class="muted" style="font-size:14px; margin-bottom:4px;">Total del mes</div>
+        <div id="income-total" style="font-size:28px; font-weight:800; color:#10b981; font-family:'JetBrains Mono',monospace;">
+          $0.00
+        </div>
+      </div>
+    </div>
+    
+    <div style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Descripcion</th>
+            <th>Categoria</th>
+            <th>Monto</th>
+            <th style="width:120px;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="income-list">
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
             
             <section id="view-services" class="view">
                 <h2>🏠 Servicios</h2>
