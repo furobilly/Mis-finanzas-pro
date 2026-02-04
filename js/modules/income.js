@@ -1,4 +1,4 @@
-// INCOME MODULE - GESTION DE INGRESOS
+// MODULO DE INGRESOS
 
 import { AppState } from '../core/state.js';
 import { Storage } from '../core/storage.js';
@@ -13,50 +13,60 @@ export const Income = {
   },
   
   setupForm() {
-    const btnAdd = document.getElementById('btn-add-income');
-    const inputDesc = document.getElementById('income-desc');
-    const inputAmount = document.getElementById('income-amount');
-    const inputDate = document.getElementById('income-date');
-    const inputCategory = document.getElementById('income-category');
+    const form = document.querySelector('#view-income .form-row');
+    if (!form) return;
     
-    if (!btnAdd) return;
+    const descInput = form.querySelector('input[placeholder="Descripción"]');
+    const amountInput = form.querySelector('input[type="number"]');
+    const categorySelect = form.querySelector('select');
+    const dateInput = form.querySelector('input[type="date"]');
+    const btnAdd = document.querySelector('#view-income .btn-primary');
     
-    inputDate.value = CONFIG.getToday();
+    if (dateInput) {
+      dateInput.value = new Date().toISOString().slice(0, 10);
+    }
     
-    btnAdd.onclick = () => {
-      const desc = inputDesc.value.trim();
-      const amount = parseFloat(inputAmount.value);
-      const date = inputDate.value;
-      const category = inputCategory.value;
-      
-      if (!desc) {
-        Alerts.warning('Ingresa una descripcion');
-        return;
-      }
-      
-      if (!amount || amount <= 0) {
-        Alerts.warning('Ingresa un monto valido mayor a 0');
-        return;
-      }
-      
-      if (!date) {
-        Alerts.warning('Selecciona una fecha');
-        return;
-      }
-      
-      this.add(desc, amount, date, category);
-      
-      inputDesc.value = '';
-      inputAmount.value = '';
-      inputDate.value = CONFIG.getToday();
-      inputCategory.value = 'sueldo';
-      
-      Alerts.success('Ingreso agregado correctamente');
-    };
+    if (btnAdd) {
+      btnAdd.onclick = () => {
+        const desc = descInput?.value.trim() || '';
+        const amount = parseFloat(amountInput?.value) || 0;
+        const category = categorySelect?.value || 'sueldo';
+        const date = dateInput?.value || new Date().toISOString().slice(0, 10);
+        
+        if (!desc) {
+          if (Alerts && Alerts.error) {
+            Alerts.error('La descripción es requerida');
+          } else {
+            alert('La descripción es requerida');
+          }
+          return;
+        }
+        
+        if (amount <= 0) {
+          if (Alerts && Alerts.error) {
+            Alerts.error('El monto debe ser mayor a cero');
+          } else {
+            alert('El monto debe ser mayor a cero');
+          }
+          return;
+        }
+        
+        this.add(desc, amount, date, category);
+        
+        if (descInput) descInput.value = '';
+        if (amountInput) amountInput.value = '';
+        if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
+        if (categorySelect) categorySelect.value = 'sueldo';
+      };
+    }
   },
   
   add(desc, amount, date, category) {
-    const income = {
+    if (!AppState.currentMonthData.income) {
+      AppState.currentMonthData.income = [];
+    }
+    
+    const newIncome = {
       id: Date.now(),
       desc: desc,
       amount: amount,
@@ -65,37 +75,48 @@ export const Income = {
       createdAt: new Date().toISOString()
     };
     
-    AppState.currentMonthData.income.push(income);
+    AppState.currentMonthData.income.push(newIncome);
     AppState.markUnsaved();
+    Storage.save();
+    
     this.render();
+    this.updateTotal();
+    
+    if (Alerts && Alerts.success) {
+      Alerts.success('Ingreso agregado correctamente');
+    }
   },
   
   edit(id) {
     const income = AppState.currentMonthData.income.find(i => i.id === id);
     if (!income) return;
     
-    const newDesc = prompt('Descripcion:', income.desc);
+    const newDesc = prompt('Descripción:', income.desc);
     if (newDesc === null) return;
     
-    const newAmount = prompt('Monto:', income.amount);
-    if (newAmount === null) return;
-    
-    const parsedAmount = parseFloat(newAmount);
-    if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      Alerts.error('Monto invalido');
+    const newAmount = parseFloat(prompt('Monto:', income.amount));
+    if (isNaN(newAmount) || newAmount <= 0) {
+      if (Alerts && Alerts.error) {
+        Alerts.error('Monto inválido');
+      }
       return;
     }
     
     const newDate = prompt('Fecha (YYYY-MM-DD):', income.date);
-    if (newDate === null) return;
+    if (!newDate) return;
     
     income.desc = newDesc.trim();
-    income.amount = parsedAmount;
+    income.amount = newAmount;
     income.date = newDate;
     
     AppState.markUnsaved();
+    Storage.save();
     this.render();
-    Alerts.success('Ingreso actualizado');
+    this.updateTotal();
+    
+    if (Alerts && Alerts.success) {
+      Alerts.success('Ingreso actualizado');
+    }
   },
   
   remove(id) {
@@ -106,12 +127,17 @@ export const Income = {
     
     AppState.currentMonthData.income.splice(index, 1);
     AppState.markUnsaved();
+    Storage.save();
     this.render();
-    Alerts.success('Ingreso eliminado');
+    this.updateTotal();
+    
+    if (Alerts && Alerts.success) {
+      Alerts.success('Ingreso eliminado');
+    }
   },
   
   render() {
-    const tbody = document.getElementById('income-list');
+    const tbody = document.querySelector('#view-income tbody');
     if (!tbody) return;
     
     const incomes = AppState.currentMonthData.income || [];
@@ -119,14 +145,13 @@ export const Income = {
     if (incomes.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="5" style="text-align:center; padding:40px; color:var(--text-secondary);">
-            <div style="font-size:48px; margin-bottom:16px;">📭</div>
-            <div>No hay ingresos registrados este mes</div>
-            <div style="font-size:14px; margin-top:8px;">Agrega tu primer ingreso arriba</div>
+          <td colspan="5" style="text-align: center; padding: 48px; color: #94a3b8;">
+            <div style="font-size: 48px; margin-bottom: 16px;">📭</div>
+            <div style="font-size: 16px; font-weight: 500;">No hay ingresos registrados este mes</div>
+            <div style="font-size: 14px; margin-top: 8px;">Agrega tu primer ingreso arriba</div>
           </td>
         </tr>
       `;
-      this.updateTotal();
       return;
     }
     
@@ -134,82 +159,47 @@ export const Income = {
       return new Date(b.date) - new Date(a.date);
     });
     
-    tbody.innerHTML = sorted.map(income => {
-      const categoryIcon = this.getCategoryIcon(income.category);
-      const formattedDate = new Date(income.date).toLocaleDateString('es-MX', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-      });
-      
-      return `
-        <tr>
-          <td>${formattedDate}</td>
-          <td>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-size:20px;">${categoryIcon}</span>
-              <span style="font-weight:600;">${income.desc}</span>
-            </div>
-          </td>
-          <td>
-            <span style="display:inline-block; padding:4px 12px; background:rgba(16,185,129,0.1); color:#10b981; border-radius:20px; font-size:12px; font-weight:700;">
-              ${this.getCategoryName(income.category)}
-            </span>
-          </td>
-          <td style="font-family:'JetBrains Mono', monospace; font-weight:700; color:#10b981; font-size:18px;">
-            ${CONFIG.formatMoney(income.amount)}
-          </td>
-          <td>
-            <div style="display:flex; gap:8px;">
-              <button class="btn-edit" onclick="Income.edit(${income.id})" title="Editar">
-                ✏️
-              </button>
-              <button class="btn-delete" onclick="Income.remove(${income.id})" title="Eliminar">
-                🗑️
-              </button>
-            </div>
-          </td>
-        </tr>
-      `;
-    }).join('');
-    
-    this.updateTotal();
+    tbody.innerHTML = sorted.map(income => `
+      <tr>
+        <td>${income.date}</td>
+        <td>${income.desc}</td>
+        <td>${this.getCategoryName(income.category)}</td>
+        <td style="color: #10b981; font-weight: 700; font-family: 'JetBrains Mono', monospace;">
+          ${CONFIG.formatMoney(income.amount)}
+        </td>
+        <td class="table-actions">
+          <button class="btn-edit" onclick="window.Income.edit(${income.id})">
+            ✏️ Editar
+          </button>
+          <button class="btn-delete" onclick="window.Income.remove(${income.id})">
+            🗑️ Borrar
+          </button>
+        </td>
+      </tr>
+    `).join('');
   },
   
   updateTotal() {
     const total = (AppState.currentMonthData.income || [])
-      .reduce((sum, i) => sum + i.amount, 0);
+      .reduce((sum, i) => sum + (i.amount || 0), 0);
     
-    const totalEl = document.getElementById('income-total');
-    if (totalEl) {
-      totalEl.textContent = CONFIG.formatMoney(total);
+    const totalElement = document.querySelector('#view-income .stat-value');
+    if (totalElement) {
+      totalElement.textContent = CONFIG.formatMoney(total);
     }
     
-    if (window.FinanzasApp && window.FinanzasApp.ui && window.FinanzasApp.ui.dashboard) {
-      window.FinanzasApp.ui.dashboard.renderStats();
+    if (window.Dashboard && window.Dashboard.renderStats) {
+      window.Dashboard.renderStats();
     }
   },
   
   getCategoryIcon(category) {
-    const icons = {
-      'sueldo': '💼',
-      'bono': '🎁',
-      'freelance': '💻',
-      'inversion': '📈',
-      'otro': '💰'
-    };
-    return icons[category] || '💰';
+    return CONFIG.INCOME_CATEGORIES[category]?.icon || '💰';
   },
   
   getCategoryName(category) {
-    const names = {
-      'sueldo': 'Sueldo',
-      'bono': 'Bono',
-      'freelance': 'Freelance',
-      'inversion': 'Inversion',
-      'otro': 'Otro'
-    };
-    return names[category] || 'Otro';
+    const cat = CONFIG.INCOME_CATEGORIES[category];
+    return cat ? `${cat.icon} ${cat.name}` : category;
   }
 };
 
